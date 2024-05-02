@@ -64,7 +64,7 @@ def findPathBetween2Point(n, maze, algo: int):
             visited[currQueuePoint[0][0]][currQueuePoint[0][1]] = True
             if currQueuePoint[0] == JerryPos:
                 return currQueuePoint[1]
-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            for dr, dc in [(-1, 0), (0, 1), (1, 0), (0, 1)]:
                 neighRow, neighCol = (
                     currQueuePoint[0][0] + dr,
                     currQueuePoint[0][1] + dc,
