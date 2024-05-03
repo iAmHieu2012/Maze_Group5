@@ -57,24 +57,24 @@ def findPathBetween2Point(n, maze, algo: int):
         queue = []
         path = [(row, col)]
         queue += [((row, col), path)]
-        visited[row][col] == True
+        visited.add((row,col))
         while queue != []:
-            currQueuePoint = queue[0]
-            queue.remove(currQueuePoint)
-            visited[currQueuePoint[0][0]][currQueuePoint[0][1]] = True
-            if currQueuePoint[0] == JerryPos:
-                return currQueuePoint[1]
+            currQP = queue[0]
+            queue.remove(currQP)
+            visited.add(currQP[0])
+            if currQP[0] == JerryPos:
+                return currQP[1]
             for dr, dc in [(-1, 0), (0, 1), (1, 0), (0, 1)]:
                 neighRow, neighCol = (
-                    currQueuePoint[0][0] + dr,
-                    currQueuePoint[0][1] + dc,
+                    currQP[0][0] + dr,
+                    currQP[0][1] + dc,
                 )
                 if isAbleToEnter(neighRow, neighCol):
-                    if not visited[neighRow][neighCol]:
+                    if (neighRow,neighCol) not in visited:
                         newPos = (neighRow, neighCol)
-                        newPath = currQueuePoint[1] + [(newPos)]
+                        newPath = currQP[1] + [(newPos)]
                         queue.append((newPos, newPath))
-                        visited[neighRow][neighCol] = True
+                        visited.add(newPos)
 
         return None
 
@@ -82,7 +82,7 @@ def findPathBetween2Point(n, maze, algo: int):
         visited = set()
         return dfs(TomPos[0], TomPos[1], [])
     elif algo == 2:
-        visited = np.zeros(maze.shape, dtype=bool)
+        visited = set()
         return bfs(TomPos[0], TomPos[1])
 
 
