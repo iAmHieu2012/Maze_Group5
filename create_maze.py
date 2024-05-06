@@ -1,8 +1,8 @@
 import pygame
 from random import choice, randrange
 
-RES = WIDTH, HEIGHT = 1202, 902
-TILE = 100
+RES = WIDTH, HEIGHT = 1026, 730
+TILE = 40
 cols, rows = WIDTH // TILE, HEIGHT // TILE
 
 class Cell:
@@ -16,13 +16,13 @@ class Cell:
         x, y = self.x * TILE, self.y * TILE
 
         if self.walls['top']:
-            pygame.draw.line(sc, pygame.Color('darkorange'), (x, y), (x + TILE, y), self.thickness)
+            pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
         if self.walls['right']:
-            pygame.draw.line(sc, pygame.Color('darkorange'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
         if self.walls['bottom']:
-            pygame.draw.line(sc, pygame.Color('darkorange'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
         if self.walls['left']:
-            pygame.draw.line(sc, pygame.Color('darkorange'), (x, y + TILE), (x, y), self.thickness)
+            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
 
     def get_rects(self):
         rects = []
@@ -95,3 +95,4 @@ def generate_maze():
         elif array:
             current_cell = array.pop()
     return grid_cells
+generate_maze()
