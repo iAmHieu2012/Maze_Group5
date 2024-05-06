@@ -66,6 +66,12 @@ clock = pygame.time.Clock()
 bg_game = pygame.image.load('img/background.jpg').convert()
 bg = pygame.image.load('img/bg_main.jpg').convert()
 
+# game icon
+pygame.display.set_caption('Maze')
+pygame_icon = pygame.image.load('img/maze_icon.png')
+pygame.display.set_icon(pygame_icon)
+
+
 # get maze
 maze = generate_maze()
 
