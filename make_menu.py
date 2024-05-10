@@ -114,14 +114,13 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
     write_screen("  X  ", WHITE, RED, (1280//2 + 280, 320), -1, DISPLAYSURF, 20)
     if mode == 0:
         write_screen("LEVEL", BLACK, None, (1280//2 - 240 + 30, 380), -1, DISPLAYSURF, 20)
-        lst = ["VIETNAM", "MEDIUM", " HARD "]
+        lst = ["EASY", "MEDIUM", " HARD "]
         for i in range(1, 4):
             write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 380), -1, DISPLAYSURF, 20)
         x = -1
         running = True
         hard = 0
         auto = 0
-        vt = []
         runner = 0
         while running:
             if runner == 0:#choose map 
@@ -143,52 +142,36 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
                             elif temp == 1: hard = 40
                             else: hard = 100
                             runner = 1
-            elif runner == 1:#choose position for Tom and Giahuy
-                if lst[0] != "RANDOM":
+            elif runner == 1:#choose mode play
+                if lst[0] != "NORMAL":
                     x = -1
-                    write_screen("POSITION", BLACK, None, (1280//2 - 240 + 40, 450), -1, DISPLAYSURF, 20)
+                    write_screen("MODE", BLACK, None, (1280//2 - 240 + 40, 450), -1, DISPLAYSURF, 20)
                     pygame.time.delay(500)
-                    lst = ["RANDOM", "CHOOSE"]
-                    for i in range(1, 3):
-                        write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 200 * i, 450), -1, DISPLAYSURF, 20)
+                    lst = ["NORMAL", "SPEEDRUN", "LIMIT"]
+                    for i in range(1, 4):
+                        write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 450), -1, DISPLAYSURF, 20)
                 for event in pygame.event.get(): 
                     if event.type == pygame.MOUSEBUTTONUP:
                         make_sound()
                         tempx = pygame.mouse.get_pos()[0]
                         tempy = pygame.mouse.get_pos()[1]
-                        temp = (tempx - 588)//200
+                        temp = (tempx - 538)//150
                         if 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
                             running = False
                             return -1
-                        elif (-1 < temp < 2 and 430 < tempy < 470 and x!= temp):
-                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 200 * (x + 1), 450), -1, DISPLAYSURF, 20)
-                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 200 * (temp + 1), 450), -1, DISPLAYSURF, 20)
+                        elif (-1 < temp < 3 and 430 < tempy < 470 and x!= temp):
+                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 450), -1, DISPLAYSURF, 20)
+                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 450), -1, DISPLAYSURF, 20)
                             x = temp
                         elif temp == x:
                             auto = temp
-                            if (auto == 0): 
-                                running = False
-                                return [hard, auto, (-1,-1)]
-                            runner = 2
-            elif runner == 2: #choose exact position
-                lst = ["Tom_x=", "Tom_y=", "Jerry_x=", "Jerry_y="]
-                write_screen("ENTER POSITION : ", BLACK, None, (1280//2 - 240 + 80, 500), -1, DISPLAYSURF, 20)
-                for i in range(4):
-                    write_screen(lst[i], BLACK, None, (1280//2 - 240 + 150 + 100*i, 530), 1, DISPLAYSURF, 20)
-                    x_t = rec_input(DISPLAYSURF, 600, 480)
-                    if x_t == 1000:
-                        running = False
-                        return -1
-                    vt.append(x_t)
-                    write_screen(str(vt[i]), BLACK, None, (1280//2 - 240 + 200 + 100*i, 530), 1, DISPLAYSURF, 20)
-                return [hard, 1, vt]
+                            running = False
+                            return [hard, auto]
             pygame.display.update((380, 300, 600, 250))
 
-    elif mode in (1, 2): #done sucess or failed
+    elif mode == 1: #done sucess or failed
         while True:
             mode == 1 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            mode == 2 and write_screen("Check if the position have exceeded map's size", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            mode == 2 and write_screen("Or the distance beetween Tom and Jerry is too small", BLACK, None, (1280//2, 420), 1, DISPLAYSURF, 18)
             for event in pygame.event.get(): 
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
@@ -272,20 +255,12 @@ def make_menu(s: str):
                             lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0)
                             if lst == -1:
                                 return 0
-                            if lst[2] == (-1, -1):
+                            if True:
                                 hard = lst[0]
                                 make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
-                                #play_game
+                                #play_game with mode 0 (play), 1(autoplay)
                                 return 0
-                            else:
-                                hard = lst[0]
-                                vt = lst[2]
-                                if abs(vt[0] - vt[2]) + abs(vt[1] - vt[3]) >= hard and min(tuple(vt)) > 0 and max(tuple(vt)) <= hard:
-                                    make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
-                                    #play_game
-                                    return 0
-                                else:
-                                    make_dialog(DISPLAYSURF, "Failed: " + str(hard) + " x " + str(hard), 2)
+                            
                     elif y == 5:
                         n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
                         if n == -1:
