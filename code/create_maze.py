@@ -14,7 +14,6 @@ class Cell:
 
     def draw(self, sc):
         x, y = self.x * TILE, self.y * TILE
-
         if self.walls['top']:
             pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
         if self.walls['right']:
@@ -42,7 +41,7 @@ class Cell:
         if x < 0 or x > cols - 1 or y < 0 or y > rows - 1:
             return False
         return self.grid_cells[find_index(x, y)]
-
+        
     def check_neighbors(self, grid_cells):
         self.grid_cells = grid_cells
         neighbors = []
@@ -59,7 +58,6 @@ class Cell:
         if left and not left.visited:
             neighbors.append(left)
         return choice(neighbors) if neighbors else False
-
 
 def remove_walls(current, next):
     dx = current.x - next.x
@@ -95,4 +93,3 @@ def generate_maze():
         elif array:
             current_cell = array.pop()
     return grid_cells
-generate_maze()
