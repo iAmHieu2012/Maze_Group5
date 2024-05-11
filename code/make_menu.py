@@ -1,4 +1,6 @@
 import pygame, sys
+import login
+import json
 from pygame.locals import *
 
 BLACK = (0, 0, 0)
@@ -12,6 +14,7 @@ MAGNETA = (255, 0, 255)
 MUSTARD_YELLOW = (139, 128, 0)
 BROWN = (150, 75, 0)
 GRAY = (128, 128, 128)
+
 def write_screen(s: str, color, color2, vt, custom_font: int, DISPLAYSURF, size):
     if custom_font == 0:
         custom_font = pygame.font.Font('AttackGraffiti.ttf', size)
@@ -227,56 +230,75 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
             pygame.display.update((380, 300, 600, 250))
 
 def make_menu(s: str):
-    DISPLAYSURF = set_all('ss')
-    clock = pygame.time.Clock()
-    running = True
-    y = 0
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP:
-                make_sound()
-                tempx = pygame.mouse.get_pos()[0]
-                tempy = pygame.mouse.get_pos()[1]
-                temp = (tempy - 220) // 50
-                if (-1< temp < 8 and 1280//2 - 200 < tempx < 1280//2 + 200 and temp!=y):
-                    pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
-                    pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200, y*50 + 220, 400, 50), 6)
-                    y = temp
-                elif temp == y > -1:
-                    if (y == 7):
-                        n = make_dialog(DISPLAYSURF, "Log out", 3)
-                        if n == -1:
-                            return 0
-                        if n == 0:
-                            running = False
-                            return -1
-                    elif (y == 0 or y == 1):
-                        while True:
-                            lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0)
-                            if lst == -1:
+    while True:
+        DISPLAYSURF = set_all(s)
+        clock = pygame.time.Clock()
+        running = True
+        y = 0
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONUP:
+                    make_sound()
+                    tempx = pygame.mouse.get_pos()[0]
+                    tempy = pygame.mouse.get_pos()[1]
+                    temp = (tempy - 220) // 50
+                    if (-1< temp < 8 and 1280//2 - 200 < tempx < 1280//2 + 200 and temp!=y):
+                        pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
+                        pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200, y*50 + 220, 400, 50), 6)
+                        y = temp
+                    elif temp == y > -1:
+                        if (y == 7):
+                            n = make_dialog(DISPLAYSURF, "Log out", 3)
+                            if n == -1:
                                 return 0
-                            if True:
-                                hard = lst[0]
-                                make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
-                                #play_game with mode 0 (play), 1(autoplay)
+                            if n == 0:
+                                running = False
+                                return -1
+                        elif (y == 0 or y == 1):
+                            while True:
+                                lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0)
+                                if lst == -1:
+                                    return 0
+                                if True:
+                                    hard_mode = [s, y] + lst
+                                    hard = hard_mode[0]
+                                    make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
+                                    #play_game with mode 0 (play), 1(autoplay)
+                                    return hard_mode
+                                
+                        elif y == 5:
+                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
+                            if n == -1:
                                 return 0
-                            
-                    elif y == 5:
-                        n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                        if n == -1:
-                            return 0
 
-            elif event.type == QUIT:
-                running = False
-                pygame.quit()
-                sys.exit()
-        pygame.display.update((380, 200, 600, 450))
+                elif event.type == QUIT:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+            pygame.display.update((380, 200, 600, 450))
 
 if __name__=="__main__":
     pygame.init()
+    login.screen_width = 1280
+    login.screen_height = 720
+    login.screen = pygame.display.set_mode((login.screen_width, login.screen_height)) 
+    login.clock = pygame.time.Clock()
     while True:
-        n = make_menu("ss")
-        print(n)
-        if n == -1:
-            break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        s = login.start_all()
+        while True:
+            n = make_menu(s) #list thong so game
+            #print(n)
+            if n == -1:
+                break
+            elif n == 0:
+                continue
+            else:
+                continue
+                #play game [name, auto, hard, mode]
+                #auto == 0 tu choi, auto == 1 bot choi
+                #hard: 20,40,100
+                #mode: 0,1,2 (normal, speed, limit)
     
