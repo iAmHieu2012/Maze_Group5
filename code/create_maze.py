@@ -11,6 +11,7 @@ class Cell:
         self.walls = {'top': True, 'right': True, 'bottom': True, 'left': True}
         self.visited = False
         self.thickness = 4
+        self.status = 1
 
     def draw(self, sc):
         x, y = self.x * TILE, self.y * TILE
@@ -58,6 +59,11 @@ class Cell:
         if left and not left.visited:
             neighbors.append(left)
         return choice(neighbors) if neighbors else False
+    
+    def make_tom_pos(self):
+        self.status = 2
+    def make_jerry_pos(self):
+        self.status = 3
 
 def remove_walls(current, next):
     dx = current.x - next.x
