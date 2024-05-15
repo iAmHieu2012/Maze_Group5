@@ -9,15 +9,11 @@ def getMaze2DArray(maze):
     return np.array(maze).reshape(create_maze.rows, create_maze.cols)
 
 
-def isAbleToEnter(row, col, maze2DArray, wall):
+def isAbleToEnter(currP, neighP, maze2DArray, wall):
     """
     Kiểm tra các ô bên cạnh có thể đi vào hay không
     """
-    return (
-        (0 <= row < maze2DArray.shape[0])
-        and (0 <= col < maze2DArray.shape[1])
-        and (maze2DArray[row][col].walls[wall])
-    )
+    return (0 <= neighP[0] < maze2DArray.shape[0]) and (0 <= neighP[1] < maze2DArray.shape[1]) and not (maze2DArray[currP[0]][currP[1]].walls[wall])
 
 
 def dfs(srcPoint, destPoint, maze2DArray, path, visited):
@@ -36,8 +32,9 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
         (0, 1, "right"),
     ]:
         neighRow, neighCol = srcPoint[0] + dr, srcPoint[1] + dc
-        if (neighRow, neighCol) not in visited and isAbleToEnter(neighRow, neighCol,maze2DArray, wall):
-            result = dfs((neighRow,neighCol),destPoint,maze2DArray, path + [srcPoint], visited)
+        neighPoint = (neighRow,neighCol)
+        if neighPoint not in visited and isAbleToEnter(srcPoint,neighPoint,maze2DArray, wall):
+            result = dfs(neighPoint, destPoint, maze2DArray, path + [srcPoint], visited)
             if result:
                 return result
 
@@ -50,7 +47,7 @@ def bfs(srcPoint, destPoint, maze2DArray,visited):
     """
     queue = []
     path = [srcPoint]
-    queue += [(srcPoint, path)]
+    queue.append((srcPoint, path))
     visited.add(srcPoint)
     while queue != []:
         curr = queue[0]
@@ -65,12 +62,12 @@ def bfs(srcPoint, destPoint, maze2DArray,visited):
             (0, 1, "right"),
         ]:
             neighRow, neighCol = (curr[0][0] + dr, curr[0][1] + dc)
-            if isAbleToEnter(neighRow, neighCol, maze2DArray, wall):
-                if (neighRow, neighCol) not in visited:
-                    newPos = (neighRow, neighCol)
-                    newPath = curr[1] + [(newPos)]
-                    queue.append((newPos, newPath))
-                    visited.add(newPos)
+            neighPoint = (neighRow, neighCol)
+            if isAbleToEnter(curr[0], neighPoint, maze2DArray, wall):
+                if neighPoint not in visited:
+                    newPath = curr[1] + [neighPoint]
+                    queue.append((neighPoint, newPath))
+                    visited.add(neighPoint)
 
     return None
 
@@ -150,6 +147,9 @@ if __name__ == "__main__":
     generateTomAndJerryPos(maze)
 
     path = findPathBetween2Point(1, maze, algo=1)
-    path_cell_list = getPathCellList(path)
+    path_cell_list = getPathCellList(path, maze2DArray = getMaze2DArray(maze))
     if path:
         print("Lối đi:\n", path)
+    # print(path_cell_list)
+    for cell in path_cell_list:
+        print(cell.x, cell.y, cell.walls)
