@@ -129,8 +129,8 @@ record = get_record()
 
 
 # fonts
-font = pygame.font.SysFont('Impact', 150)
-text_font = pygame.font.SysFont('Impact', 80)
+font = pygame.font.Font(r"./font/AttackGraffiti.ttf",150)
+text_font = pygame.font.Font(r"./font/AttackGraffiti.ttf",80)
 
 while True:
     surface.blit(bg, (WIDTH, 0))
@@ -155,32 +155,26 @@ while True:
     # Press ESC to see path dfs
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
         pos = (((player_rect.top-5)//TILE),((player_rect.left-5)//TILE))
-        if pos != CurrentPos:
-            maze2D[pos[0]][pos[1]].make_tom_pos()
-            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
-            CurrentPos = pos
-            maze = list(maze2D.flatten())
-            path1 = findPathBetween2Point(1, maze, algo=1)
-            path_cell_list_dfs = getPathCellList(path1,maze2D)
-            [cell.draw(game_surface) for cell in maze]
+        maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+        maze2D[pos[0]][pos[1]].make_tom_pos()
+        CurrentPos = pos
+        maze = list(maze2D.flatten())
+        path1 = findPathBetween2Point(1, maze, algo=1)
+        path_cell_list_dfs = getPathCellList(path1,maze2D)
+        [cell.draw(game_surface) for cell in maze]
         [cell.color_cell(game_surface,'blue') for cell in path_cell_list_dfs]
 
     # Press TAB to see path bfs
     if pygame.key.get_pressed()[pygame.K_TAB]:
         pos = (((player_rect.top-5)//TILE),((player_rect.left-5)//TILE))
-        if pos != CurrentPos:
-            maze2D[pos[0]][pos[1]].make_tom_pos()
-            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
-            CurrentPos = pos
-            maze = list(maze2D.flatten())
-            path2 = findPathBetween2Point(1, maze, algo=2)
-            path_cell_list_bfs = getPathCellList(path2,maze2D)
-            [cell.draw(game_surface) for cell in maze]
+        maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+        maze2D[pos[0]][pos[1]].make_tom_pos()
+        CurrentPos = pos
+        maze = list(maze2D.flatten())
+        path2 = findPathBetween2Point(1, maze, algo=2)
+        path_cell_list_bfs = getPathCellList(path2,maze2D)
+        [cell.draw(game_surface) for cell in maze]
         [cell.color_cell(game_surface,'green') for cell in path_cell_list_bfs]
-        print(CurrentPos)
-        print(pos)    
-    
-    
         
     # draw maze
     [cell.draw(game_surface) for cell in maze]
