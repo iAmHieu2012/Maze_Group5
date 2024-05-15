@@ -97,13 +97,13 @@ CurrentPos = findTomAndJerryPos(maze2D)[0]
 
 # player settings
 player_speed = 5
-player_img = pygame.image.load('img/tomface.jpg').convert_alpha()
+player_img = pygame.image.load('img/tomface.png').convert_alpha()
 player_img = pygame.transform.scale(player_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness))
 player_rect = player_img.get_rect()
 player_rect.center = TILE // 2, TILE // 2
 player_rect.topleft = CurrentPos[1] * TILE + 5, CurrentPos[0] * TILE + 5
 
-dir_img = pygame.image.load('img/jerryface.jpg').convert_alpha()
+dir_img = pygame.image.load('img/jerryface.png').convert_alpha()
 dir_img = pygame.transform.scale(dir_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness))
 dir_rect = dir_img.get_rect()
 dir_rect.center = TILE // 2, TILE // 2
