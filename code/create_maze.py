@@ -76,6 +76,8 @@ class Cell:
         self.status = 2
     def make_jerry_pos(self):
         self.status = 3
+    def make_blank(self):
+        self.status = 1
 
 def remove_walls(current, next):
     dx = current.x - next.x
