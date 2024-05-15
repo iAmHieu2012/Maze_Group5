@@ -1,8 +1,8 @@
 import pygame
 from random import choice, randrange
 
-RES = WIDTH, HEIGHT = 1026, 730
-TILE = 40
+RES = WIDTH, HEIGHT = 1024, 720
+TILE = 60
 cols, rows = WIDTH // TILE, HEIGHT // TILE
 
 class Cell:
@@ -13,6 +13,17 @@ class Cell:
         self.thickness = 4
         self.status = 1
 
+    def color_cell(self, sc, color):
+        pygame.draw.rect(sc, pygame.Color(color),((self.x*TILE), (self.y*TILE), TILE, TILE))
+        x, y = self.x * TILE, self.y * TILE
+        if self.walls['top']:
+            pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
+        if self.walls['right']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
+        if self.walls['bottom']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
+        if self.walls['left']:
+            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
     def draw(self, sc):
         x, y = self.x * TILE, self.y * TILE
         if self.walls['top']:
@@ -37,6 +48,7 @@ class Cell:
             rects.append(pygame.Rect( (x, y), (self.thickness, TILE) ))
         return rects
 
+    
     def check_cell(self, x, y):
         find_index = lambda x, y: x + y * cols
         if x < 0 or x > cols - 1 or y < 0 or y > rows - 1:
@@ -64,6 +76,8 @@ class Cell:
         self.status = 2
     def make_jerry_pos(self):
         self.status = 3
+    def make_blank(self):
+        self.status = 1
 
 def remove_walls(current, next):
     dx = current.x - next.x

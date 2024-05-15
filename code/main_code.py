@@ -1,4 +1,5 @@
 from create_maze import *
+from algorithm import *
 
 class Food:
     def __init__(self):
@@ -37,7 +38,7 @@ def is_game_over():
         [food.set_pos() for food in food_list]
         set_record(record, score)
         record = get_record()
-        time, score, FPS = 60, 0, 60
+        time, score, FPS = 150, 0, 60
 
 
 def get_record():
@@ -74,13 +75,40 @@ pygame.display.set_icon(pygame_icon)
 
 # get maze
 maze = generate_maze()
+print(TILE)
+print(create_maze.TILE)
+
+maze = create_maze.generate_maze()
+generateTomAndJerryPos(maze)
+maze2D = getMaze2DArray(maze)
+path1 = findPathBetween2Point(1, maze, algo=1)
+print(path1)
+path_cell_list_dfs = getPathCellList(path1,maze2D)
+path2 = findPathBetween2Point(1, maze, algo=2)
+print(path2)
+path_cell_list_bfs = getPathCellList(path2,maze2D)
+
+
+# get Jerry position
+AimPos = findTomAndJerryPos(maze2D)[1]
+
+# get Tom position
+CurrentPos = findTomAndJerryPos(maze2D)[0]
 
 # player settings
 player_speed = 5
-player_img = pygame.image.load('img/character.png').convert_alpha()
+player_img = pygame.image.load('img/tomface.png').convert_alpha()
 player_img = pygame.transform.scale(player_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness))
 player_rect = player_img.get_rect()
 player_rect.center = TILE // 2, TILE // 2
+player_rect.topleft = CurrentPos[1] * TILE + 5, CurrentPos[0] * TILE + 5
+
+dir_img = pygame.image.load('img/jerryface.png').convert_alpha()
+dir_img = pygame.transform.scale(dir_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness))
+dir_rect = dir_img.get_rect()
+dir_rect.center = TILE // 2, TILE // 2
+dir_rect.topleft = AimPos[1] * TILE + 5, AimPos[0] * TILE + 5
+print(dir_rect)
 # directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
 # keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
 directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
@@ -95,7 +123,7 @@ walls_collide_list = sum([cell.get_rects() for cell in maze], [])
 
 # timer, score, record
 pygame.time.set_timer(pygame.USEREVENT, 1000)
-time = 60
+time = 150
 score = 0
 record = get_record()
 
@@ -123,9 +151,40 @@ while True:
             break
     if not is_collide(*direction):
         player_rect.move_ip(direction)
+        
+    # Press ESC to see path dfs
+    if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+        pos = (((player_rect.top-5)//TILE),((player_rect.left-5)//TILE))
+        if pos != CurrentPos:
+            maze2D[pos[0]][pos[1]].make_tom_pos()
+            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+            CurrentPos = pos
+            maze = list(maze2D.flatten())
+            path1 = findPathBetween2Point(1, maze, algo=1)
+            path_cell_list_dfs = getPathCellList(path1,maze2D)
+            [cell.draw(game_surface) for cell in maze]
+        [cell.color_cell(game_surface,'blue') for cell in path_cell_list_dfs]
 
+    # Press TAB to see path bfs
+    if pygame.key.get_pressed()[pygame.K_TAB]:
+        pos = (((player_rect.top-5)//TILE),((player_rect.left-5)//TILE))
+        if pos != CurrentPos:
+            maze2D[pos[0]][pos[1]].make_tom_pos()
+            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+            CurrentPos = pos
+            maze = list(maze2D.flatten())
+            path2 = findPathBetween2Point(1, maze, algo=2)
+            path_cell_list_bfs = getPathCellList(path2,maze2D)
+            [cell.draw(game_surface) for cell in maze]
+        [cell.color_cell(game_surface,'green') for cell in path_cell_list_bfs]
+        print(CurrentPos)
+        print(pos)    
+    
+    
+        
     # draw maze
     [cell.draw(game_surface) for cell in maze]
+
 
     # gameplay
     if eat_food():
@@ -135,6 +194,7 @@ while True:
 
     # draw player
     game_surface.blit(player_img, player_rect)
+    game_surface.blit(dir_img, dir_rect)
 
     # draw food
     [food.draw() for food in food_list]
