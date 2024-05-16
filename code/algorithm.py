@@ -1,7 +1,6 @@
 import numpy as np
 import create_maze
 
-
 def getMaze2DArray(maze):
     """
     Chuyển listCell thành ma trận 2 chiều
@@ -26,9 +25,7 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     """
     if srcPoint == destPoint:
         return path + [srcPoint]
-
     visited.add(srcPoint)
-
     for dr, dc, wall in [
         (-1, 0, "top"),
         (1, 0, "bottom"),

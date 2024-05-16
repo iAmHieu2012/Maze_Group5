@@ -14,13 +14,15 @@ class Food:
     def draw(self):
         game_surface.blit(self.img, self.rect)
 
-
 def is_collide(x, y):
     tmp_rect = player_rect.move(x, y)
     if tmp_rect.collidelist(walls_collide_list) == -1:
         return False
     return True
 
+# def has_neighbor(x,y):
+    
+    
 
 def eat_food():
     for food in food_list:
@@ -58,6 +60,8 @@ def set_record(record, score):
 
 
 FPS = 60
+#FPS tăng thì tốc độ quét màn hình tăng -> tốc độ nhân vật tăng
+
 pygame.init()
 game_surface = pygame.Surface(RES)
 surface = pygame.display.set_mode((WIDTH + 300, HEIGHT))
@@ -95,6 +99,23 @@ AimPos = findTomAndJerryPos(maze2D)[1]
 # get Tom position
 CurrentPos = findTomAndJerryPos(maze2D)[0]
 
+maze = create_maze.generate_maze()
+generateTomAndJerryPos(maze)
+maze2D = getMaze2DArray(maze)
+path1 = findPathBetween2Point(1, maze, algo=1)
+
+path_cell_list_dfs = getPathCellList(path1,maze2D)
+path2 = findPathBetween2Point(1, maze, algo=2)
+
+path_cell_list_bfs = getPathCellList(path2,maze2D)
+
+
+# get Jerry position
+AimPos = findTomAndJerryPos(maze2D)[1]
+
+# get Tom position
+CurrentPos = findTomAndJerryPos(maze2D)[0]
+
 # player settings
 player_speed = 5
 player_img = pygame.image.load('img/tomface.png').convert_alpha()
@@ -116,7 +137,7 @@ keys = {'a': pygame.K_LEFT, 'd': pygame.K_RIGHT, 'w': pygame.K_UP, 's': pygame.K
 direction = (0, 0)
 
 # food settings
-food_list = [Food() for i in range(3)]
+food_list = [Food() for i in range(10)]
 
 # collision list
 walls_collide_list = sum([cell.get_rects() for cell in maze], [])
@@ -145,10 +166,14 @@ while True:
 
     # controls and movement
     pressed_key = pygame.key.get_pressed()
+
+    #Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
     for key, key_value in keys.items():
         if pressed_key[key_value] and not is_collide(*directions[key]):
             direction = directions[key]
+                   
             break
+    #Nếu nút bấm đầu vào hợp lệ, di chuyển đến hướng đó
     if not is_collide(*direction):
         player_rect.move_ip(direction)
         
@@ -201,6 +226,6 @@ while True:
     surface.blit(text_font.render('record:', True, pygame.Color('magenta'), True), (WIDTH + 20, 470))
     surface.blit(font.render(f'{record}', True, pygame.Color('magenta')), (WIDTH + 20, 540))
 
-    # print(clock.get_fps())
     pygame.display.flip()
     clock.tick(FPS)
+
