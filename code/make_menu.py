@@ -17,9 +17,9 @@ GRAY = (128, 128, 128)
 
 def write_screen(s: str, color, color2, vt, custom_font: int, DISPLAYSURF, size):
     if custom_font == 0:
-        custom_font = pygame.font.Font('AttackGraffiti.ttf', size)
+        custom_font = pygame.font.Font('font/AttackGraffiti.ttf', size)
     elif custom_font == -1:
-        custom_font = pygame.font.Font('Retolia.ttf', size)
+        custom_font = pygame.font.Font('font/Retolia.ttf', size)
     else:
         custom_font = pygame.font.SysFont('calibri', size)
     custom_text = custom_font.render(s, True, color, color2)
@@ -34,7 +34,7 @@ def set_all(s: str):
     
     #DISPLAYSURF.fill(BLUE)
     #pygame.draw.line(DISPLAYSURF, RED, (0, 0), (100, 100), 10)
-    background = pygame.image.load('nice3.png')
+    background = pygame.image.load('img/nice3.png')
     picture = pygame.transform.scale(background, (1280, 720))
     DISPLAYSURF.blit(picture, (0, 0))
 
@@ -53,9 +53,9 @@ def set_all(s: str):
 
 def make_sound(mode = 0):
     if mode == 0:
-        sound_1 = 'mouse.wav'
+        sound_1 = 'sound/mouse.wav'
     else:
-        sound_1 = 'key.wav'
+        sound_1 = 'sound/key.wav'
     sound_1 = pygame.mixer.Sound(sound_1)
     sound_1.play()
 

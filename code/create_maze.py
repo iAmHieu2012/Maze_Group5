@@ -1,8 +1,9 @@
 import pygame
 from random import choice, randrange
 
-RES = WIDTH, HEIGHT = 1026, 730
-TILE = 40
+RES = WIDTH, HEIGHT = 1024, 720
+TILE = 50
+
 cols, rows = WIDTH // TILE, HEIGHT // TILE
 
 class Cell:
@@ -13,7 +14,8 @@ class Cell:
         self.thickness = 4
         self.status = 1
 
-    def draw(self, sc):
+    def color_cell(self, sc, color):
+        pygame.draw.rect(sc, pygame.Color(color),((self.x*TILE), (self.y*TILE), TILE, TILE))
         x, y = self.x * TILE, self.y * TILE
         if self.walls['top']:
             pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
@@ -24,17 +26,29 @@ class Cell:
         if self.walls['left']:
             pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
 
+
+    def draw(self, sc):
+        x, y = self.x * TILE, self.y * TILE
+        if self.walls['top']:
+            pygame.draw.line(sc, pygame.Color('black'), (x - 1, y), (x + TILE + 1, y), self.thickness)
+        if self.walls['right']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y - 1), (x + TILE, y + TILE + 1), self.thickness)
+        if self.walls['bottom']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE - 1, y + TILE), (x + 1, y + TILE), self.thickness)
+        if self.walls['left']:
+            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE - 1), (x, y + 1), self.thickness)
+
     def get_rects(self):
         rects = []
         x, y = self.x * TILE, self.y * TILE
         if self.walls['top']:
-            rects.append(pygame.Rect( (x, y), (TILE, self.thickness) ))
+            rects.append(pygame.Rect( (x, y), (TILE + 2, self.thickness) ))
         if self.walls['right']:
-            rects.append(pygame.Rect( (x + TILE, y), (self.thickness, TILE) ))
+            rects.append(pygame.Rect( (x + TILE, y), (self.thickness, TILE + 2) ))
         if self.walls['bottom']:
-            rects.append(pygame.Rect( (x, y + TILE), (TILE , self.thickness) ))
+            rects.append(pygame.Rect( (x, y + TILE), (TILE + 2, self.thickness) ))
         if self.walls['left']:
-            rects.append(pygame.Rect( (x, y), (self.thickness, TILE) ))
+            rects.append(pygame.Rect( (x, y), (self.thickness, TILE + 2) ))
         return rects
 
     def check_cell(self, x, y):
@@ -65,6 +79,9 @@ class Cell:
     def make_jerry_pos(self):
         self.status = 3
 
+    def make_blank(self):
+        self.status = 1
+
 def remove_walls(current, next):
     dx = current.x - next.x
     if dx == 1:
@@ -86,7 +103,6 @@ def generate_maze():
     current_cell = grid_cells[0]
     array = []
     break_count = 1
-
     while break_count != len(grid_cells):
         current_cell.visited = True
         next_cell = current_cell.check_neighbors(grid_cells)
