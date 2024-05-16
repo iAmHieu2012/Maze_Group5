@@ -25,6 +25,16 @@ class Cell:
             pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
         if self.walls['left']:
             pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
+    def draw(self, sc):
+        x, y = self.x * TILE, self.y * TILE
+        if self.walls['top']:
+            pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
+        if self.walls['right']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
+        if self.walls['bottom']:
+            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
+        if self.walls['left']:
+            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
 
 
     def draw(self, sc):
@@ -51,6 +61,7 @@ class Cell:
             rects.append(pygame.Rect( (x, y), (self.thickness, TILE + 2) ))
         return rects
 
+    
     def check_cell(self, x, y):
         find_index = lambda x, y: x + y * cols
         if x < 0 or x > cols - 1 or y < 0 or y > rows - 1:
@@ -78,6 +89,8 @@ class Cell:
         self.status = 2
     def make_jerry_pos(self):
         self.status = 3
+    def make_blank(self):
+        self.status = 1
 
     def make_blank(self):
         self.status = 1
