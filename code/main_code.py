@@ -4,7 +4,7 @@ from algorithm import *
 
 class Food:
     def __init__(self):
-        self.img = pygame.image.load("img/food.png").convert_alpha()
+        self.img = pygame.image.load("img/cheese.png").convert_alpha()
         self.img = pygame.transform.scale(self.img, (TILE - 10, TILE - 10))
         self.rect = self.img.get_rect()
         self.set_pos()
@@ -38,11 +38,11 @@ def is_game_over():
     global time, score, record, FPS
     if time < 0:
         pygame.time.wait(700)
-        player_rect.center = TILE // 2, TILE // 2
+        # player_rect.center = TILE // 2, TILE // 2
         [food.set_pos() for food in food_list]
         set_record(record, score)
         record = get_record()
-        time, score, FPS = 150, 0, 60
+        time, score, FPS = 20, 0, 60
 
 
 def get_record():
@@ -84,11 +84,6 @@ pygame.display.set_icon(pygame_icon)
 maze = create_maze.generate_maze()
 generateTomAndJerryPos(maze)
 maze2D = getMaze2DArray(maze)
-path1 = findPathBetween2Point(1, maze, algo=1)
-path_cell_list_dfs = getPathCellList(path1, maze2D)
-path2 = findPathBetween2Point(1, maze, algo=2)
-path_cell_list_bfs = getPathCellList(path2, maze2D)
-
 
 # get Jerry position
 AimPos = findTomAndJerryPos(maze2D)[1]
@@ -96,25 +91,13 @@ AimPos = findTomAndJerryPos(maze2D)[1]
 # get Tom position
 CurrentPos = findTomAndJerryPos(maze2D)[0]
 
-maze = create_maze.generate_maze()
-generateTomAndJerryPos(maze)
-maze2D = getMaze2DArray(maze)
-path1 = findPathBetween2Point(1, maze, algo=1)
-
-path_cell_list_dfs = getPathCellList(path1, maze2D)
-path2 = findPathBetween2Point(1, maze, algo=2)
-
-path_cell_list_bfs = getPathCellList(path2, maze2D)
-
-
-# get Jerry position
-AimPos = findTomAndJerryPos(maze2D)[1]
-
-# get Tom position
-CurrentPos = findTomAndJerryPos(maze2D)[0]
+# path1 = findPathBetween2Point(maze, algo=1)
+# path_cell_list_dfs = getPathCellList(path1, maze2D)
+# path2 = findPathBetween2Point(maze, algo=2)
+# path_cell_list_bfs = getPathCellList(path2, maze2D)
 
 # player settings
-player_speed = 4
+player_speed = 4  # TILE must be divided by player_speed
 player_img = pygame.image.load("img/tomface.png").convert_alpha()
 player_img = pygame.transform.scale(
     player_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness)
@@ -154,24 +137,14 @@ walls_collide_list = sum(
     [
         pygame.Rect(0, 0, TILE * create_maze.cols, maze[0].thickness),
         pygame.Rect(0, 0, maze[0].thickness, TILE * create_maze.rows),
-        pygame.Rect(
-            create_maze.cols * TILE - maze[0].thickness,
-            0,
-            maze[0].thickness,
-            TILE * create_maze.rows,
-        ),
-        pygame.Rect(
-            0,
-            create_maze.rows * TILE - maze[0].thickness,
-            TILE * create_maze.cols,
-            maze[0].thickness,
-        ),
-    ],
+        pygame.Rect(create_maze.cols * TILE - maze[0].thickness, 0, maze[0].thickness, TILE * create_maze.rows),
+        pygame.Rect(0, create_maze.rows * TILE - maze[0].thickness, TILE * create_maze.cols, maze[0].thickness)
+    ]
 )
 
 # timer, score, record
 pygame.time.set_timer(pygame.USEREVENT, 1000)
-time = 150
+time = 20
 score = 0
 record = get_record()
 
@@ -200,8 +173,8 @@ while True:
 
     if current_direction == "w" or current_direction == "a":
         pos = (
-            ((player_rect.top - 2* maze[0].thickness) // TILE),
-            ((player_rect.left - 2* maze[0].thickness) // TILE),
+            ((player_rect.top - 2 * maze[0].thickness) // TILE),
+            ((player_rect.left - 2 * maze[0].thickness) // TILE),
         )
     else:
         pos = (
@@ -219,8 +192,8 @@ while True:
                 current_direction = key
                 if key == "w" or key == "a":
                     lastpos = (
-                        ((player_rect.top - 2*maze[0].thickness) // TILE),
-                        ((player_rect.left-2*maze[0].thickness) // TILE),
+                        ((player_rect.top - 2 * maze[0].thickness) // TILE),
+                        ((player_rect.left - 2 * maze[0].thickness) // TILE),
                     )
                 else:
                     lastpos = (
@@ -238,13 +211,13 @@ while True:
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
         pos = (
             ((player_rect.top - maze[0].thickness) // TILE),
-            round((player_rect.left - maze[0].thickness) // TILE),
+            ((player_rect.left - maze[0].thickness) // TILE),
         )
         maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
         maze2D[pos[0]][pos[1]].make_tom_pos()
         CurrentPos = pos
         maze = list(maze2D.flatten())
-        path1 = findPathBetween2Point(1, maze, algo=1)
+        path1 = findPathBetween2Point(maze, algo=1)
         path_cell_list_dfs = getPathCellList(path1, maze2D)
         [cell.draw(game_surface) for cell in maze]
         [cell.color_cell(game_surface, "blue") for cell in path_cell_list_dfs]
@@ -259,21 +232,10 @@ while True:
         maze2D[pos[0]][pos[1]].make_tom_pos()
         CurrentPos = pos
         maze = list(maze2D.flatten())
-        path2 = findPathBetween2Point(1, maze, algo=2)
+        path2 = findPathBetween2Point(maze, algo=2)
         path_cell_list_bfs = getPathCellList(path2, maze2D)
         [cell.draw(game_surface) for cell in maze]
         [cell.color_cell(game_surface, "green") for cell in path_cell_list_bfs]
-
-    if pygame.key.get_pressed()[pygame.K_m]:
-        print(
-            (
-                ((player_rect.top - maze[0].thickness) // TILE),
-                ((player_rect.left - maze[0].thickness) // TILE),
-            )
-        )
-        print(((player_rect.top - maze[0].thickness) / TILE),
-                ((player_rect.left - maze[0].thickness) / TILE))
-        print(player_rect)
 
     # draw maze
     [cell.draw(game_surface) for cell in maze]
@@ -292,9 +254,7 @@ while True:
     [food.draw() for food in food_list]
 
     # draw stats
-    surface.blit(
-        text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10)
-    )
+    surface.blit(text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10))
     surface.blit(font.render(f"{time}", True, pygame.Color("cyan")), (WIDTH + 20, 80))
     surface.blit(
         text_font.render("score", True, pygame.Color("forestgreen")),
