@@ -1,8 +1,10 @@
 import pygame
 from random import choice, randrange
+import algorithm
 
-RES = WIDTH, HEIGHT = 1024, 720
-TILE = 50
+RES = WIDTH, HEIGHT = 1080, 720
+TILE = 60
+THICK = 4
 
 cols, rows = WIDTH // TILE, HEIGHT // TILE
 
@@ -11,54 +13,47 @@ class Cell:
         self.x, self.y = x, y
         self.walls = {'top': True, 'right': True, 'bottom': True, 'left': True}
         self.visited = False
-        self.thickness = 4
+        self.thickness = THICK
         self.status = 1
 
+    def draw(self, sc):
+        x, y = self.x * TILE, self.y * TILE
+        if self.walls['top']:
+            pygame.draw.rect(sc, pygame.Color('green4'), pygame.Rect(x-self.thickness,y-self.thickness,TILE+2*self.thickness,self.thickness))
+        if self.walls['right']:
+            pygame.draw.rect(sc, pygame.Color('green4'), pygame.Rect(x+TILE,y-self.thickness,self.thickness,TILE+2*self.thickness))
+        if self.walls['bottom']:
+            pygame.draw.rect(sc, pygame.Color('green4'), pygame.Rect(x-self.thickness,y+TILE,TILE+2*self.thickness,self.thickness))
+        if self.walls['left']:
+            pygame.draw.rect(sc, pygame.Color('green4'), pygame.Rect(x-self.thickness,y-self.thickness,self.thickness,TILE+2*self.thickness))
+            
     def color_cell(self, sc, color):
         pygame.draw.rect(sc, pygame.Color(color),((self.x*TILE), (self.y*TILE), TILE, TILE))
-        x, y = self.x * TILE, self.y * TILE
-        if self.walls['top']:
-            pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
-        if self.walls['right']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
-        if self.walls['bottom']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
-        if self.walls['left']:
-            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
-    def draw(self, sc):
-        x, y = self.x * TILE, self.y * TILE
-        if self.walls['top']:
-            pygame.draw.line(sc, pygame.Color('black'), (x, y), (x + TILE, y), self.thickness)
-        if self.walls['right']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y), (x + TILE, y + TILE), self.thickness)
-        if self.walls['bottom']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y + TILE), (x , y + TILE), self.thickness)
-        if self.walls['left']:
-            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE), (x, y), self.thickness)
+        self.draw(sc)
 
 
-    def draw(self, sc):
-        x, y = self.x * TILE, self.y * TILE
-        if self.walls['top']:
-            pygame.draw.line(sc, pygame.Color('black'), (x - 1, y), (x + TILE + 1, y), self.thickness)
-        if self.walls['right']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y - 1), (x + TILE, y + TILE + 1), self.thickness)
-        if self.walls['bottom']:
-            pygame.draw.line(sc, pygame.Color('black'), (x + TILE - 1, y + TILE), (x + 1, y + TILE), self.thickness)
-        if self.walls['left']:
-            pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE - 1), (x, y + 1), self.thickness)
+    # def draw(self, sc):
+    #     x, y = self.x * TILE, self.y * TILE
+    #     if self.walls['top']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x - 1, y), (x + TILE + 1, y), self.thickness)
+    #     if self.walls['right']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y - 1), (x + TILE, y + TILE + 1), self.thickness)
+    #     if self.walls['bottom']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x + TILE - 1, y + TILE), (x + 1, y + TILE), self.thickness)
+    #     if self.walls['left']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE - 1), (x, y + 1), self.thickness)
 
     def get_rects(self):
         rects = []
         x, y = self.x * TILE, self.y * TILE
         if self.walls['top']:
-            rects.append(pygame.Rect( (x, y), (TILE + 2, self.thickness) ))
+            rects.append(pygame.Rect(x-self.thickness,y-self.thickness,TILE+2*self.thickness,self.thickness))
         if self.walls['right']:
-            rects.append(pygame.Rect( (x + TILE, y), (self.thickness, TILE + 2) ))
+            rects.append(pygame.Rect(x+TILE,y-self.thickness,self.thickness,TILE+2*self.thickness))
         if self.walls['bottom']:
-            rects.append(pygame.Rect( (x, y + TILE), (TILE + 2, self.thickness) ))
+            rects.append(pygame.Rect(x-self.thickness,y+TILE,TILE+2*self.thickness,self.thickness))
         if self.walls['left']:
-            rects.append(pygame.Rect( (x, y), (self.thickness, TILE + 2) ))
+            rects.append(pygame.Rect(x-self.thickness,y-self.thickness,self.thickness,TILE+2*self.thickness))
         return rects
 
     
