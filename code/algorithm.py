@@ -1,6 +1,8 @@
 import numpy as np
 import create_maze
 
+MODE = 15
+
 def getMaze2DArray(maze):
     """
     Chuyển listCell thành ma trận 2 chiều
@@ -11,6 +13,7 @@ def getMaze2DArray(maze):
 def isAbleToEnter(currP, neighP, maze2DArray, wall):
     """
     Kiểm tra các ô bên cạnh có thể đi vào hay không
+    neighP nằm theo hướng của wall
     """
     return (
         (0 <= neighP[0] < maze2DArray.shape[0])
@@ -87,7 +90,7 @@ def generateTomAndJerryPos(maze):
     )
     maze2DArray = getMaze2DArray(maze)
 
-    while not bfs(tom, jerry, maze2DArray, visited=set()):
+    while not bfs(tom, jerry, maze2DArray, visited=set()) or len(bfs(tom, jerry, maze2DArray, visited=set()))<MODE:
         tom = (
             np.random.randint(0, create_maze.rows),
             np.random.randint(0, create_maze.cols),
@@ -146,6 +149,8 @@ def getPathCellList(path, maze2DArray):
 
 if __name__ == "__main__":
     maze = create_maze.generate_maze()
+    for cell in maze:
+        print(cell.x,cell.y)
     generateTomAndJerryPos(maze)
 
     path = findPathBetween2Point(1, maze, algo=1)
