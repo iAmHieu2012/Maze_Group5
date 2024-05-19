@@ -87,9 +87,6 @@ class Cell:
     def make_blank(self):
         self.status = 1
 
-    def make_blank(self):
-        self.status = 1
-
 def remove_walls(current, next):
     dx = current.x - next.x
     if dx == 1:

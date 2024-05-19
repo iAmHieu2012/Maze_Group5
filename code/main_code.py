@@ -47,8 +47,6 @@ def eat_food():
 def is_game_over():
     global time, score, record, FPS
     if time < 0:
-        pygame.time.wait(700)
-        # player_rect.center = TILE // 2, TILE // 2
         [food.set_pos() for food in food_list]
         set_record(record, score)
         record = get_record()
@@ -115,7 +113,7 @@ def new_game():
         CurrentPos[0] * TILE + maze[0].thickness,
     )
     
-    dir_rect.topleft = (
+    des_rect.topleft = (
         AimPos[1] * TILE + maze[0].thickness,
         AimPos[0] * TILE + maze[0].thickness,
     )
@@ -153,12 +151,13 @@ player_rect.topleft = (
     CurrentPos[0] * TILE + maze[0].thickness,
 )
 
-dir_img = pygame.image.load("img/jerryface.png").convert_alpha()
-dir_img = pygame.transform.scale(
-    dir_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness)
+# 
+des_img = pygame.image.load("img/jerryface.png").convert_alpha()
+des_img = pygame.transform.scale(
+    des_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness)
 )
-dir_rect = dir_img.get_rect()
-dir_rect.topleft = (
+des_rect = des_img.get_rect()
+des_rect.topleft = (
     AimPos[1] * TILE + maze[0].thickness,
     AimPos[0] * TILE + maze[0].thickness,
 )
@@ -246,17 +245,17 @@ while True:
         # Get player position (Tom's Position)
         if current_direction == "w" or current_direction == "a":
             pos = (
-                ((player_rect.top - 2 * maze[0].thickness) // TILE),
-                ((player_rect.left - 2 * maze[0].thickness) // TILE),
+                np.ceil((player_rect.top - maze[0].thickness) / TILE),
+                np.ceil((player_rect.left -  maze[0].thickness) / TILE),
             )
         else:
             pos = (
-                ((player_rect.top - maze[0].thickness) // TILE),
-                ((player_rect.left - maze[0].thickness) // TILE),
+                np.floor((player_rect.top - maze[0].thickness) / TILE),
+                np.floor((player_rect.left - maze[0].thickness) / TILE),
         )
             
         # Action when player won
-        if pos == AimPos:
+        if player_rect.colliderect(des_rect):
             surface.blit(end_game_surface,(0,0))
             end_game_surface.blit(bg_tom_win,(0,0))
             if pygame.mouse.get_pressed()[0]:
@@ -289,16 +288,7 @@ while True:
                     if not is_set:
                         is_set = True
                         current_direction = key
-                        if key == "w" or key == "a":
-                            lastpos = (
-                                ((player_rect.top - 2 * maze[0].thickness) // TILE),
-                                ((player_rect.left - 2 * maze[0].thickness) // TILE),
-                            )
-                        else:
-                            lastpos = (
-                                ((player_rect.top - maze[0].thickness) // TILE),
-                                ((player_rect.left - maze[0].thickness) // TILE),
-                            )
+                        lastpos = pos
                     break
 
             if pos == lastpos and not is_collide(*direction):
@@ -345,7 +335,7 @@ while True:
                 score += 1
             # draw player
             game_surface.blit(player_img, player_rect)
-            game_surface.blit(dir_img, dir_rect)
+            game_surface.blit(des_img, des_rect)
 
             # draw food
             [food.draw() for food in food_list]
