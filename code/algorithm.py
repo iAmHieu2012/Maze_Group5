@@ -26,9 +26,9 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     """
     Thuật toán DFS
     """
+    visited.add(srcPoint)
     if srcPoint == destPoint:
         return path + [srcPoint]
-    visited.add(srcPoint)
     for dr, dc, wall in [
         (-1, 0, "top"),
         (1, 0, "bottom"),
