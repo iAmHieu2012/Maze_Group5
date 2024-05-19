@@ -55,6 +55,7 @@ def is_game_over():
         time, score, FPS = 20, 0, 60
 
 
+
 def get_record():
     try:
         with open("record") as f:
@@ -77,6 +78,7 @@ FPS = 60
 pygame.init()
 game_surface = pygame.Surface(RES)
 pause_surface = pygame.Surface((WIDTH + 300, HEIGHT))
+end_game_surface = pygame.Surface((WIDTH + 300, HEIGHT))
 surface = pygame.display.set_mode((WIDTH + 300, HEIGHT))
 clock = pygame.time.Clock()
 
@@ -84,6 +86,10 @@ clock = pygame.time.Clock()
 bg_game = pygame.image.load("img/background.jpg").convert()
 bg_game = pygame.transform.scale(bg_game, (WIDTH, HEIGHT))
 bg_pause = pygame.image.load("img/bg_pause.png").convert()
+bg_tom_win = pygame.image.load("img/tomwin.png").convert()
+bg_tom_win = pygame.transform.scale(bg_tom_win, (WIDTH+300, HEIGHT))
+bg_jerry_win = pygame.image.load("img/jerrywin.png").convert()
+bg_jerry_win = pygame.transform.scale(bg_jerry_win, (WIDTH+300, HEIGHT))
 bg = pygame.image.load("img/bg_main.jpg").convert()
 
 # game icon
@@ -92,6 +98,38 @@ pygame_icon = pygame.image.load("img/maze_icon.png")
 pygame.display.set_icon(pygame_icon)
 
 
+def new_game():
+    # get maze
+    maze = create_maze.generate_maze()
+    maze = generateTomAndJerryPos(maze)
+    maze2D = getMaze2DArray(maze)
+
+    # get Jerry position
+    AimPos = findTomAndJerryPos(maze2D)[1]
+
+    # get Tom position
+    CurrentPos = findTomAndJerryPos(maze2D)[0]
+
+    player_rect.topleft = (
+        CurrentPos[1] * TILE + maze[0].thickness,
+        CurrentPos[0] * TILE + maze[0].thickness,
+    )
+    
+    dir_rect.topleft = (
+        AimPos[1] * TILE + maze[0].thickness,
+        AimPos[0] * TILE + maze[0].thickness,
+    )
+    walls_collide_list = sum(
+        [cell.get_rects() for cell in maze],
+        [
+            pygame.Rect(0, 0, TILE * create_maze.cols, maze[0].thickness),
+            pygame.Rect(0, 0, maze[0].thickness, TILE * create_maze.rows),
+            pygame.Rect(create_maze.cols * TILE - maze[0].thickness, 0, maze[0].thickness, TILE * create_maze.rows),
+            pygame.Rect(0, create_maze.rows * TILE - maze[0].thickness, TILE * create_maze.cols, maze[0].thickness)
+        ]
+    )
+    return maze, maze2D, walls_collide_list
+    
 # get maze
 maze = create_maze.generate_maze()
 generateTomAndJerryPos(maze)
@@ -102,11 +140,6 @@ AimPos = findTomAndJerryPos(maze2D)[1]
 
 # get Tom position
 CurrentPos = findTomAndJerryPos(maze2D)[0]
-
-# path1 = findPathBetween2Point(maze, algo=1)
-# path_cell_list_dfs = getPathCellList(path1, maze2D)
-# path2 = findPathBetween2Point(maze, algo=2)
-# path_cell_list_bfs = getPathCellList(path2, maze2D)
 
 # player settings
 player_speed = 4  # TILE must be divided by player_speed
@@ -173,13 +206,16 @@ current_direction = None
 # pause status
 pause = False
 
-# resume button
+# button
+
 resume_button = Button("img/resumebutton.png", 900, 520)
 home_button = Button("img/menubutton.png", 1100, 520)
 pause_button = Button("img/pausebutton.png", 1300,50)
 
 
 while True:
+    
+    # Menu pause game
     if pause:
         surface.blit(pause_surface,(0,0))
         pause_surface.blit(bg_pause, (0,0))
@@ -204,13 +240,10 @@ while True:
         if event.type == pygame.USEREVENT and not pause:
             time -= 1
 
-
+    # Play game
     if not pause:
-        surface.blit(bg, (WIDTH, 0))
-        surface.blit(game_surface, (0, 0))
-        game_surface.blit(bg_game, (0, 0))
-        # controls and movement
-
+        
+        # Get player position (Tom's Position)
         if current_direction == "w" or current_direction == "a":
             pos = (
                 ((player_rect.top - 2 * maze[0].thickness) // TILE),
@@ -220,103 +253,128 @@ while True:
             pos = (
                 ((player_rect.top - maze[0].thickness) // TILE),
                 ((player_rect.left - maze[0].thickness) // TILE),
-            )
-        pressed_key = pygame.key.get_pressed()
-
-        # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
-        for key, key_value in keys.items():
-            if pressed_key[key_value] and not is_collide(*directions[key]):
-                direction = directions[key]
-                if not is_set:
-                    is_set = True
-                    current_direction = key
-                    if key == "w" or key == "a":
-                        lastpos = (
-                            ((player_rect.top - 2 * maze[0].thickness) // TILE),
-                            ((player_rect.left - 2 * maze[0].thickness) // TILE),
-                        )
-                    else:
-                        lastpos = (
-                            ((player_rect.top - maze[0].thickness) // TILE),
-                            ((player_rect.left - maze[0].thickness) // TILE),
-                        )
-                break
-
-        if pos == lastpos and not is_collide(*direction):
-            player_rect.move_ip(direction)
+        )
+            
+        # Action when player won
+        if pos == AimPos:
+            surface.blit(end_game_surface,(0,0))
+            end_game_surface.blit(bg_tom_win,(0,0))
+            if pygame.mouse.get_pressed()[0]:
+                maze, maze2D,walls_collide_list = new_game()
+                is_game_over()
+                continue
+        # Action when player failed
+        elif time < 0:
+            surface.blit(end_game_surface,(0,0))
+            end_game_surface.blit(bg_jerry_win,(0,0))
+            if pygame.mouse.get_pressed()[0]:
+                maze, maze2D,walls_collide_list = new_game()
+                is_game_over()
+                continue
+            
+        # playing
         else:
-            is_set = False
-
-        # Press ESC to see path dfs
-        if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-            pos = (
-                ((player_rect.top - maze[0].thickness) // TILE),
-                ((player_rect.left - maze[0].thickness) // TILE),
-            )
-            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
-            maze2D[pos[0]][pos[1]].make_tom_pos()
-            CurrentPos = pos
-            maze = list(maze2D.flatten())
-            path1 = findPathBetween2Point(maze, algo=1)
-            path_cell_list_dfs = getPathCellList(path1, maze2D)
-            [cell.draw(game_surface) for cell in maze]
-            [cell.color_cell(game_surface, "blue") for cell in path_cell_list_dfs]
-
-        # Press TAB to see path bfs
-        if pygame.key.get_pressed()[pygame.K_TAB]:
-            pos = (
-                ((player_rect.top - maze[0].thickness) // TILE),
-                ((player_rect.left - maze[0].thickness) // TILE),
-            )
-            maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
-            maze2D[pos[0]][pos[1]].make_tom_pos()
-            CurrentPos = pos
-            maze = list(maze2D.flatten())
-            path2 = findPathBetween2Point(maze, algo=2)
-            path_cell_list_bfs = getPathCellList(path2, maze2D)
-            [cell.draw(game_surface) for cell in maze]
-            [cell.color_cell(game_surface, "green") for cell in path_cell_list_bfs]
-
-        # draw maze
-        [cell.draw(game_surface) for cell in maze]
-
-        # gameplay
-        if eat_food():
-            FPS += 10
-            score += 1
-        is_game_over()
-
-        # draw player
-        game_surface.blit(player_img, player_rect)
-        game_surface.blit(dir_img, dir_rect)
-
-        # draw food
-        [food.draw() for food in food_list]
-
-        # draw stats
-        surface.blit(text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10))
-        surface.blit(font.render(f"{time}", True, pygame.Color("cyan")), (WIDTH + 20, 80))
-        surface.blit(
-            text_font.render("score", True, pygame.Color("forestgreen")),
-            (WIDTH + 20, 240),
-        )
-        surface.blit(
-            font.render(f"{score}", True, pygame.Color("forestgreen")), (WIDTH + 20, 310)
-        )
-        surface.blit(
-            text_font.render("record", True, pygame.Color("magenta")),
-            (WIDTH + 20, 470),
-        )
-        surface.blit(
-            font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
-        )
-
-        clock.tick(FPS)
+            surface.blit(bg, (WIDTH, 0))
+            surface.blit(game_surface, (0, 0))
+            game_surface.blit(bg_game, (0, 0))
         
-        #draw pause button
-        pause_button.draw(surface)
-        if pygame.mouse.get_pressed()[0]:
-            if pause_button.rect.collidepoint(pygame.mouse.get_pos()):
-                pause = True
+            # controls and movement
+
+            pressed_key = pygame.key.get_pressed()
+
+            # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
+            for key, key_value in keys.items():
+                if pressed_key[key_value] and not is_collide(*directions[key]):
+                    direction = directions[key]
+                    if not is_set:
+                        is_set = True
+                        current_direction = key
+                        if key == "w" or key == "a":
+                            lastpos = (
+                                ((player_rect.top - 2 * maze[0].thickness) // TILE),
+                                ((player_rect.left - 2 * maze[0].thickness) // TILE),
+                            )
+                        else:
+                            lastpos = (
+                                ((player_rect.top - maze[0].thickness) // TILE),
+                                ((player_rect.left - maze[0].thickness) // TILE),
+                            )
+                    break
+
+            if pos == lastpos and not is_collide(*direction):
+                player_rect.move_ip(direction)
+            else:
+                is_set = False
+
+            # Press ESC to see path dfs
+            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+                pos = (
+                    ((player_rect.top - maze[0].thickness) // TILE),
+                    ((player_rect.left - maze[0].thickness) // TILE),
+                )
+                maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+                maze2D[pos[0]][pos[1]].make_tom_pos()
+                CurrentPos = pos
+                maze = list(maze2D.flatten())
+                path1 = findPathBetween2Point(maze, algo=1)
+                path_cell_list_dfs = getPathCellList(path1, maze2D)
+                [cell.draw(game_surface) for cell in maze]
+                [cell.color_cell(game_surface, "blue") for cell in path_cell_list_dfs]
+
+            # Press TAB to see path bfs
+            if pygame.key.get_pressed()[pygame.K_TAB]:
+                pos = (
+                    ((player_rect.top - maze[0].thickness) // TILE),
+                    ((player_rect.left - maze[0].thickness) // TILE),
+                )
+                maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+                maze2D[pos[0]][pos[1]].make_tom_pos()
+                CurrentPos = pos
+                maze = list(maze2D.flatten())
+                path2 = findPathBetween2Point(maze, algo=2)
+                path_cell_list_bfs = getPathCellList(path2, maze2D)
+                [cell.draw(game_surface) for cell in maze]
+                [cell.color_cell(game_surface, "green") for cell in path_cell_list_bfs]
+
+            # draw maze
+            [cell.draw(game_surface) for cell in maze]
+
+            # gameplay
+            if eat_food():
+                FPS += 10
+                score += 1
+            # draw player
+            game_surface.blit(player_img, player_rect)
+            game_surface.blit(dir_img, dir_rect)
+
+            # draw food
+            [food.draw() for food in food_list]
+
+            # draw stats
+            surface.blit(text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10))
+            surface.blit(font.render(f"{time}", True, pygame.Color("cyan")), (WIDTH + 20, 80))
+            surface.blit(
+                text_font.render("score", True, pygame.Color("forestgreen")),
+                (WIDTH + 20, 240),
+            )
+            surface.blit(
+                font.render(f"{score}", True, pygame.Color("forestgreen")), (WIDTH + 20, 310)
+            )
+            surface.blit(
+                text_font.render("record", True, pygame.Color("magenta")),
+                (WIDTH + 20, 470),
+            )
+            surface.blit(
+                font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
+            )
+
+            clock.tick(FPS)
+            
+            #draw pause button
+            pause_button.draw(surface)
+            if pygame.mouse.get_pressed()[0]:
+                if pause_button.rect.collidepoint(pygame.mouse.get_pos()):
+                    pause = True
+                
     pygame.display.update()
 
