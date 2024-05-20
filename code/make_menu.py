@@ -175,6 +175,7 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
     elif mode == 1: #done sucess or failed
         while True:
             mode == 1 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
+            print('x')
             for event in pygame.event.get(): 
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
