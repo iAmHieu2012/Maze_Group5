@@ -3,6 +3,7 @@ import create_maze
 
 MODE = 15
 
+
 def getMaze2DArray(maze):
     """
     Chuyển listCell thành ma trận 2 chiều
@@ -37,7 +38,9 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     ]:
         neighRow, neighCol = srcPoint[0] + dr, srcPoint[1] + dc
         neighPoint = (neighRow, neighCol)
-        if neighPoint not in visited and isAbleToEnter(srcPoint, neighPoint, maze2DArray, wall):
+        if neighPoint not in visited and isAbleToEnter(
+            srcPoint, neighPoint, maze2DArray, wall
+        ):
             result = dfs(neighPoint, destPoint, maze2DArray, path + [srcPoint], visited)
             if result:
                 return result
@@ -90,7 +93,10 @@ def generateTomAndJerryPos(maze):
     )
     maze2DArray = getMaze2DArray(maze)
 
-    while not bfs(tom, jerry, maze2DArray, visited=set()) or len(bfs(tom, jerry, maze2DArray, visited=set()))<MODE:
+    while (
+        not bfs(tom, jerry, maze2DArray, visited=set())
+        or len(bfs(tom, jerry, maze2DArray, visited=set())) < MODE
+    ):
         tom = (
             np.random.randint(0, create_maze.rows),
             np.random.randint(0, create_maze.cols),
@@ -129,7 +135,7 @@ def findPathBetween2Point(maze, algo: int):
     maze2DArray = getMaze2DArray(maze)
 
     tom, jerry = findTomAndJerryPos(maze2DArray)
-    if tom == (-1,-1) or jerry == (-1,-1):
+    if tom == (-1, -1) or jerry == (-1, -1):
         return None
     if algo == 1:
         visited = set()

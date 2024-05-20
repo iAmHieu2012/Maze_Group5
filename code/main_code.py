@@ -1,6 +1,6 @@
 from create_maze import *
 from algorithm import *
-
+# from soundbar import *
 
 class Food:
     def __init__(self):
@@ -46,11 +46,10 @@ def eat_food():
 
 def is_game_over():
     global time, score, record, FPS
-    if time < 0:
-        [food.set_pos() for food in food_list]
-        set_record(record, score)
-        record = get_record()
-        time, score, FPS = 20, 0, 60
+    [food.set_pos() for food in food_list]
+    set_record(record, score)
+    record = get_record()
+    time, score, FPS = 20, 0, 60
 
 
 
@@ -74,6 +73,7 @@ FPS = 60
 # FPS tăng thì tốc độ quét màn hình tăng -> tốc độ nhân vật tăng
 
 pygame.init()
+pygame.mixer.init()
 game_surface = pygame.Surface(RES)
 pause_surface = pygame.Surface((WIDTH + 300, HEIGHT))
 end_game_surface = pygame.Surface((WIDTH + 300, HEIGHT))
@@ -151,7 +151,7 @@ player_rect.topleft = (
     CurrentPos[0] * TILE + maze[0].thickness,
 )
 
-# 
+# destination settings
 des_img = pygame.image.load("img/jerryface.png").convert_alpha()
 des_img = pygame.transform.scale(
     des_img, (TILE - 2 * maze[0].thickness, TILE - 2 * maze[0].thickness)
@@ -196,6 +196,7 @@ record = get_record()
 # fonts
 font = pygame.font.Font(r"./font/Shermlock.ttf", 150)
 text_font = pygame.font.Font(r"./font/Shermlock.ttf", 80)
+mini_text_font = pygame.font.Font(r"./font/Shermlock.ttf", 40)
 
 # save last position and the state of setting lastpos
 lastpos = (-1, -1)
@@ -206,58 +207,70 @@ current_direction = None
 pause = False
 
 # button
-
 resume_button = Button("img/resumebutton.png", 900, 520)
 home_button = Button("img/menubutton.png", 1100, 520)
 pause_button = Button("img/pausebutton.png", 1300,50)
+# sound_button = Button("img/resumebutton.png", 1200,570)
 
 
-while True:
-    
-    # Menu pause game
-    if pause:
-        surface.blit(pause_surface,(0,0))
-        pause_surface.blit(bg_pause, (0,0))
-        pause_surface.blit(text_font.render("CONTINUE?", True, pygame.Color("white")), (880, 400))
-        resume_button.draw(pause_surface)
-        home_button.draw(pause_surface)
-        if pygame.mouse.get_pressed()[0]:
-            if resume_button.rect.collidepoint(pygame.mouse.get_pos()):
-                pause = False
-            if resume_button.rect.collidepoint(pygame.mouse.get_pos()):
-                # Go back home()
-                pause = False
-            
+def pause_game():
+    surface.blit(pause_surface,(0,0))
+    pause_surface.blit(bg_pause, (0,0))
+    pause_surface.blit(text_font.render("CONTINUE?", True, pygame.Color("white")), (880, 400))
+    resume_button.draw(pause_surface)
+    home_button.draw(pause_surface)
+    if pygame.mouse.get_pressed()[0]:
+        if resume_button.rect.collidepoint(pygame.mouse.get_pos()):
+            return False
+        if resume_button.rect.collidepoint(pygame.mouse.get_pos()):
+            # Go back home()
+            return False
+    return True
+
+def get_player_current_cell():
+    # Get player position (Tom's Position)
+    if current_direction == "w" or current_direction == "a":
+        pos = (
+            np.ceil((player_rect.top - maze[0].thickness) / TILE),
+            np.ceil((player_rect.left -  maze[0].thickness) / TILE),
+        )
+    else:
+        pos = (
+            np.floor((player_rect.top - maze[0].thickness) / TILE),
+            np.floor((player_rect.left - maze[0].thickness) / TILE),
+        )
+    return pos
    
-        
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            running = False
             exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 pause = False if pause else True
         if event.type == pygame.USEREVENT and not pause:
             time -= 1
+    
+    # Menu pause game
+    if pause:
+        pause = pause_game()
+        
+        # soundbar
+        # soundbar.x = soundbar(1000,1000)
+        
 
     # Play game
     if not pause:
         
-        # Get player position (Tom's Position)
-        if current_direction == "w" or current_direction == "a":
-            pos = (
-                np.ceil((player_rect.top - maze[0].thickness) / TILE),
-                np.ceil((player_rect.left -  maze[0].thickness) / TILE),
-            )
-        else:
-            pos = (
-                np.floor((player_rect.top - maze[0].thickness) / TILE),
-                np.floor((player_rect.left - maze[0].thickness) / TILE),
-        )
+        pos = get_player_current_cell()
             
         # Action when player won
         if player_rect.colliderect(des_rect):
             surface.blit(end_game_surface,(0,0))
             end_game_surface.blit(bg_tom_win,(0,0))
+            end_game_surface.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (850, 500))
             if pygame.mouse.get_pressed()[0]:
                 maze, maze2D,walls_collide_list = new_game()
                 is_game_over()
@@ -266,6 +279,7 @@ while True:
         elif time < 0:
             surface.blit(end_game_surface,(0,0))
             end_game_surface.blit(bg_jerry_win,(0,0))
+            end_game_surface.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (850, 500))
             if pygame.mouse.get_pressed()[0]:
                 maze, maze2D,walls_collide_list = new_game()
                 is_game_over()
