@@ -1,7 +1,7 @@
 import numpy as np
 import create_maze
 
-MODE = 15
+MODE = 50
 
 
 def getMaze2DArray(maze):
