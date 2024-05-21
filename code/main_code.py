@@ -1,5 +1,7 @@
 from create_maze import *
 from algorithm import *
+from autoplay import *
+from time import sleep
 
 
 class Food:
@@ -111,8 +113,7 @@ bg_tom_win = pygame.transform.scale(bg_tom_win, (WIDTH+300, HEIGHT))
 bg_jerry_win = pygame.image.load("img/jerrywin.png").convert()
 bg_jerry_win = pygame.transform.scale(bg_jerry_win, (WIDTH+300, HEIGHT))
 
-hint_box = pygame.image.load("img/box.png").convert()
-hint_box = pygame.transform.scale(hint_box, (700, 600))
+
 
 bg = pygame.image.load("img/bg_main.jpg").convert()
 
@@ -166,7 +167,7 @@ AimPos = findTomAndJerryPos(maze2D)[1]
 CurrentPos = findTomAndJerryPos(maze2D)[0]
 
 # player settings
-player_speed = 10  # TILE must be divided by player_speed
+player_speed = 4  # TILE must be divided by player_speed
 player_img = pygame.image.load("img/tomface.png").convert_alpha()
 player_img = pygame.transform.scale(
     player_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
@@ -187,6 +188,12 @@ des_rect.topleft = (
     AimPos[1] * create_maze.TILE + maze[0].thickness,
     AimPos[0] * create_maze.TILE + maze[0].thickness,
 )
+# hint starlight
+hint_img = pygame.image.load("img/star.png").convert_alpha()
+hint_img = pygame.transform.scale(
+    hint_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+)
+hint_rect = hint_img.get_rect()
 # directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
 # keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
 directions = {
@@ -239,7 +246,9 @@ mini_text_font = pygame.font.Font(r"./font/Shermlock.ttf", 40)
 lastpos = (-1, -1)
 is_set = False
 current_direction = None
+default_algo = 1
 # pause status, win status
+autoplay_pause = False
 pause = False
 finish = False
 # hint status
@@ -264,7 +273,7 @@ def pause_game():
     if pygame.mouse.get_pressed()[0]:
         if play_button.rect.collidepoint(pygame.mouse.get_pos()):
             return False
-        if play_button.rect.collidepoint(pygame.mouse.get_pos()):
+        if home_button.rect.collidepoint(pygame.mouse.get_pos()):
             # Go back home()
             return False
     return True
@@ -284,7 +293,8 @@ def get_player_current_cell():
     pos = (int(pos[0]),int(pos[1]))
     return pos
 
-
+count = 0
+times_move = 0
 #main    
 running = True
 while running:
@@ -295,6 +305,8 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 pause = False if pause else True
+            if event.key == pygame.K_h:
+                autoplay_pause = False if autoplay_pause else True
         if event.type == pygame.USEREVENT and not pause:
             time -= 1
     # Menu pause game
@@ -321,6 +333,8 @@ while running:
                     time = -1
                     is_game_over()
                     finish = False
+                    hint1, hint_2, hint = False, False, False
+                    is_set = False
                     continue
             else:
                 surface.blit(bg, (WIDTH, 0))
@@ -351,36 +365,32 @@ while running:
                 else:
                     is_set = False
 
-                # Press ESC to see path dfs
-                if hint_1:
-                    # pos = (
-                    #     ((player_rect.top - maze[0].thickness) // create_maze.TILE),
-                    #     ((player_rect.left - maze[0].thickness) // create_maze.TILE),
-                    # )
+                if hint_1 and not hint:
+                    hint = True
                     maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
                     maze2D[pos[0]][pos[1]].make_tom_pos()
                     CurrentPos = pos
                     maze = list(maze2D.flatten())
                     path1 = findPathBetween2Point(maze, algo=1)
                     path_cell_list_dfs = getPathCellList(path1, maze2D)
+                    five_first_step = path_cell_list_dfs[1:6].copy()
                     [cell.draw(game_surface) for cell in maze]
-                    [cell.color_cell(game_surface, "blue") for cell in path_cell_list_dfs]
 
-                # Press TAB to see path bfs
-                if hint_2:
-                    # pos = (
-                    #     ((player_rect.top - maze[0].thickness) // create_maze.TILE),
-                    #     ((player_rect.left - maze[0].thickness) // create_maze.TILE),
-                    # )
+                if hint_2 and not hint:
+                    hint = True
                     maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
                     maze2D[pos[0]][pos[1]].make_tom_pos()
                     CurrentPos = pos
                     maze = list(maze2D.flatten())
                     path2 = findPathBetween2Point(maze, algo=2)
                     path_cell_list_bfs = getPathCellList(path2, maze2D)
+                    five_first_step = path_cell_list_bfs[1:6].copy()
                     [cell.draw(game_surface) for cell in maze]
-                    [cell.color_cell(game_surface, "green") for cell in path_cell_list_bfs]
 
+                if hint:
+                    for i in range(5):
+                        hint_rect.topleft = (maze[0].thickness + five_first_step[i].x*create_maze.TILE,maze[0].thickness + five_first_step[i].y*create_maze.TILE)
+                        game_surface.blit(hint_img, hint_rect)
                 # draw maze
                 [cell.draw(game_surface) for cell in maze]
 
@@ -408,6 +418,8 @@ while running:
                     time = -1
                     is_game_over()
                     finish = False
+                    hint1, hint_2, hint = False, False, False
+                    is_set = False
                     continue
             # Action when player failed
             elif time < 0:
@@ -423,6 +435,8 @@ while running:
                     CurrentPos = findTomAndJerryPos(maze2D)[0]
                     is_game_over()
                     finish = False
+                    hint1, hint_2, hint = False, False, False
+                    is_set = False
                     continue
             else:
                 surface.blit(bg, (WIDTH, 0))
@@ -452,47 +466,32 @@ while running:
                     player_rect.move_ip(direction)
                 else:
                     is_set = False
-                # path dfs
-                if hint_1:
-                    # pos = (
-                    #     ((player_rect.top - maze[0].thickness) // create_maze.TILE),
-                    #     ((player_rect.left - maze[0].thickness) // create_maze.TILE),
-                    # )
+                if hint_1 and not hint:
+                    hint = True
                     maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
                     maze2D[pos[0]][pos[1]].make_tom_pos()
                     CurrentPos = pos
                     maze = list(maze2D.flatten())
                     path1 = findPathBetween2Point(maze, algo=1)
                     path_cell_list_dfs = getPathCellList(path1, maze2D)
+                    five_first_step = path_cell_list_dfs[1:6].copy()
                     [cell.draw(game_surface) for cell in maze]
-                    [cell.color_cell(game_surface, "blue") for cell in path_cell_list_dfs]
 
-                # path bfs
-                if hint_2:
-                    # pos = (
-                    #     ((player_rect.top - maze[0].thickness) // create_maze.TILE),
-                    #     ((player_rect.left - maze[0].thickness) // create_maze.TILE),
-                    # )
+                if hint_2 and not hint:
+                    hint = True
                     maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
                     maze2D[pos[0]][pos[1]].make_tom_pos()
                     CurrentPos = pos
                     maze = list(maze2D.flatten())
                     path2 = findPathBetween2Point(maze, algo=2)
                     path_cell_list_bfs = getPathCellList(path2, maze2D)
+                    five_first_step = path_cell_list_bfs[1:6].copy()
                     [cell.draw(game_surface) for cell in maze]
-                    [cell.color_cell(game_surface, "green") for cell in path_cell_list_bfs]
 
-                if pygame.key.get_pressed()[pygame.K_m]:
-                    print(
-                        (
-                            ((player_rect.top - maze[0].thickness) // create_maze.TILE),
-                            ((player_rect.left - maze[0].thickness) // create_maze.TILE),
-                        )
-                    )
-                    print(((player_rect.top - maze[0].thickness) / create_maze.TILE),
-                            ((player_rect.left - maze[0].thickness) / create_maze.TILE))
-                    print(player_rect)
-
+                if hint:
+                    for i in range(5):
+                        hint_rect.topleft = (maze[0].thickness + five_first_step[i].x*create_maze.TILE,maze[0].thickness + five_first_step[i].y*create_maze.TILE)
+                        game_surface.blit(hint_img, hint_rect)
                 # draw maze
                 [cell.draw(game_surface) for cell in maze]
 
@@ -524,91 +523,157 @@ while running:
 
         #Collect mode
         elif game_mode == 3:
+            if time < 0:
+                finish = True
+                bg.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (0, 500))
+                if pygame.mouse.get_pressed()[0]:
+                    maze, maze2D,walls_collide_list ,player_rect.topleft,des_rect.topleft= new_game()
+                    # get Jerry position
+                    AimPos = findTomAndJerryPos(maze2D)[1]
+                    # get Tom position
+                    CurrentPos = findTomAndJerryPos(maze2D)[0]
+                    is_game_over()
+                    finish = False
+                    is_set = False
+                    continue
+            else:
+                surface.blit(bg, (WIDTH, 0))
+                surface.blit(game_surface, (0, 0))
+                game_surface.blit(bg_game, (0, 0))
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        exit()
+                    if event.type == pygame.USEREVENT:
+                        time -= 1
+
+                # controls and movement
+                pos = get_player_current_cell()
+                pressed_key = pygame.key.get_pressed()
+                # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
+                for key, key_value in keys.items():
+                    if pressed_key[key_value] and not is_collide(*directions[key]):
+                        direction = directions[key]
+                        if not is_set:
+                            is_set = True
+                            current_direction = key
+                            lastpos = pos
+                        break
+
+                if pos == lastpos and not is_collide(*direction):
+                    player_rect.move_ip(direction)
+                else:
+                    is_set = False
+
+                # draw maze
+                [cell.draw(game_surface) for cell in maze]
+
+                # gameplay
+                if eat_food():
+                    # FPS += 10
+                    score += 1
+
+                # draw player
+                game_surface.blit(player_img, player_rect)
+
+                # draw food
+                [food.draw() for food in food_list]
+
+                # draw stats
+                surface.blit(
+                    text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10)
+                )
+                surface.blit(font.render(f"{time}", True, pygame.Color("cyan")), (WIDTH + 20, 80))
+                surface.blit(
+                    text_font.render("score", True, pygame.Color("forestgreen")),
+                    (WIDTH + 20, 240),
+                )
+                surface.blit(
+                    font.render(f"{score}", True, pygame.Color("forestgreen")), (WIDTH + 20, 310)
+                )
+                surface.blit(
+                    text_font.render("record", True, pygame.Color("magenta")),
+                    (WIDTH + 20, 470),
+                )
+                surface.blit(
+                    font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
+                )
+
+            clock.tick(FPS)
+        
+        elif game_mode == 4:
             surface.blit(bg, (WIDTH, 0))
             surface.blit(game_surface, (0, 0))
             game_surface.blit(bg_game, (0, 0))
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
-                if event.type == pygame.USEREVENT:
-                    time -= 1
-
-            # controls and movement
-            pos = get_player_current_cell()
-            pressed_key = pygame.key.get_pressed()
-            # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
-            for key, key_value in keys.items():
-                if pressed_key[key_value] and not is_collide(*directions[key]):
-                    direction = directions[key]
-                    if not is_set:
-                        is_set = True
-                        current_direction = key
-                        lastpos = pos
-                    break
-
-            if pos == lastpos and not is_collide(*direction):
-                player_rect.move_ip(direction)
-            else:
-                is_set = False
-
-            # draw maze
-            [cell.draw(game_surface) for cell in maze]
-
-            # gameplay
-            if eat_food():
-                # FPS += 10
-                score += 1
-            is_game_over()
-
-            # draw player
+            if not autoplay_pause:
+                path = findPathBetween2Point(maze, algo=default_algo) if findPathBetween2Point(maze, algo=default_algo) else []
+                pos = get_player_current_cell()
+                if not is_set:
+                    is_set = True
+                    lastpos = pos
+                if lastpos == pos:
+                    if len(path)>=2:
+                        pA = path[0]
+                        pB = path[1]
+                        current_direction = get_way_between_2point(pA,pB,maze2D)
+                        player_rect.move_ip(directions[current_direction])
+                    if not len(path):
+                        bg.blit(text_font.render("FINISH", True, pygame.Color("pink")),(0,0))
+                        bg.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (850, 500))
+                        if pygame.mouse.get_pressed()[0]:
+                            maze, maze2D,walls_collide_list ,player_rect.topleft,des_rect.topleft= new_game()
+                            # get Jerry position
+                            AimPos = findTomAndJerryPos(maze2D)[1]
+                            # get Tom position
+                            CurrentPos = findTomAndJerryPos(maze2D)[0]
+                            time = -1
+                            is_game_over()
+                            finish = False
+                            hint1, hint_2, hint = False, False, False
+                            is_set = False
+                else:
+                    maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
+                    maze2D[pos[0]][pos[1]].make_tom_pos()
+                    CurrentPos = pos
+                    maze = list(maze2D.flatten())                    
+                    is_set = False
+            if hint_1:
+                default_algo = 1
+                [cell.draw(game_surface) for cell in maze]
+                [cell.color_cell(game_surface, "blue") for cell in getPathCellList(path,maze2D)[1:]]
+                
+            if hint_2:
+                default_algo = 2
+                [cell.draw(game_surface) for cell in maze]
+                [cell.color_cell(game_surface, "green") for cell in getPathCellList(path,maze2D)[1:]]
+            game_surface.blit(des_img,des_rect)
             game_surface.blit(player_img, player_rect)
-
-            # draw food
-            [food.draw() for food in food_list]
-
-            # draw stats
-            surface.blit(
-                text_font.render("TIME", True, pygame.Color("cyan")), (WIDTH + 20, 10)
-            )
-            surface.blit(font.render(f"{time}", True, pygame.Color("cyan")), (WIDTH + 20, 80))
-            surface.blit(
-                text_font.render("score", True, pygame.Color("forestgreen")),
-                (WIDTH + 20, 240),
-            )
-            surface.blit(
-                font.render(f"{score}", True, pygame.Color("forestgreen")), (WIDTH + 20, 310)
-            )
-            surface.blit(
-                text_font.render("record", True, pygame.Color("magenta")),
-                (WIDTH + 20, 470),
-            )
-            surface.blit(
-                font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
-            )
-
+            [cell.draw(game_surface) for cell in maze]
+                    
             clock.tick(FPS)
-        #draw pause button
-        pause_button.draw(surface)
-        if pygame.mouse.get_pressed()[0]:
-            if pause_button.rect.collidepoint(pygame.mouse.get_pos()):
-                pause = True
-        #draw hint button
-        if (game_mode == 1 or game_mode == 2):
-            hint_button_1.draw(surface)
-            surface.blit(mini_text_font.render("HINT 1", True, pygame.Color("white")), (1200, 400))
 
-            hint_button_2.draw(surface)
-            surface.blit(mini_text_font.render("HINT 2", True, pygame.Color("white")), (1200, 600))
+        if not finish:
+            #draw pause button
+            pause_button.draw(surface)
             if pygame.mouse.get_pressed()[0]:
-                if hint_button_1.rect.collidepoint(pygame.mouse.get_pos()):
-                    if not hint_1:
-                        hint_1 = True
-                        hint_2 = False
-                        
-            if pygame.mouse.get_pressed()[0]:
-                if hint_button_2.rect.collidepoint(pygame.mouse.get_pos()):
-                    if not hint_2:
-                        hint_2 = True
-                        hint_1 = False
-    pygame.display.flip()
+                if pause_button.rect.collidepoint(pygame.mouse.get_pos()):
+                    pause = True
+            #draw hint button
+            if (game_mode == 1 or game_mode == 2 or game_mode == 4) and not pause:
+                hint_button_1.draw(surface)
+                surface.blit(mini_text_font.render("HINT 1", True, pygame.Color("white")), (1200, 400))
+
+                hint_button_2.draw(surface)
+                surface.blit(mini_text_font.render("HINT 2", True, pygame.Color("white")), (1200, 600))
+                if pygame.mouse.get_pressed()[0]:
+                    if hint_button_1.rect.collidepoint(pygame.mouse.get_pos()):
+                        if not hint_1:
+                            hint_1 = True
+                            hint_2 = False
+                            
+                if pygame.mouse.get_pressed()[0]:
+                    if hint_button_2.rect.collidepoint(pygame.mouse.get_pos()):
+                        if not hint_2:
+                            hint_2 = True
+                            hint_1 = False
+    pygame.display.update()
