@@ -1,7 +1,5 @@
 from create_maze import *
 from algorithm import *
-from autoplay import *
-from time import sleep
 
 
 class Food:
@@ -292,6 +290,19 @@ def get_player_current_cell():
         )
     pos = (int(pos[0]),int(pos[1]))
     return pos
+
+def get_way_between_2point(currp, nextp, maze2D):
+    if currp[0] == nextp[0]:
+        if (currp[1]+1 == nextp[1]) and not maze2D[currp].walls['right'] and not maze2D[nextp].walls['left']:
+            return 'd'
+        if (currp[1]-1== nextp[1]) and not maze2D[currp].walls['left'] and not maze2D[nextp].walls['right']:
+            return 'a'
+    if currp[1] == nextp[1]:
+        if (currp[0]+1== nextp[0]) and not maze2D[currp].walls['bottom'] and not maze2D[nextp].walls['top']:
+            return 's'
+        if (currp[0]-1== nextp[0]) and not maze2D[currp].walls['top'] and not maze2D[nextp].walls['bottom']:
+            return 'w'  
+    return None          
 
 count = 0
 times_move = 0
