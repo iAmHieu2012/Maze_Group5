@@ -478,9 +478,9 @@ def start_all():
     # Vòng lặp chính
     running = True
     while running:
-        # Xử lý sự kiện
+        # Xử lý sự kiện 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or 8 == 5:
                 pygame.quit()  # Thoát khỏi pygame khi nhấn nút tắt màn hình
                 quit()  # Thoát khỏi chương trình
             # Bắt sự kiện nhấp chuột

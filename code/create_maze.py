@@ -3,7 +3,7 @@ from random import choice, randrange
 import algorithm
 
 RES = WIDTH, HEIGHT = 1080, 720
-TILE = 40
+TILE = 60
 THICK = 4
 
 cols, rows = WIDTH // TILE, HEIGHT // TILE
@@ -31,6 +31,18 @@ class Cell:
         pygame.draw.rect(sc, pygame.Color(color),((self.x*TILE), (self.y*TILE), TILE, TILE))
         self.draw(sc)
 
+
+    # def draw(self, sc):
+    #     x, y = self.x * TILE, self.y * TILE
+    #     if self.walls['top']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x - 1, y), (x + TILE + 1, y), self.thickness)
+    #     if self.walls['right']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x + TILE, y - 1), (x + TILE, y + TILE + 1), self.thickness)
+    #     if self.walls['bottom']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x + TILE - 1, y + TILE), (x + 1, y + TILE), self.thickness)
+    #     if self.walls['left']:
+    #         pygame.draw.line(sc, pygame.Color('black'), (x, y + TILE - 1), (x, y + 1), self.thickness)
+
     def get_rects(self):
         rects = []
         x, y = self.x * TILE, self.y * TILE
@@ -44,6 +56,7 @@ class Cell:
             rects.append(pygame.Rect(x-self.thickness,y-self.thickness,self.thickness,TILE+2*self.thickness))
         return rects
 
+    
     def check_cell(self, x, y):
         find_index = lambda x, y: x + y * cols
         if x < 0 or x > cols - 1 or y < 0 or y > rows - 1:
