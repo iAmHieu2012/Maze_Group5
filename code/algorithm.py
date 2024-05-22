@@ -1,7 +1,9 @@
+
 import numpy as np
 import create_maze
 
 MODE = 50
+
 
 def getMaze2DArray(maze):
     """
@@ -26,9 +28,9 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     """
     Thuật toán DFS
     """
+    visited.add(srcPoint)
     if srcPoint == destPoint:
         return path + [srcPoint]
-    visited.add(srcPoint)
     for dr, dc, wall in [
         (-1, 0, "top"),
         (1, 0, "bottom"),
@@ -37,7 +39,9 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     ]:
         neighRow, neighCol = srcPoint[0] + dr, srcPoint[1] + dc
         neighPoint = (neighRow, neighCol)
-        if neighPoint not in visited and isAbleToEnter(srcPoint, neighPoint, maze2DArray, wall):
+        if neighPoint not in visited and isAbleToEnter(
+            srcPoint, neighPoint, maze2DArray, wall
+        ):
             result = dfs(neighPoint, destPoint, maze2DArray, path + [srcPoint], visited)
             if result:
                 return result
@@ -90,7 +94,10 @@ def generateTomAndJerryPos(maze):
     )
     maze2DArray = getMaze2DArray(maze)
 
-    while not bfs(tom, jerry, maze2DArray, visited=set()) or len(bfs(tom, jerry, maze2DArray, visited=set()))<MODE:
+    while (
+        not bfs(tom, jerry, maze2DArray, visited=set())
+        or len(bfs(tom, jerry, maze2DArray, visited=set())) < MODE
+    ):
         tom = (
             np.random.randint(0, create_maze.rows),
             np.random.randint(0, create_maze.cols),
@@ -122,13 +129,15 @@ def findTomAndJerryPos(maze2DArray):
     return (TomPos, JerryPos)
 
 
-def findPathBetween2Point(n, maze, algo: int):
+def findPathBetween2Point(maze, algo: int):
     """
     Tỉm đường đi theo 2 thuật toán
     """
     maze2DArray = getMaze2DArray(maze)
 
     tom, jerry = findTomAndJerryPos(maze2DArray)
+    if tom == (-1, -1) or jerry == (-1, -1):
+        return None
     if algo == 1:
         visited = set()
         return dfs(tom, jerry, maze2DArray, [], visited)
@@ -142,18 +151,17 @@ def getPathCellList(path, maze2DArray):
     Chuyển list vị trí thành list các Cell
     """
     result = []
-    for cell in path:
-        result.append(maze2DArray[cell[0]][cell[1]])
+    if path:
+        for cell in path:
+            result.append(maze2DArray[cell[0]][cell[1]])
     return result
 
 
 if __name__ == "__main__":
     maze = create_maze.generate_maze()
-    for cell in maze:
-        print(cell.x,cell.y)
     generateTomAndJerryPos(maze)
 
-    path = findPathBetween2Point(1, maze, algo=1)
+    path = findPathBetween2Point(maze, algo=1)
     path_cell_list = getPathCellList(path, maze2DArray=getMaze2DArray(maze))
     if path:
         print("Lối đi:\n", path)

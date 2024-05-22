@@ -1,7 +1,8 @@
 import pygame, sys
-import login
+import Login
 import json
 from pygame.locals import *
+import soundbar
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -34,18 +35,18 @@ def set_all(s: str):
     
     #DISPLAYSURF.fill(BLUE)
     #pygame.draw.line(DISPLAYSURF, RED, (0, 0), (100, 100), 10)
-    background = pygame.image.load('img/nice3.png')
+    background = pygame.image.load('img/background.jpg')
     picture = pygame.transform.scale(background, (1280, 720))
     DISPLAYSURF.blit(picture, (0, 0))
 
     #textsys
     write_screen("Account: "+s, BLACK, YELLOW, (1280/2, 650), 1, DISPLAYSURF, 20)
     #textcus
-    write_screen("MAZE", RED, None, (1280/2, 130), 0, DISPLAYSURF, 90)
+    write_screen("TOM & JERRY", RED, None, (1280/2, 130), 0, DISPLAYSURF, 90)
     for i in range(8):
         pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200,i*50 + 220, 400, 50), 6) #ve bang chon
     pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, 0*50 + 220, 400, 50), 6)
-    lst = ["PLAY", "AUTOPLAY", "LOAD GAME", "LEADERBOARD", "INSTRUCTION", "SETTINGS", "ABOUT", "LOG OUT"]
+    lst = ["PLAY", "AUTOPLAY", "LOAD GAME", "LEADERBOARD", "HELP", "SETTINGS", "ABOUT", "LOG OUT"]
     for i in range(8):
         write_screen(lst[i], BLUE, None, (1280/2, i*50 + 245), -1, DISPLAYSURF, 26)
     pygame.display.update()
@@ -58,6 +59,7 @@ def make_sound(mode = 0):
         sound_1 = 'sound/key.wav'
     sound_1 = pygame.mixer.Sound(sound_1)
     sound_1.play()
+    sound_1.set_volume(0.2)
 
 def rec_input(DISPLAYSURF, x, y) -> int:
     font = pygame.font.SysFont('calibri', 20)
@@ -110,7 +112,7 @@ def rec_input(DISPLAYSURF, x, y) -> int:
         pygame.display.flip()
         clock.tick(30)
 
-def make_dialog(DISPLAYSURF, s: str, mode = 0):
+def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
     pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
     pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
@@ -123,7 +125,6 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
         x = -1
         running = True
         hard = 0
-        auto = 0
         runner = 0
         while running:
             if runner == 0:#choose map 
@@ -145,7 +146,9 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
                             elif temp == 1: hard = 40
                             else: hard = 100
                             runner = 1
-            elif runner == 1:#choose mode play
+                            if auto == 1:
+                                return [hard, 4]
+            elif runner == 1 and auto == 0:#choose mode play
                 if lst[0] != "NORMAL":
                     x = -1
                     write_screen("MODE", BLACK, None, (1280//2 - 240 + 40, 450), -1, DISPLAYSURF, 20)
@@ -167,15 +170,14 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
                             write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 450), -1, DISPLAYSURF, 20)
                             x = temp
                         elif temp == x:
-                            auto = temp
+                            mode2 = temp
                             running = False
-                            return [hard, auto]
+                            return [hard, mode2]
             pygame.display.update((380, 300, 600, 250))
 
     elif mode == 1: #done sucess or failed
         while True:
             mode == 1 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            print('x')
             for event in pygame.event.get(): 
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
@@ -209,26 +211,36 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0):
             pygame.display.update((380, 300, 600, 250))
 
     elif mode == 4:#setting
-        write_screen("BACKGROUND", BLACK, None, (1280//2 - 100, 380), -1, DISPLAYSURF, 20)
-        write_screen("SOUND", BLACK, None, (1280//2 - 100, 480), -1, DISPLAYSURF, 20)
-        temp = 0
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONUP:
-                    tempx = pygame.mouse.get_pos()[0]
-                    tempy = pygame.mouse.get_pos()[1]
-                    make_sound()
-                    if 900 < tempx < 940 and 302 < tempy < 340:
-                        return -1
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
-                        make_sound(1)
-                        temp = 1 - temp
-            if temp == 0:
-                write_screen("<<  ON  >>", BLACK, WHITE, (1280//2 + 50, 480), -1, DISPLAYSURF, 20)
-            else:
-                write_screen("<<  OFF >>", BLACK, WHITE, (1280//2 + 50, 480), -1, DISPLAYSURF, 20)
-            pygame.display.update((380, 300, 600, 250))
+        write_screen(" KEY ", BLACK, None, (1280//2 - 240 + 30, 380), -1, DISPLAYSURF, 20)
+        lst = ["AWSD", "ARROWKEY", "JIKL"]
+        for i in range(1, 4):
+            write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 380), -1, DISPLAYSURF, 20)
+        x = -1
+        running = True
+        key_mode = 0
+        runner = 0
+        while running:
+            if runner == 0:#choose map 
+                for event in pygame.event.get(): 
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        make_sound()
+                        tempx = pygame.mouse.get_pos()[0]
+                        tempy = pygame.mouse.get_pos()[1]
+                        temp = (tempx - 538)//150
+                        if (-1 < temp < 3 and 360 < tempy < 400 and temp != x):
+                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 380), -1, DISPLAYSURF, 20)
+                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 380), -1, DISPLAYSURF, 20)
+                            x = temp
+                        elif 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
+                            running = False
+                            return -1
+                        elif temp == x > -1:
+                            key_mode = temp
+                            runner = -1
+            pygame.display.update()
+            if runner == -1:
+                soundbar.sound_all(DISPLAYSURF)
+                return (key_mode, -1)
 
 def make_menu(s: str):
     while True:
@@ -257,20 +269,19 @@ def make_menu(s: str):
                                 return -1
                         elif (y == 0 or y == 1):
                             while True:
-                                lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0)
+                                lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0, y)
                                 if lst == -1:
                                     return 0
                                 if True:
                                     hard_mode = [s, y] + lst
-                                    hard = hard_mode[0]
+                                    hard = hard_mode[2]
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
                                 
                         elif y == 5:
                             n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                            if n == -1:
-                                return 0
+                            return 0
 
                 elif event.type == QUIT:
                     running = False
@@ -280,18 +291,19 @@ def make_menu(s: str):
 
 if __name__=="__main__":
     pygame.init()
-    login.screen_width = 1280
-    login.screen_height = 720
-    login.screen = pygame.display.set_mode((login.screen_width, login.screen_height)) 
-    login.clock = pygame.time.Clock()
+    Login.screen_width = 1280
+    Login.screen_height = 720
+    Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
+    Login.clock = pygame.time.Clock()
+    soundbar.set_sound(0.5)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        s = login.start_all()
+        s = Login.start_all()
         while True:
             n = make_menu(s) #list thong so game
-            #print(n)
+            print(n)
             if n == -1:
                 break
             elif n == 0:
