@@ -3,10 +3,8 @@ import sys
 
 #result = 1 nếu thắng và 0 nếu thua
 def End_game(result = 0):
-    # Khởi tạo Pygamepygame.init()
-    
+    # Khởi tạo Pygamepygame.init()   
     # pygame.mixer.init()
-
     SCREEN_WIDTH=1280
     SCREEN_HEIGHT=720
     SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)

@@ -296,11 +296,13 @@ if __name__=="__main__":
     Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
     Login.clock = pygame.time.Clock()
     soundbar.set_sound(0.5)
+    s = Login.start_all()
+    print(s)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        s = Login.start_all()
+        # s = Login.start_all()
         while True:
             n = make_menu(s) #list thong so game
             print(n)
@@ -314,4 +316,4 @@ if __name__=="__main__":
                 #auto == 0 tu choi, auto == 1 bot choi
                 #hard: 20,40,100
                 #mode: 0,1,2 (normal, speed, limit)
-    
+ 

@@ -1,8 +1,6 @@
-#from create_maze import *
 from end_game import *
-#from main_code import *
 import Login
-from Make_menu import *
+from make_menu import *
 import subprocess
 
 if __name__ == '__main__':
@@ -18,6 +16,9 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
         s = Login.start_all()
+        fp1 = open('current_account.txt', 'w')
+        fp1.writelines(s)
+        fp1.close()
         while True:
             n = make_menu(s) #list thong so game
             #print(n)

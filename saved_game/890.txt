@@ -1,0 +1,977 @@
+2
+1
+146
+40
+7 1
+0 0
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+1 0
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+2 0
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+3 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+4 0
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+5 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+6 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+7 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+8 0
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+9 0
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+10 0
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+11 0
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+12 0
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+13 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+14 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+15 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+16 0
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+17 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+19 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+20 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+21 0
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 0
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+23 0
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+24 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+25 0
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+26 0
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+0 1
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+1 1
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+2 1
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+3 1
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+4 1
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+5 1
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+6 1
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+7 1
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+8 1
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+9 1
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+10 1
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+11 1
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+12 1
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+13 1
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+14 1
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+15 1
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 1
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+17 1
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+18 1
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+19 1
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+20 1
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+21 1
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+22 1
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+23 1
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+24 1
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+25 1
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+26 1
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 2
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+1 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+2 2
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+3 2
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+4 2
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+5 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+6 2
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+7 2
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+8 2
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+9 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+10 2
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+11 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+12 2
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+13 2
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+14 2
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+15 2
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+16 2
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+17 2
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+18 2
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+19 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+20 2
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+21 2
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 2
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+23 2
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+24 2
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+25 2
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+26 2
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+0 3
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+1 3
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+2 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+3 3
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+4 3
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+5 3
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+6 3
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+7 3
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+8 3
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+9 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+10 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+11 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+12 3
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+13 3
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+14 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+15 3
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+16 3
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+17 3
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+18 3
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+19 3
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+20 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+21 3
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+22 3
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+23 3
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+24 3
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+25 3
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+26 3
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+0 4
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+1 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+2 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+3 4
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+4 4
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+5 4
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+6 4
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+7 4
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+8 4
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+9 4
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+10 4
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+11 4
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+13 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+14 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+15 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 4
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+17 4
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+18 4
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+19 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+20 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+21 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+22 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+23 4
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+24 4
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+25 4
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+26 4
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+0 5
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+1 5
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+2 5
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+3 5
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+4 5
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+5 5
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+6 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+7 5
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+8 5
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+9 5
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+10 5
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+11 5
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+12 5
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+13 5
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+14 5
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+15 5
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+16 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+17 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+18 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+19 5
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+20 5
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+21 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+22 5
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+23 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+24 5
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+25 5
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+26 5
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+1 6
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+2 6
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+3 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+4 6
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+5 6
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+6 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+7 6
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+8 6
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+9 6
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+10 6
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+11 6
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 6
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+13 6
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+14 6
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+15 6
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 6
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+17 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+18 6
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+19 6
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+20 6
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+21 6
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+22 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+24 6
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+25 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+26 6
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 7
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+1 7
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+2 7
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+3 7
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+4 7
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+5 7
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+6 7
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+7 7
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+8 7
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+9 7
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+10 7
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+11 7
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+12 7
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+13 7
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+14 7
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+15 7
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+16 7
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+17 7
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+18 7
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+19 7
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+20 7
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+21 7
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 7
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+23 7
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+24 7
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+25 7
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+26 7
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 8
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+1 8
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+2 8
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+3 8
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+4 8
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+5 8
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+6 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+7 8
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+8 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+9 8
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+10 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+11 8
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+13 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+14 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+15 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 8
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 8
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+19 8
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+20 8
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+21 8
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+22 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+23 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+24 8
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+25 8
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+26 8
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+0 9
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+1 9
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+2 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+3 9
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+4 9
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+5 9
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+6 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+7 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+8 9
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+9 9
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+10 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+11 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+12 9
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+13 9
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+14 9
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+15 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+16 9
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+18 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+19 9
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+20 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+21 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 9
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 9
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+24 9
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+25 9
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+26 9
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+0 10
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+1 10
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+2 10
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+3 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+4 10
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+5 10
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+6 10
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+7 10
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+8 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+9 10
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+10 10
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+11 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+12 10
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+13 10
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+14 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+15 10
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 10
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+18 10
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+19 10
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+20 10
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+21 10
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+22 10
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 10
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+24 10
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+25 10
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+26 10
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+0 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+1 11
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+2 11
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+3 11
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+4 11
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+5 11
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+6 11
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+7 11
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+8 11
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+9 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+10 11
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+11 11
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+12 11
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+13 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+14 11
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+15 11
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+16 11
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 11
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 11
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+19 11
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+20 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+21 11
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+23 11
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+24 11
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+25 11
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+26 11
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+0 12
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+1 12
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+2 12
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+3 12
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+4 12
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+5 12
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+6 12
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+7 12
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+8 12
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+9 12
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+10 12
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+11 12
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+12 12
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+13 12
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+14 12
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+15 12
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+16 12
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 12
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+18 12
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+19 12
+{'top': False, 'right': False, 'bottom': False, 'left': False}
+20 12
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+21 12
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+22 12
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+23 12
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+24 12
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+25 12
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+26 12
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 13
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+1 13
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+2 13
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+3 13
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+4 13
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+5 13
+{'top': False, 'right': True, 'bottom': True, 'left': True}
+6 13
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+7 13
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+8 13
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+9 13
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+10 13
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+11 13
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 13
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+13 13
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+14 13
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+15 13
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 13
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+17 13
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+18 13
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+19 13
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+20 13
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+21 13
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+22 13
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+23 13
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+24 13
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+25 13
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+26 13
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+0 14
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+1 14
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+2 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+3 14
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+4 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+5 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+6 14
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+7 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+8 14
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+9 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+10 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+11 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+12 14
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+13 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+14 14
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+15 14
+{'top': False, 'right': False, 'bottom': False, 'left': True}
+16 14
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 14
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 14
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+19 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+20 14
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+21 14
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+22 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+24 14
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+25 14
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+26 14
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+0 15
+{'top': True, 'right': True, 'bottom': False, 'left': True}
+1 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+2 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+3 15
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+4 15
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+5 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+6 15
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+7 15
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+8 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+9 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+10 15
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+11 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 15
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+13 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+14 15
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+15 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+16 15
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 15
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 15
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+19 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+20 15
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+21 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+22 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+24 15
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+25 15
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+26 15
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+0 16
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+1 16
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+2 16
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+3 16
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+4 16
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+5 16
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+6 16
+{'top': True, 'right': False, 'bottom': False, 'left': False}
+7 16
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+8 16
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+9 16
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+10 16
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+11 16
+{'top': True, 'right': True, 'bottom': False, 'left': False}
+12 16
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+13 16
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+14 16
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+15 16
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+16 16
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 16
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+18 16
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+19 16
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+20 16
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+21 16
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+22 16
+{'top': False, 'right': True, 'bottom': False, 'left': True}
+23 16
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+24 16
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+25 16
+{'top': True, 'right': False, 'bottom': False, 'left': True}
+26 16
+{'top': False, 'right': True, 'bottom': False, 'left': False}
+0 17
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+1 17
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+2 17
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+3 17
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+4 17
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+5 17
+{'top': True, 'right': True, 'bottom': True, 'left': False}
+6 17
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+7 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+8 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+9 17
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+10 17
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+11 17
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+12 17
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+13 17
+{'top': True, 'right': False, 'bottom': True, 'left': True}
+14 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+15 17
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+16 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+17 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+18 17
+{'top': False, 'right': False, 'bottom': True, 'left': False}
+19 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+20 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+21 17
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+22 17
+{'top': False, 'right': False, 'bottom': True, 'left': True}
+23 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+24 17
+{'top': True, 'right': False, 'bottom': True, 'left': False}
+25 17
+{'top': False, 'right': True, 'bottom': True, 'left': False}
+26 17
+{'top': False, 'right': True, 'bottom': True, 'left': True}

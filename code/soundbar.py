@@ -57,5 +57,3 @@ def sound_all(screen):
         screen.blit(button,(x, SCREEN_HEIGHT/2 + 100))
         pygame.display.update((SCREEN_WIDTH/2-bar.get_width()/2 - 10, SCREEN_HEIGHT/2 + 60, 250, 100))
 
-    # pygame.quit()
-    # sys.exit()

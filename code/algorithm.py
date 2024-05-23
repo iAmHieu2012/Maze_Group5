@@ -1,16 +1,13 @@
-
 import numpy as np
 import create_maze
 
 MODE = 50
-
 
 def getMaze2DArray(maze):
     """
     Chuyển listCell thành ma trận 2 chiều
     """
     return np.array(maze).reshape(create_maze.rows, create_maze.cols)
-
 
 def isAbleToEnter(currP, neighP, maze2DArray, wall):
     """
@@ -22,7 +19,6 @@ def isAbleToEnter(currP, neighP, maze2DArray, wall):
         and (0 <= neighP[1] < maze2DArray.shape[1])
         and (not maze2DArray[currP[0]][currP[1]].walls[wall])
     )
-
 
 def dfs(srcPoint, destPoint, maze2DArray, path, visited):
     """
@@ -47,7 +43,6 @@ def dfs(srcPoint, destPoint, maze2DArray, path, visited):
                 return result
 
     return None
-
 
 def bfs(srcPoint, destPoint, maze2DArray, visited):
     """
@@ -76,9 +71,7 @@ def bfs(srcPoint, destPoint, maze2DArray, visited):
                     newPath = curr[1] + [neighPoint]
                     queue.append((neighPoint, newPath))
                     visited.add(neighPoint)
-
     return None
-
 
 def generateTomAndJerryPos(maze):
     """
@@ -109,7 +102,6 @@ def generateTomAndJerryPos(maze):
     maze2DArray[tom[0]][tom[1]].make_tom_pos()
     maze2DArray[jerry[0]][jerry[1]].make_jerry_pos()
     return list(maze2DArray.flatten())
-
 
 def findTomAndJerryPos(maze2DArray):
     """
@@ -156,15 +148,18 @@ def getPathCellList(path, maze2DArray):
             result.append(maze2DArray[cell[0]][cell[1]])
     return result
 
+# if __name__ == "__main__":
+#     maze = create_maze.generate_maze()
+#     generateTomAndJerryPos(maze)
 
-if __name__ == "__main__":
-    maze = create_maze.generate_maze()
-    generateTomAndJerryPos(maze)
+#     path = findPathBetween2Point(maze, algo=1)
+#     path_cell_list = getPathCellList(path, maze2DArray=getMaze2DArray(maze))
+#     if path:
+#         print("Lối đi:\n", path)
+#     # print(path_cell_list)
+#     for cell in path_cell_list:
+#         print(cell.x, cell.y, cell.walls)
+#     # print(maze)
 
-    path = findPathBetween2Point(maze, algo=1)
-    path_cell_list = getPathCellList(path, maze2DArray=getMaze2DArray(maze))
-    if path:
-        print("Lối đi:\n", path)
-    # print(path_cell_list)
-    for cell in path_cell_list:
-        print(cell.x, cell.y, cell.walls)
+#     # maze = create_maze.generate_maze() #maze la 1 list cac Cell
+

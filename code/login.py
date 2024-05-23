@@ -23,7 +23,7 @@ def check_account(username, password, accounts):
 def check_username(username, password, accounts):
     if username in accounts.keys():
         return True
-    return False
+    return False    
 
 # Hàm thêm tài khoản đăng kí
 def add_account(filename, username, password):
@@ -36,13 +36,20 @@ def login():
     # Định nghĩa màu sắc
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    BLUE = (0, 191, 255)
     RED = (255, 0, 0)
+    DARK_RED = (139, 0, 0)  # Màu Dark Red
+    YELLOW = (255, 255, 204)
+    DARK_TEAL_ACCENT_1_DARKER_25 = (0, 63, 92)  # Màu Dark Teal, Accent 1, Darker 25%
+    DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
+
+    # Tải ảnh nền
+    background_image = pygame.image.load('img/background2.jpg')
 
     # Tạo font chữ
     font_1 = pygame.font.Font(None, 36)
     font_2 = pygame.font.Font(None, 30)
     font_3 = pygame.font.Font(None, 24)
+    font_4 = pygame.font.Font(None, 20)
 
     # Biến lưu trữ tên người dùng
     username_input = ""
@@ -164,52 +171,67 @@ def login():
 
         # Tô màu màn hình
         screen.fill(WHITE)
+        # Vẽ ảnh nền
+        screen.blit(background_image, (0, 0))
 
         # Render và vẽ các thành phần giao diện
-        loginpage = font_1.render("Login Page", True, BLACK, WHITE)
+        loginpage = font_1.render("Log in Page", True, DARK_RED, None)
         if current_input == "None":
-            username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
-            password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, WHITE)       
+            username = font_2.render("Username    ", True, BLACK, None)
+            username_width = username.get_width()
+            username_input_rendered = font_4.render(username_input, True, BLACK, None)
+            password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, None)       
         elif current_input == "username":
-            password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, WHITE)
+            password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, None)
             if blink_timer < blink_interval / 2:
-                username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
+                username = font_2.render("Username    ", True, BLACK, None)
+                username_width = username.get_width()
+                username_input_rendered = font_4.render(username_input, True, BLACK, None)
             else:
-                username = font_2.render(f"Username    {'*' * len(username_input)}|", True, BLACK, WHITE)
+                username = font_2.render("Username    ", True, BLACK, None)
+                username_width = username.get_width()
+                username_input_rendered = font_4.render(f"{username_input}|", True, BLACK, None)
         elif current_input == "password":
-            username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
+            username = font_2.render("Username    ", True, BLACK, None)
+            username_width = username.get_width()
+            username_input_rendered = font_4.render(username_input, True, BLACK, None)
             if blink_timer < blink_interval / 2:
-                password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, WHITE)
+                password = font_2.render(f"Password     {'*' * len(password_input)}", True, BLACK, None)
             else:
-                password = font_2.render(f"Password     {'*' * len(password_input)}|", True, BLACK, WHITE)
+                password = font_2.render(f"Password     {'*' * len(password_input)}|", True, BLACK, None)
 
-        Login = font_3.render("Login", True, BLACK, WHITE)
-        Reset = font_3.render("Reset", True, BLACK, WHITE)
-        donthaveaccount = font_2.render("Don't have account ?", True, BLACK, WHITE)
-        createnewaccount = font_2.render("Create New Account !!!", True, BLUE, WHITE)
-        login_fail = font_3.render("Invalid username or password!", True, RED, WHITE)  # Khi đăng nhập không thành công
-        login_success = font_3.render("Login successful !", True, RED, WHITE)  # Khi đăng nhập thành công
+        Login = font_3.render("Login", True, DARK_GREEN_ACCENT_3_DARKER_25, None)
+        Reset = font_3.render("Reset", True, DARK_GREEN_ACCENT_3_DARKER_25, None)
+        donthaveaccount = font_2.render("Don't have account ?", True, BLACK, None)
+        createnewaccount = font_2.render("Create New Account !!!", True, DARK_TEAL_ACCENT_1_DARKER_25, None)
+        login_fail = font_3.render("Invalid username or password!", True, RED, None)  # Khi đăng nhập không thành công
+        login_success = font_3.render("Login successful !", True, RED, None)  # Khi đăng nhập thành công
 
+        # Biến xác định vùng vàng xung quanh bao quát
+        yellow_rect = pygame.Rect(430, screen_height // 2 - 160, 420, 372) 
+
+        # Tô màu vàng ở vùng bao quát xung quanh
+        pygame.draw.rect(screen, YELLOW, yellow_rect)
 
         #Vẽ đối tượng văn bản lên màn hình ở vị trí mong muốn
         screen.blit(loginpage, (screen_width // 2 - loginpage.get_width() // 2, screen_height // 2 - loginpage.get_height() // 2 - 125))
         screen.blit(username, (480, screen_height // 2 - loginpage.get_height() // 2 - 50))
+        screen.blit(username_input_rendered, (480 + username_width, screen_height // 2 - loginpage.get_height() // 2 - 50))
         screen.blit(password, (480, screen_height // 2 - loginpage.get_height() // 2))
         screen.blit(Login, (485, screen_height // 2 - loginpage.get_height() // 2 + 50))
         screen.blit(Reset, (585, screen_height // 2 - loginpage.get_height() // 2 + 50))
         screen.blit(donthaveaccount, (480, screen_height // 2 - loginpage.get_height() // 2 + 125))
         screen.blit(createnewaccount, (480, screen_height // 2 - loginpage.get_height() // 2 + 175))
         if flag == True:
-            screen.blit(login_success, (675, screen_height // 2 - loginpage.get_height() // 2 + 50)) # Khi đăng nhập thành công
+            screen.blit(login_success, (480, screen_height // 2 - loginpage.get_height() // 2 + 90)) # Khi đăng nhập thành công
         elif flag == False:
-            screen.blit(login_fail, (675, screen_height // 2 - loginpage.get_height() // 2 + 50)) # Khi đăng nhập không thành công
+            screen.blit(login_fail, (480, screen_height // 2 - loginpage.get_height() // 2 + 90)) # Khi đăng nhập không thành công
 
         # Vẽ hình chữ nhật xung quanh vùng nhập dữ liệu, ô login, ô reset
         pygame.draw.rect(screen, BLACK, (600, screen_height // 2 - username.get_height() // 2 - 50 - 10, 170, username.get_height() + 10), 2)
         pygame.draw.rect(screen, BLACK, (600, screen_height // 2 - password.get_height() // 2 - 10, 170, password.get_height() + 10), 2)
-        pygame.draw.rect(screen, BLACK, (485 - 5, screen_height // 2 - Login.get_height() // 2 + 50 - 10 , 55, Login.get_height() + 10), 2)
-        pygame.draw.rect(screen, BLACK, (585 - 5, screen_height // 2 - Reset.get_height() // 2 + 50 - 10, 55, Reset.get_height() + 10), 2)
-        #pygame.draw.rect(screen, BLACK, (480 - 5, screen_height // 2 - loginpage.get_height() // 2 + 175 - 5, 230, createnewaccount.get_height() + 10), 2)
+        pygame.draw.rect(screen, DARK_GREEN_ACCENT_3_DARKER_25, (485 - 5, screen_height // 2 - Login.get_height() // 2 + 50 - 10 , 55, Login.get_height() + 10), 2)
+        pygame.draw.rect(screen, DARK_GREEN_ACCENT_3_DARKER_25, (585 - 5, screen_height // 2 - Reset.get_height() // 2 + 50 - 10, 55, Reset.get_height() + 10), 2)
       
         # Cập nhật màn hình
         pygame.display.flip()
@@ -217,22 +239,23 @@ def login():
         # Giới hạn tốc độ khung hình
         clock.tick(60)
 
-    # Thoát khỏi Pygame
-    #pygame.quit()
-
 def sign_up():
  
-    # Định nghĩa màu sắc
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    BLUE = (0, 191, 255)
     RED = (255, 0, 0)
+    DARK_RED = (139, 0, 0)  # Màu Dark Red
+    YELLOW = (255, 255, 204)
+    DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
+
+    # Tải ảnh nền
+    background_image = pygame.image.load('img/background3.jpg')
 
     # Tạo font chữ
     font_1 = pygame.font.Font(None, 36)
     font_2 = pygame.font.Font(None, 30)
     font_3 = pygame.font.Font(None, 24)
-    font_4 = pygame.font.Font(None, 18)
+    font_4 = pygame.font.Font(None, 20)
 
     # Biến lưu trữ tên người dùng
     username_input = ""
@@ -319,8 +342,7 @@ def sign_up():
                                 add_account(filename, username_input, password_1_input)
                                 flag_account = True
                                 # nếu ráp code muốn return ra chuỗi username mới thì return ngay chỗ này
-                                running = False  
-                                print(username_input)  
+                                running = False    
                                 return username_input                    
           
             # Bắt sự kiện nhập văn bản vào ô username or password
@@ -382,64 +404,84 @@ def sign_up():
 
         # Tô màu màn hình
         screen.fill(WHITE)
+
+        # Vẽ ảnh nền
+        screen.blit(background_image, (0, 0))
+
         # Render và vẽ các thành phần giao diện
-
-        signuppage = font_1.render("Sign up Page", True, BLACK, WHITE)
+        signuppage = font_1.render("Sign up Page", True, DARK_RED, None)
         if current_input == "None":
-            username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
-            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, WHITE)
-            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, WHITE)     
+            username = font_2.render("Username    ", True, BLACK, None)
+            username_width = username.get_width()
+            username_input_rendered = font_4.render(username_input, True, BLACK, None)
+            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, None)
+            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, None)     
         elif current_input == "username":
-            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, WHITE)
-            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, WHITE)
+            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, None)
+            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, None)
             if blink_timer < blink_interval / 2:
-                username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
+                username = font_2.render("Username    ", True, BLACK, None)
+                username_width = username.get_width()
+                username_input_rendered = font_4.render(username_input, True, BLACK, None)
             else:
-                username = font_2.render(f"Username    {'*' * len(username_input)}|", True, BLACK, WHITE)
+                username = font_2.render("Username    ", True, BLACK, None)
+                username_width = username.get_width()
+                username_input_rendered = font_4.render(f"{username_input}|", True, BLACK, None)
         elif current_input == "password_1":
-            username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
-            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, WHITE)
+            username = font_2.render("Username    ", True, BLACK, None)
+            username_width = username.get_width()
+            username_input_rendered = font_4.render(username_input, True, BLACK, None)
+            password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, None)
             if blink_timer < blink_interval / 2:
-                password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, WHITE)
+                password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, None)
             else:
-                password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}|", True, BLACK, WHITE)
+                password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}|", True, BLACK, None)
         elif current_input == "password_2":
-            username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
-            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, WHITE)
+            username = font_2.render("Username    ", True, BLACK, None)
+            username_width = username.get_width()
+            username_input_rendered = font_4.render(username_input, True, BLACK, None)
+            password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, None)
             if blink_timer < blink_interval / 2:
-                password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, WHITE)
+                password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, None)
             else:
-                password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}|", True, BLACK, WHITE)
+                password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}|", True, BLACK, None)
 
-        # username = font_2.render(f"Username    {'*' * len(username_input)}", True, BLACK, WHITE)
-        # password_1 = font_2.render(f"Password     {'*' * len(password_1_input)}", True, BLACK, WHITE)
-        # password_2 = font_2.render(f"Confirm        {'*' * len(password_2_input)}", True, BLACK, WHITE)
+        signup = font_3.render("Sign up", True, DARK_GREEN_ACCENT_3_DARKER_25, None)
+        wrong_password = font_3.render("Please check your password again !", True, RED, None)
+        existed_account_1 = font_3.render("This account has been existed", True, RED, None)
+        existed_account_2 = font_3.render("Please create a new account !", True, RED, None)
+        existed_username_1 = font_3.render("This username has been existed", True, RED, None)
+        existed_username_2 = font_3.render("Please create a new username !", True, RED, None)
 
-        signup = font_3.render("Sign up", True, BLACK, WHITE)
-        wrong_password = font_3.render("Please check your password again !", True, RED, WHITE)
-        existed_account = font_3.render("This account has been existed, please create a new account !", True, RED, WHITE)
-        existed_username = font_3.render("This username has been existed, please create a new username !", True, RED, WHITE)
+        # Biến xác định vùng vàng xung quanh bao quát
+        yellow_rect = pygame.Rect(430, screen_height // 2 - 160, 420, 372) 
+
+        # Tô màu vàng ở vùng bao quát xung quanh
+        pygame.draw.rect(screen, YELLOW, yellow_rect)
 
         #Vẽ đối tượng văn bản lên màn hình ở vị trí mong muốn
         screen.blit(signuppage, (screen_width // 2 - signuppage.get_width() // 2, screen_height // 2 - signuppage.get_height() // 2 - 125))
         screen.blit(username, (480, screen_height // 2 - signuppage.get_height() // 2 - 50))
+        screen.blit(username_input_rendered, (480 + username_width, screen_height // 2 - signuppage.get_height() // 2 - 50))
         screen.blit(password_1, (480, screen_height // 2 - signuppage.get_height() // 2))
         screen.blit(password_2, (480, screen_height // 2 - signuppage.get_height() // 2 + 50))
         screen.blit(signup, (485, screen_height // 2 - signuppage.get_height() // 2 + 100))
         if flag_password == False:
-            screen.blit(wrong_password, (600, screen_height // 2 - signuppage.get_height() // 2 + 100))
+            screen.blit(wrong_password, (570, screen_height // 2 - signuppage.get_height() // 2 + 100))
         else:
             if flag_account == False:
-                screen.blit(existed_account, (600, screen_height // 2 - signuppage.get_height() // 2 + 100))
+                screen.blit(existed_account_1, (570, screen_height // 2 - signuppage.get_height() // 2 + 100))
+                screen.blit(existed_account_2, (570, screen_height // 2 - signuppage.get_height() // 2 + 130))
             else:
                 if flag_username == False:
-                    screen.blit(existed_username, (600, screen_height // 2 - signuppage.get_height() // 2 + 100))
+                    screen.blit(existed_username_1, (570, screen_height // 2 - signuppage.get_height() // 2 + 100))
+                    screen.blit(existed_username_2, (570, screen_height // 2 - signuppage.get_height() // 2 + 130))
 
         # Vẽ hình chữ nhật xung quanh vùng nhập dữ liệu
         pygame.draw.rect(screen, BLACK, (600, screen_height // 2 - username.get_height() // 2 - 50 - 10, 170, username.get_height() + 10), 2)
         pygame.draw.rect(screen, BLACK, (600, screen_height // 2 - password_1.get_height() // 2 - 10, 170, password_1.get_height() + 10), 2)
         pygame.draw.rect(screen, BLACK, (600, screen_height // 2 - password_2.get_height() // 2 + 50 - 10, 170, password_2.get_height() + 10), 2)
-        pygame.draw.rect(screen, BLACK, (485 - 5, screen_height // 2 - signup.get_height() // 2 + 100 - 10 , 70, signup.get_height() + 10), 2)
+        pygame.draw.rect(screen, DARK_GREEN_ACCENT_3_DARKER_25, (485 - 5, screen_height // 2 - signup.get_height() // 2 + 100 - 10 , 70, signup.get_height() + 10), 2)
       
         # Cập nhật màn hình
         pygame.display.flip()
@@ -447,16 +489,19 @@ def sign_up():
         # Giới hạn tốc độ khung hình
         clock.tick(60)
 
-    # Thoát khỏi Pygame
-    #pygame.quit()
-
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width,screen_height))      
+clock = pygame.time.Clock()
 
 def start_all():
-    # Định nghĩa màu sắc
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    BLUE = (0, 191, 255)
-    RED = (255, 0, 0)
+    YELLOW = (255, 255, 204)
+    DARK_RED = (139, 0, 0)  # Màu Dark Red
+
+    # Tải ảnh nền
+    background_image = pygame.image.load('img/background1.jpg')
 
     #return login trả về tên đăng nhập
     tendangnhap = ''
@@ -478,7 +523,7 @@ def start_all():
     # Vòng lặp chính
     running = True
     while running:
-        # Xử lý sự kiện 
+        # Xử lý sự kiện
         for event in pygame.event.get():
             if event.type == pygame.QUIT or 8 == 5:
                 pygame.quit()  # Thoát khỏi pygame khi nhấn nút tắt màn hình
@@ -490,18 +535,25 @@ def start_all():
                 if is_over_Login_box(mouse_pos):
                     tendangnhap = login()
                 if is_over_Signup_box(mouse_pos):
-                    tendangnhap = sign_up()
-                return tendangnhap                
-
+                    tendangnhap = sign_up()    
+                return tendangnhap
+            
         # Tô màu màn hình
         screen.fill(WHITE)
-        # # Vẽ hình ảnh Tom and Jerry lên màn hình
-        # screen.blit(tom_and_jerry_img, tom_and_jerry_rect)
-
+        # Vẽ ảnh nền
+        screen.blit(background_image, (0, 0))
 
         # Render và vẽ các thành phần giao diện
-        Login = font_1.render("Login", True, BLACK, WHITE)
-        Signup = font_1.render("Signup", True, BLUE, WHITE)
+        Login = font_1.render("Log in", True, DARK_RED, None)
+        Signup = font_1.render("Sign up", True, DARK_RED, None)
+
+        # Biến xác định vùng trắng bao bọc xung quanh ô login và signup
+        white_login_rect = pygame.Rect(550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20) 
+        white_signup_rect = pygame.Rect(550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20)
+
+        # Tô màu trắng vùng xung quanh 
+        pygame.draw.rect(screen, YELLOW, white_login_rect)
+        pygame.draw.rect(screen, YELLOW, white_signup_rect)
 
 
         #Vẽ đối tượng văn bản lên màn hình ở vị trí mong muốn
@@ -518,32 +570,27 @@ def start_all():
         # Giới hạn tốc độ khung hình
         clock.tick(60)
 
-    # Thoát khỏi Pygame
-    #pygame.quit()
 
 if __name__ == '__main__':
+
+    
     # pygame setup
     pygame.init()
+
     #Cửa số game: chỉnh full screen: screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-    screen_width = 1280
-    screen_height = 720
-    screen = pygame.display.set_mode((screen_width,screen_height)) 
-
-    # # Load hình ảnh Tom and Jerry
-    # tom_and_jerry_img = pygame.image.load('wallpaperflare.com_wallpaper.jpg')  # Đặt đường dẫn tới hình ảnh của bạn ở đây
-
-    # # Vị trí để vẽ hình ảnh Tom and Jerry
-    # tom_and_jerry_rect = tom_and_jerry_img.get_rect()
-    # tom_and_jerry_rect.center = (screen_width // 2, screen_height // 2)  # Đặt hình ảnh ở giữa màn hình        
+    # screen_width = 1280
+    # screen_height = 720
+    # screen = pygame.display.set_mode((screen_width,screen_height))      
 
     #Đặt tên cho cửa sổ game là Maze
     pygame.display.set_caption('Maze')
+
     #Hình ảnh tượng trưng cho game đặt bên trái tên cửa sổ game
-    # img = pygame.image.load('maze_icon.png')
-    # pygame.display.set_icon(img)
+    img = pygame.image.load('img/maze_icon.png')
+    pygame.display.set_icon(img)
 
     #tạo biến clock truy cập vào đồng hồ trong pygame.time để xử lí về thời gian
-    clock = pygame.time.Clock()
+    # clock = pygame.time.Clock()
     running = True
     while running:
         # poll for events
@@ -557,11 +604,11 @@ if __name__ == '__main__':
 
         ss = start_all()
         print(ss)
+        
         break
+
         # flip() the display to put your work on screen
         pygame.display.flip()
 
         clock.tick(60)  # limits FPS to 60
     pygame.quit()
-
-    
