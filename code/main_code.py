@@ -1,7 +1,7 @@
 from create_maze import *
 from algorithm import *
 from time import sleep
-from make_menu import *
+
 
 class Food:
     def __init__(self):
@@ -34,7 +34,7 @@ elif game_level == 100:
 
 class Food:
     def __init__(self):
-        self.img = pygame.image.load("img/cheese.png").convert_alpha()
+        self.img = pygame.image.load("img/food.png").convert_alpha()
         self.img = pygame.transform.scale(self.img, (create_maze.TILE - 10, create_maze.TILE - 10))
         self.rect = self.img.get_rect()
         self.set_pos()
@@ -200,13 +200,17 @@ hint_img = pygame.transform.scale(
     hint_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
 )
 hint_rect = hint_img.get_rect()
+# directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
+# keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
+# directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
+# keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
 directions = {
     "a": (-player_speed, 0),
     "d": (player_speed, 0),
     "w": (0, -player_speed),
     "s": (0, player_speed),
 }
-keys = {"a": pygame.K_j, "d": pygame.K_l, "w": pygame.K_i, "s": pygame.K_k}
+keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
 direction = (0, 0)
 
 # food settings
@@ -281,66 +285,7 @@ pause_button = Button("img/pausebutton.png", 1300,50)
 hint_button_1 = Button("img/hintbutton.png", 1300,300)
 hint_button_2 = Button("img/hintbutton.png", 1300,500)
 # sound_button = Button("img/resumebutton.png", 1200,570)
-
-
-def create_user_saved_game(username : str):
-    # get Jerry position
-    AimPos = findTomAndJerryPos(maze2D)[1]
-    # get Tom position
-    CurrentPos = findTomAndJerryPos(maze2D)[0]
-
-    filename = 'saved_game/' + username + '.txt'
-    fp = open(filename, 'w')
-    if game_mode == 0:
-        # Dòng 1: in game_mode
-        # Dòng 2: in game_level
-        # Dòng 3: in vị trí Jerry
-        # Dòng 4: in vị trí Tom
-        fp.write('0\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(AimPos[0]) + ' ')
-        fp.write(str(AimPos[1]) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-    elif game_mode == 1:
-        # Dòng 1: in game_mode
-        # Dòng 2: in thời gian còn lại
-        # Dong 3: in game_level
-        # Dòng 4: in vị trí Jerry
-        # Dòng 5: in vị trí Tom
-        fp.write('1\n')
-        fp.write(str(time) + '\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(AimPos[0]) + ' ')
-        fp.write(str(AimPos[1]) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-    elif game_mode == 2:
-        # Dòng 1: in game_mode
-        # Dòng 2: in số điểm hiện tại
-        # Dòng 3: in thời gian còn lại
-        # Dòng 4: in game_level
-        # Dòng 5: in vị trí Tom
-        fp.write('2\n')
-        fp.write(str(score) + '\n')
-        fp.write(str(time) + '\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-
-    for cell in maze:
-        fp.write(str(cell.x))
-        fp.write(' ')
-        fp.write(str(cell.y))
-        fp.write('\n')
-        fp.write(str(cell.walls))
-        fp.write('\n')  
-    fp.close()             
     
-
 def pause_game():
     surface.blit(pause_surface,(0,0))
     pause_surface.blit(bg_pause, (0,0))
@@ -351,40 +296,8 @@ def pause_game():
         if play_button.rect.collidepoint(pygame.mouse.get_pos()):
             return 0
         if home_button.rect.collidepoint(pygame.mouse.get_pos()):
-            DISPLAYSURF = surface
-            pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
-            pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
-            write_screen('Go out', WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
-            write_screen("  x  ", WHITE, RED, (1280//2 + 280, 320), -1, DISPLAYSURF, 20)
-            write_screen("Do u want to save your current game?", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
-            while True:
-                for event in pygame.event.get(): 
-                    tempx = pygame.mouse.get_pos()[0]
-                    tempy = pygame.mouse.get_pos()[1]
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        if (900 < tempx < 940 and 302 < tempy < 340) or (724 < tempx < 748 and 490 < tempy < 506): #quit dialog
-                            # Không Lưu mê cung
-                            # f = open('current_account.txt', 'r')
-                            # username = f.read()
-                            # f.close()
-                            # create_user_saved_game(username)
-                            return 1
-                        elif 542 < tempx < 567 and 489 < tempy < 506:
-                            # lưu mê cung
-                            f = open('current_account.txt', 'r')
-                            username = f.read()
-                            f.close()
-                            create_user_saved_game(username)
-                            return 1
-                    else:
-                        if 542 < tempx < 567 and 489 < tempy < 506:
-                            write_screen("SURE", BLACK, BROWN, ((542+568)//2, 500), 1, DISPLAYSURF, 18)
-                        elif 724 < tempx < 748 and 490 < tempy < 506:
-                            write_screen("NO", BLACK, BROWN, ((720 + 746)//2, 500), 1, DISPLAYSURF, 18)
-                        else:
-                            write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
-                pygame.display.update((380, 300, 600, 250))
+            # Go back home()
+            return 1
     # continue to pause
     return 2
 
@@ -444,6 +357,9 @@ while running:
         if game_mode == 0:
             # Action when player won
             if player_rect.colliderect(des_rect):
+                result = open('result.txt', 'w')
+                result.write('1')
+                result.close()
                 hint1, hint_2, hint = False, False, False
                 is_set = False
                 finish = True
@@ -709,9 +625,14 @@ while running:
 
             # gameplay
             if eat_food():
+                # FPS += 10
                 score += 1
             if is_game_over() == False:
                 running = False
+                finish = True
+                result = open('result.txt', 'w')
+                result.write('1')
+                result.close()
                 break
 
             # draw player
