@@ -188,6 +188,18 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                         return
             pygame.display.update((380, 300, 600, 250))
 
+    # elif mode == 2: #load game
+    #     while True:
+    #         mode == 2 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
+    #         for event in pygame.event.get(): 
+    #             if event.type == pygame.MOUSEBUTTONUP:
+    #                 make_sound()
+    #                 tempx = pygame.mouse.get_pos()[0]
+    #                 tempy = pygame.mouse.get_pos()[1]
+    #                 temp = (tempx - 588)//200
+    #                 if 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
+    #                     return
+    #         pygame.display.update((380, 300, 600, 250))
     elif mode == 3:#quit game
         write_screen("Do u really want to log out? We will miss u =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
         write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
@@ -260,14 +272,7 @@ def make_menu(s: str):
                         pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200, y*50 + 220, 400, 50), 6)
                         y = temp
                     elif temp == y > -1:
-                        if (y == 7):
-                            n = make_dialog(DISPLAYSURF, "Log out", 3)
-                            if n == -1:
-                                return 0
-                            if n == 0:
-                                running = False
-                                return -1
-                        elif (y == 0 or y == 1):
+                        if (y == 0 or y == 1):
                             while True:
                                 lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0, y)
                                 if lst == -1:
@@ -278,10 +283,25 @@ def make_menu(s: str):
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
-                                
+                        elif y == 2:
+                            # Load game
+                            
+                        # elif y == 3:
+                        #     # leaderboard
+                        # elif y == 4:
+                        #     # instruction
                         elif y == 5:
                             n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
                             return 0
+                        # elif y == 6:
+                        #     # about
+                        elif (y == 7):
+                            n = make_dialog(DISPLAYSURF, "Log out", 3)
+                            if n == -1:
+                                return 0
+                            if n == 0:
+                                running = False
+                                return -1 
 
                 elif event.type == QUIT:
                     running = False

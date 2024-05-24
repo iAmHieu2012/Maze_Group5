@@ -1,9 +1,5 @@
 {
-    "123": "456",
-    "asdfgh": "123456",
-    "jkl": "jkl1",
-    "12345": "12345",
-    "usernaodo": "password",
-    "qwer": "qwer",
-    "890": "890"
+    "easynormal": "easy",
+    "mediumspeed": "medium",
+    "hardlimit": "hard"
 }

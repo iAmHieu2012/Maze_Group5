@@ -16,6 +16,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
         s = Login.start_all()
+        open('current_account.txt', 'w').close()
         fp1 = open('current_account.txt', 'w')
         fp1.writelines(s)
         fp1.close()
