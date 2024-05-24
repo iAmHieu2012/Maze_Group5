@@ -18,6 +18,13 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
         s = Login.start_all()
+# <<<<<<< main
+# =======
+        open('current_account.txt', 'w').close()
+        fp1 = open('current_account.txt', 'w')
+        fp1.writelines(s)
+        fp1.close()
+# >>>>>>> main
         while True:
             soundbar.set_sound(pygame.mixer.music.get_volume())
             n = make_menu(s) #list thong so game
