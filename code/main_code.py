@@ -1,7 +1,7 @@
 from create_maze import *
 from algorithm import *
 from time import sleep
-from make_menu import *
+
 
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -430,13 +430,17 @@ hint_img = pygame.transform.scale(
     hint_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
 )
 hint_rect = hint_img.get_rect()
+# directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
+# keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
+# directions = {'a': (-player_speed, 0), 'd': (player_speed, 0), 'w': (0, -player_speed), 's': (0, player_speed)}
+# keys = {'a': pygame.K_a, 'd': pygame.K_d, 'w': pygame.K_w, 's': pygame.K_s}
 directions = {
     "a": (-player_speed, 0),
     "d": (player_speed, 0),
     "w": (0, -player_speed),
     "s": (0, player_speed),
 }
-keys = {"a": pygame.K_j, "d": pygame.K_l, "w": pygame.K_i, "s": pygame.K_k}
+keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
 direction = (0, 0)
 
 # food settings
@@ -509,7 +513,8 @@ pause_button = Button("img/pausebutton.png", 1300,50)
 hint_button_1 = Button("img/hintbutton.png", 1300,300)
 hint_button_2 = Button("img/hintbutton.png", 1300,500)
 # sound_button = Button("img/resumebutton.png", 1200,570)
-
+# <<<<<<< main
+# =======
 
 def create_user_saved_game(username : str):
     # get Jerry position
@@ -571,8 +576,8 @@ def create_user_saved_game(username : str):
                 fp.write('0 ')
         fp.write('\n')  
     fp.close()             
+# >>>>>>> main
     
-
 def pause_game():
     surface.blit(pause_surface,(0,0))
     pause_surface.blit(bg_pause, (0,0))
@@ -583,6 +588,10 @@ def pause_game():
         if play_button.rect.collidepoint(pygame.mouse.get_pos()):
             return 0
         if home_button.rect.collidepoint(pygame.mouse.get_pos()):
+# <<<<<<< main
+#             # Go back home()
+#             return 1
+# =======
             DISPLAYSURF = surface
             pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
             pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
@@ -612,6 +621,7 @@ def pause_game():
                         else:
                             write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
                 pygame.display.update((380, 300, 600, 250))
+# >>>>>>> main
     # continue to pause
     return 2
 
@@ -670,6 +680,9 @@ while running:
         if game_mode == 0:
             # Action when player won
             if player_rect.colliderect(des_rect):
+                result = open('result.txt', 'w')
+                result.write('1')
+                result.close()
                 hint1, hint_2, hint = False, False, False
                 is_set = False
                 finish = True
@@ -883,9 +896,14 @@ while running:
 
             # gameplay
             if eat_food():
+                # FPS += 10
                 score += 1
             if is_game_over() == False:
                 running = False
+                finish = True
+                result = open('result.txt', 'w')
+                result.write('1')
+                result.close()
                 break
 
             # draw player

@@ -1,5 +1,6 @@
 import pygame
 import json
+import pygame.mixer as mixer
 
 # Hàm để đọc dữ liệu từ tệp JSON
 def read_accounts_from_json(filename):
@@ -23,7 +24,7 @@ def check_account(username, password, accounts):
 def check_username(username, password, accounts):
     if username in accounts.keys():
         return True
-    return False    
+    return False
 
 # Hàm thêm tài khoản đăng kí
 def add_account(filename, username, password):
@@ -43,7 +44,15 @@ def login():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background2.jpg')
+    background_image = pygame.image.load('img/background2.png')
+
+    # Tải nhạc nền và phát lặp lại
+    mixer.music.load('sound/login_music.mp3')
+    mixer.music.play(-1)  # -1 để phát lặp lại liên tục
+
+    # tải âm thanh khi click chuột và khi nhấn phím
+    click_sound = mixer.Sound('sound/click.mp3')
+    key_sound = mixer.Sound("sound/key.wav")
 
     # Tạo font chữ
     font_1 = pygame.font.Font(None, 36)
@@ -104,16 +113,22 @@ def login():
                 mouse_pos = pygame.mouse.get_pos()
                 # Kiểm tra xem chuột có nằm trong ô vuông bên cạnh username hay không
                 if is_over_username_box(mouse_pos):
+                    click_sound.play()
                     current_input = "username"
                 if is_over_password_box(mouse_pos):
+                    click_sound.play()
                     current_input = "password"
                 if is_over_Reset_box(mouse_pos):
+                    click_sound.play()
                     username_input = ""
                     password_input = ""
                     current_input = "None"
                 if is_over_CreateNewAccount_box(mouse_pos):
+                    click_sound.play()
+                    mixer.music.stop()
                     return sign_up()
                 if is_over_Login_box(mouse_pos):
+                    click_sound.play()
                     filename = 'accounts.json'
                     # Đọc dữ liệu từ tệp JSON
                     accounts = read_accounts_from_json(filename)
@@ -122,6 +137,7 @@ def login():
                         flag = True
                         # khi ráp code thì return ra username_input
                         running = False
+                        mixer.music.stop()
                         return username_input
                     else:
                         # Đăng nhập không thành công, đặt cờ hiệu không thành công
@@ -130,15 +146,20 @@ def login():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     if current_input == "username":
+                        key_sound.play()
                         # Nếu nhấn phím backspace, xóa ký tự cuối cùng trong username
                         username_input = username_input[:-1]
                     elif current_input == "password":
+                        key_sound.play()
                         # Nếu nhấn phím backspace, xóa ký tự cuối cùng trong password
                         password_input = password_input[:-1]
                 elif event.key == pygame.K_RETURN:
+                    if current_input != "None":
+                        key_sound.play()
                     current_input = "None"
                 # phần thêm vào chức năng điều khiển nút up down
                 elif event.key == pygame.K_UP:
+                    key_sound.play()
                     if current_input == "None":
                         current_input = "password"
                     elif current_input == "username":
@@ -146,6 +167,7 @@ def login():
                     elif current_input == "password":
                         current_input = "username"
                 elif event.key == pygame.K_DOWN: 
+                    key_sound.play()
                     if current_input == "None":
                         current_input = "username"
                     elif current_input == "username":
@@ -154,6 +176,7 @@ def login():
                         current_input = "username"                           
                 else:
                     if current_input == "username":
+                        key_sound.play()
                         if len(username_input) < 20:
                             # Nếu nhấn một phím khác, thêm ký tự đó vào username
                             username_input += event.unicode
@@ -162,6 +185,7 @@ def login():
                             username_input += event.unicode
                             username_input = username_input[1:]
                     elif current_input == "password":
+                        key_sound.play()
                         if len(password_input) < 20:
                             # Nếu nhấn một phím khác, thêm ký tự đó vào password
                             password_input += event.unicode
@@ -249,7 +273,15 @@ def sign_up():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background3.jpg')
+    background_image = pygame.image.load('img/background3.png')
+
+    # Tải nhạc nền và phát lặp lại
+    mixer.music.load('sound/signup_music.mp3')
+    mixer.music.play(-1)  # -1 để phát lặp lại liên tục
+
+    # tải âm thanh khi click chuột và khi nhấn phím
+    click_sound = mixer.Sound('sound/click.mp3')
+    key_sound = mixer.Sound("sound/key.wav")
 
     # Tạo font chữ
     font_1 = pygame.font.Font(None, 36)
@@ -309,12 +341,16 @@ def sign_up():
                 mouse_pos = pygame.mouse.get_pos()
                 # Kiểm tra xem chuột có nằm trong ô vuông bên cạnh username hay không
                 if is_over_username_box(mouse_pos):
+                    click_sound.play()
                     current_input = "username"
                 if is_over_password_1_box(mouse_pos):
+                    click_sound.play()
                     current_input = "password_1"
                 if is_over_password_2_box(mouse_pos):
+                    click_sound.play()
                     current_input = "password_2"
                 if is_over_signup_box(mouse_pos):
+                    click_sound.play()
                     # Lưu ý, cho phép đăng kí mới True, còn không cho phép thì False, chưa biết thì None
                     if password_1_input != password_2_input:
                         flag_password = False
@@ -342,24 +378,33 @@ def sign_up():
                                 add_account(filename, username_input, password_1_input)
                                 flag_account = True
                                 # nếu ráp code muốn return ra chuỗi username mới thì return ngay chỗ này
-                                running = False    
+                                running = False
+                                # mixer.music.stop()
+                                print(username_input)    
                                 return username_input                    
           
             # Bắt sự kiện nhập văn bản vào ô username or password
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     if current_input == "username":
+                        key_sound.play()
                         # Nếu nhấn phím backspace, xóa ký tự cuối cùng trong username
                         username_input = username_input[:-1]
                     elif current_input == "password_1":
+                        key_sound.play()
                         # Nếu nhấn phím backspace, xóa ký tự cuối cùng trong password
                         password_1_input = password_1_input[:-1]
                     elif current_input == "password_2":
+                        key_sound.play()
                         # Nếu nhấn phím backspace, xóa ký tự cuối cùng trong password
                         password_2_input = password_2_input[:-1]
                 elif event.key == pygame.K_RETURN:
+                    if current_input != "None":
+                        pass
+                        key_sound.play()
                     current_input = "None"
                 elif event.key == pygame.K_UP:
+                    key_sound.play()
                     if current_input == "None":
                         current_input = "password_2"
                     elif current_input == "username":
@@ -369,6 +414,7 @@ def sign_up():
                     elif current_input == "password_2":
                         current_input = "password_1"
                 elif event.key == pygame.K_DOWN:
+                    key_sound.play()
                     if current_input == "None":
                         current_input = "username"
                     elif current_input == "username":
@@ -379,6 +425,7 @@ def sign_up():
                         current_input = "username"                    
                 else:
                     if current_input == "username":
+                        key_sound.play()
                         if len(username_input) < 20:
                             # Nếu nhấn một phím khác, thêm ký tự đó vào username
                             username_input += event.unicode
@@ -387,6 +434,7 @@ def sign_up():
                             username_input += event.unicode
                             username_input = username_input[1:]
                     elif current_input == "password_1":
+                        key_sound.play()
                         if len(password_1_input) < 20:
                             # Nếu nhấn một phím khác, thêm ký tự đó vào password
                             password_1_input += event.unicode
@@ -394,6 +442,7 @@ def sign_up():
                             password_1_input += event.unicode
                             password_1_input = password_1_input[1:]                 
                     elif current_input == "password_2":
+                        key_sound.play()
                         if len(password_2_input) < 20:
                             # Nếu nhấn một phím khác, thêm ký tự đó vào password
                             password_2_input += event.unicode
@@ -489,11 +538,6 @@ def sign_up():
         # Giới hạn tốc độ khung hình
         clock.tick(60)
 
-screen_width = 1280
-screen_height = 720
-screen = pygame.display.set_mode((screen_width,screen_height))      
-clock = pygame.time.Clock()
-
 def start_all():
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -501,7 +545,14 @@ def start_all():
     DARK_RED = (139, 0, 0)  # Màu Dark Red
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background1.jpg')
+    background_image = pygame.image.load('img/background1.png')
+
+    # tải âm thanh khi click chuột
+    click_sound = mixer.Sound('sound/click.mp3')
+
+    # Tải nhạc nền và phát lặp lại
+    mixer.music.load('sound/startall_music.mp3')
+    mixer.music.play(-1)  # -1 để phát lặp lại liên tục
 
     #return login trả về tên đăng nhập
     tendangnhap = ''
@@ -525,7 +576,7 @@ def start_all():
     while running:
         # Xử lý sự kiện
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or 8 == 5:
+            if event.type == pygame.QUIT:
                 pygame.quit()  # Thoát khỏi pygame khi nhấn nút tắt màn hình
                 quit()  # Thoát khỏi chương trình
             # Bắt sự kiện nhấp chuột
@@ -533,11 +584,16 @@ def start_all():
                 mouse_pos = pygame.mouse.get_pos()
                 # Kiểm tra xem chuột có nằm trong ô vuông bên cạnh username hay không
                 if is_over_Login_box(mouse_pos):
+                    click_sound.play()  # Phát âm thanh khi click vào ô Login
+                    mixer.music.stop()
                     tendangnhap = login()
                 if is_over_Signup_box(mouse_pos):
-                    tendangnhap = sign_up()    
-                return tendangnhap
-            
+                    click_sound.play()  # Phát âm thanh khi click vào ô signup 
+                    mixer.music.stop()
+                    tendangnhap = sign_up()
+                return tendangnhap   
+                               
+
         # Tô màu màn hình
         screen.fill(WHITE)
         # Vẽ ảnh nền
@@ -570,27 +626,32 @@ def start_all():
         # Giới hạn tốc độ khung hình
         clock.tick(60)
 
+    # Thoát khỏi Pygame
+    #pygame.quit()
 
 if __name__ == '__main__':
-
-    
     # pygame setup
     pygame.init()
-
     #Cửa số game: chỉnh full screen: screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-    # screen_width = 1280
-    # screen_height = 720
-    # screen = pygame.display.set_mode((screen_width,screen_height))      
+    screen_width = 1280
+    screen_height = 720
+    screen = pygame.display.set_mode((screen_width,screen_height)) 
+
+    # # Load hình ảnh Tom and Jerry
+    # tom_and_jerry_img = pygame.image.load('wallpaperflare.com_wallpaper.jpg')  # Đặt đường dẫn tới hình ảnh của bạn ở đây
+
+    # # Vị trí để vẽ hình ảnh Tom and Jerry
+    # tom_and_jerry_rect = tom_and_jerry_img.get_rect()
+    # tom_and_jerry_rect.center = (screen_width // 2, screen_height // 2)  # Đặt hình ảnh ở giữa màn hình        
 
     #Đặt tên cho cửa sổ game là Maze
     pygame.display.set_caption('Maze')
-
     #Hình ảnh tượng trưng cho game đặt bên trái tên cửa sổ game
-    img = pygame.image.load('img/maze_icon.png')
-    pygame.display.set_icon(img)
+    # img = pygame.image.load('maze_icon.png')
+    # pygame.display.set_icon(img)
 
     #tạo biến clock truy cập vào đồng hồ trong pygame.time để xử lí về thời gian
-    # clock = pygame.time.Clock()
+    clock = pygame.time.Clock()
     running = True
     while running:
         # poll for events
@@ -604,11 +665,11 @@ if __name__ == '__main__':
 
         ss = start_all()
         print(ss)
-        
         break
-
         # flip() the display to put your work on screen
         pygame.display.flip()
 
         clock.tick(60)  # limits FPS to 60
     pygame.quit()
+
+    

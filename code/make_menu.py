@@ -15,6 +15,7 @@ MAGNETA = (255, 0, 255)
 MUSTARD_YELLOW = (139, 128, 0)
 BROWN = (150, 75, 0)
 GRAY = (128, 128, 128)
+DARK_ORANGE = (255, 140, 0)
 
 def write_screen(s: str, color, color2, vt, custom_font: int, DISPLAYSURF, size):
     if custom_font == 0:
@@ -35,20 +36,19 @@ def set_all(s: str):
     
     #DISPLAYSURF.fill(BLUE)
     #pygame.draw.line(DISPLAYSURF, RED, (0, 0), (100, 100), 10)
-    background = pygame.image.load('img/background.jpg')
+    background = pygame.image.load('img/background1.png')
     picture = pygame.transform.scale(background, (1280, 720))
     DISPLAYSURF.blit(picture, (0, 0))
 
     #textsys
     write_screen("Account: "+s, BLACK, YELLOW, (1280/2, 650), 1, DISPLAYSURF, 20)
     #textcus
-    write_screen("TOM & JERRY", RED, None, (1280/2, 130), 0, DISPLAYSURF, 90)
     for i in range(8):
-        pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200,i*50 + 220, 400, 50), 6) #ve bang chon
+        pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200,i*50 + 220, 400, 50), 6) #ve bang chon
     pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, 0*50 + 220, 400, 50), 6)
     lst = ["PLAY", "AUTOPLAY", "LOAD GAME", "LEADERBOARD", "HELP", "SETTINGS", "ABOUT", "LOG OUT"]
     for i in range(8):
-        write_screen(lst[i], BLUE, None, (1280/2, i*50 + 245), -1, DISPLAYSURF, 26)
+        write_screen(lst[i], BLACK, None, (1280/2, i*50 + 245), -1, DISPLAYSURF, 26)
     pygame.display.update()
     return DISPLAYSURF
 
@@ -117,6 +117,7 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
     pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
     write_screen("  X  ", WHITE, RED, (1280//2 + 280, 320), -1, DISPLAYSURF, 20)
+    button_X = pygame.Rect((900, 302, 40, 38))
     if mode == 0:
         write_screen("LEVEL", BLACK, None, (1280//2 - 240 + 30, 380), -1, DISPLAYSURF, 20)
         lst = ["EASY", "MEDIUM", " HARD "]
@@ -138,7 +139,7 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                             x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 380), -1, DISPLAYSURF, 20)
                             write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 380), -1, DISPLAYSURF, 20)
                             x = temp
-                        elif 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
+                        elif button_X.collidepoint((tempx, tempy)): #quit dialog
                             running = False
                             return -1
                         elif temp == x > -1:
@@ -269,7 +270,7 @@ def make_menu(s: str):
                     temp = (tempy - 220) // 50
                     if (-1< temp < 8 and 1280//2 - 200 < tempx < 1280//2 + 200 and temp!=y):
                         pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
-                        pygame.draw.rect(DISPLAYSURF, YELLOW, (1280//2 - 200, y*50 + 220, 400, 50), 6)
+                        pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200, y*50 + 220, 400, 50), 6)
                         y = temp
                     elif temp == y > -1:
                         if (y == 0 or y == 1):
@@ -283,31 +284,53 @@ def make_menu(s: str):
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
-                        elif y == 2:
+                        
+                        elif y ==4 or y == 6:
+                            DISPLAYSURF.fill('white')
+                            foo = 'help.txt' if y == 4 else 'about.txt'
+                            help = open(foo, 'r')
+                            help = help.readlines()
+                            for i in range(len(help)):
+                                write_screen(help[i], BLACK, None, (1280//2, 100 + i*30), 1, DISPLAYSURF, 16)
+                            subrun = True
+                            while subrun:
+                                for event in pygame.event.get():
+                                    if event.type == pygame.QUIT:
+                                            running = False
+                                            subrun = False
+                                            pygame.quit()
+                                            sys.exit()
+                                    elif event.type == pygame.MOUSEBUTTONUP:
+                                            subrun = False
+                                            return 0
+                                pygame.display.update()
+                        elif y == 5:
+                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
+                            return 0
+
+                        # elif y == 2:
                             # Load game
                             
                         # elif y == 3:
                         #     # leaderboard
-                        # elif y == 4:
-                        #     # instruction
-                        elif y == 5:
-                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                            return 0
-                        # elif y == 6:
-                        #     # about
+
                         elif (y == 7):
                             n = make_dialog(DISPLAYSURF, "Log out", 3)
                             if n == -1:
                                 return 0
                             if n == 0:
                                 running = False
+# <<<<<<< main
+#                                 return -1
+# =======
                                 return -1 
+# >>>>>>> main
 
                 elif event.type == QUIT:
                     running = False
                     pygame.quit()
                     sys.exit()
-            pygame.display.update((380, 200, 600, 450))
+            pygame.display.update()
 
 if __name__=="__main__":
     pygame.init()
@@ -316,13 +339,11 @@ if __name__=="__main__":
     Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
     Login.clock = pygame.time.Clock()
     soundbar.set_sound(0.5)
-    s = Login.start_all()
-    print(s)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        # s = Login.start_all()
+        s = Login.start_all()
         while True:
             n = make_menu(s) #list thong so game
             print(n)
@@ -336,4 +357,4 @@ if __name__=="__main__":
                 #auto == 0 tu choi, auto == 1 bot choi
                 #hard: 20,40,100
                 #mode: 0,1,2 (normal, speed, limit)
- 
+    

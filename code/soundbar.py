@@ -26,6 +26,7 @@ def sound_all(screen):
     # screen.blit(picture, (0, 0))
     x=SCREEN_WIDTH/2-button.get_width()/2
     mouse_held=False
+    button_X = pygame.Rect((900, 302, 40, 38))
 
     # pygame.mixer.music.load('sound/ingame.mp3')
     # pygame.mixer.music.play(-1)
@@ -38,6 +39,8 @@ def sound_all(screen):
             if event.type == pygame.KEYDOWN:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_X.collidepoint(mouse_pos):
+                    running = False
                 if event.button == 1:
                     if button_rect.collidepoint(mouse_pos):
                         mouse_held=True
@@ -57,3 +60,5 @@ def sound_all(screen):
         screen.blit(button,(x, SCREEN_HEIGHT/2 + 100))
         pygame.display.update((SCREEN_WIDTH/2-bar.get_width()/2 - 10, SCREEN_HEIGHT/2 + 60, 250, 100))
 
+    # pygame.quit()
+    # sys.exit()
