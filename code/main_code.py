@@ -34,7 +34,7 @@ elif game_level == 100:
 
 class Food:
     def __init__(self):
-        self.img = pygame.image.load("img/food.png").convert_alpha()
+        self.img = pygame.image.load("img/cheese.png").convert_alpha()
         self.img = pygame.transform.scale(self.img, (create_maze.TILE - 10, create_maze.TILE - 10))
         self.rect = self.img.get_rect()
         self.set_pos()
