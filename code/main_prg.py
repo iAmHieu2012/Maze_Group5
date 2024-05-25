@@ -30,19 +30,19 @@ if __name__ == '__main__':
                 break
             elif n == 0:
                 continue
-            elif n == 2:
-                subprocess.run(['python', 'load_game.py'])
-                result = open('result.txt', 'r')
-                temp = int(result.read(2))
-                result.close()
-                if temp == -1:
-                    break
-                if End_game(temp) == 0:
-                    soundbar.set_sound(pygame.mixer.music.get_volume())
-                    break
-                else:
-                    soundbar.set_sound(pygame.mixer.music.get_volume())
-                    continue
+            # elif n == 2:
+            #     subprocess.run(['python', 'load_game.py'])
+            #     result = open('result.txt', 'r')
+            #     temp = int(result.read(2))
+            #     result.close()
+            #     if temp == -1:
+            #         break
+            #     if End_game(temp) == 0:
+            #         soundbar.set_sound(pygame.mixer.music.get_volume())
+            #         break
+            #     else:
+            #         soundbar.set_sound(pygame.mixer.music.get_volume())
+            #         continue
             elif n == 4:
                 subprocess.run(['python', 'code/instruction.py'])
             elif n == 6:
