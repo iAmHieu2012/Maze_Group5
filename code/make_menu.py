@@ -114,115 +114,139 @@ def rec_input(DISPLAYSURF, x, y) -> int:
             # Blit the input_box rect.
         pygame.draw.rect(DISPLAYSURF, color, input_box, 4)
 
-        pygame.display.flip()
+        pygame.display.update()
         clock.tick(30)
 
 def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
-    # logbox = pygame.image.load('img/log.png').convert_alpha()
-    # logbox = pygame.transform.scale(logbox, (600, 480))
-    pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
-    pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
-    write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
-    write_screen("  X  ", WHITE, RED, (1280//2 + 280, 320), -1, DISPLAYSURF, 20)
-    button_X = pygame.Rect((900, 302, 40, 38))
+    logbox = pygame.image.load('img/log.png').convert_alpha()
+    logbox = pygame.transform.scale(logbox, (560, 400))
+    logbox_rect = logbox.get_rect()
+    logbox_rect.topleft = (1280//2 - 500, 200)
+    x_button = pygame.image.load('img/xbutton.png').convert_alpha()
+    x_button = pygame.transform.scale(x_button, (60, 60))    
+    tick_button = pygame.image.load('img/tickbutton.png').convert_alpha()
+    tick_button = pygame.transform.scale(tick_button, (60, 60))
+    modebox = pygame.image.load('img/modebox.png').convert_alpha()
+    modebox = pygame.transform.scale(modebox, (140,50))
+    modebox_pressed = pygame.image.load('img/modeboxpressed.png').convert_alpha()
+    modebox_pressed = pygame.transform.scale(modebox_pressed, (140,50))
+    DISPLAYSURF.blit(logbox, logbox_rect)
+    DISPLAYSURF.blit(x_button, (1280//2 + 80, 250))
+    DISPLAYSURF.blit(tick_button, (logbox_rect.centerx, logbox_rect.bottom))
+    # pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
+    # pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
+    write_screen(s, GRAY, None, (1280//2 - 270, 250), -1, DISPLAYSURF, 30)
+    # write_screen("  X  ", WHITE, RED, (1280//2 + 80, 320), -1, DISPLAYSURF, 20)
+    x_button_rect = x_button.get_rect()
+    x_button_rect.topleft = (1280//2 + 60, 250)
+    tick_button_rect = x_button.get_rect()
+    tick_button_rect.center = (logbox_rect.centerx, logbox_rect.bottom)
     if mode == 0:
-        write_screen("LEVEL", BLACK, None, (1280//2 - 240 + 30, 380), -1, DISPLAYSURF, 20)
+        write_screen("LEVEL", BLACK, None, (1280//2 - 430, 320), -1, DISPLAYSURF, 20)
         lst = ["EASY", "MEDIUM", " HARD "]
+        lst_level_rect = []
         for i in range(1, 4):
-            write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 380), -1, DISPLAYSURF, 20)
-        x = -1
+            DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 355))
+            lst_level_rect.append(pygame.rect.Rect(1280//2 - 590 + 150 * i, 355,140,50))
+            write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
         running = True
         hard = 0
-        runner = 0
+        if auto == 0:
+            write_screen("MODE", BLACK, None, (1280//2 - 430, 450), -1, DISPLAYSURF, 20)
+            # pygame.time.delay(500)
+            lstmode = ["NORMAL", "SPEEDRUN", "LIMIT"]
+            lst_mode_rect = []
+            for i in range(1, 4):
+                DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 485))
+                lst_mode_rect.append(pygame.rect.Rect(1280//2 - 590 + 150 * i, 485,140,50))
+                write_screen(lstmode[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 510), -1, DISPLAYSURF, 20)
+                
+        player_choice = []
+        x1 = -1
+        x2 = -1
         while running:
-            if runner == 0:#choose map 
-                for event in pygame.event.get(): 
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        make_sound()
-                        tempx = pygame.mouse.get_pos()[0]
-                        tempy = pygame.mouse.get_pos()[1]
-                        temp = (tempx - 538)//150
-                        if (-1 < temp < 3 and 360 < tempy < 400 and temp != x):
-                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 380), -1, DISPLAYSURF, 20)
-                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 380), -1, DISPLAYSURF, 20)
-                            x = temp
-                        elif button_X.collidepoint((tempx, tempy)): #quit dialog
-                            running = False
-                            return -1
-                        elif temp == x > -1:
-                            if temp == 0: hard = 20
-                            elif temp == 1: hard = 40
-                            else: hard = 100
-                            runner = 1
-                            if auto == 1:
-                                return [hard, 4]
-            elif runner == 1 and auto == 0:#choose mode play
-                if lst[0] != "NORMAL":
-                    x = -1
-                    write_screen("MODE", BLACK, None, (1280//2 - 240 + 40, 450), -1, DISPLAYSURF, 20)
-                    pygame.time.delay(500)
-                    lst = ["NORMAL", "SPEEDRUN", "LIMIT"]
-                    for i in range(1, 4):
-                        write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 450), -1, DISPLAYSURF, 20)
-                for event in pygame.event.get(): 
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        make_sound()
-                        tempx = pygame.mouse.get_pos()[0]
-                        tempy = pygame.mouse.get_pos()[1]
-                        temp = (tempx - 538)//150
-                        if 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
-                            running = False
-                            return -1
-                        elif (-1 < temp < 3 and 430 < tempy < 470 and x!= temp):
-                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 450), -1, DISPLAYSURF, 20)
-                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 450), -1, DISPLAYSURF, 20)
-                            x = temp
-                        elif temp == x:
-                            mode2 = temp
-                            running = False
-                            return [hard, mode2]
-            pygame.display.update((380, 300, 600, 250))
+            mousePos = pygame.mouse.get_pos()
+            for item in lst_level_rect:
+                if item.collidepoint(mousePos):
+                    x1 = lst_level_rect.index(item)
+                    break
+            else: x1=-1
+            for item in lst_mode_rect:
+                if item.collidepoint(mousePos):
+                    x2 = lst_mode_rect.index(item)
+                    break
+            else:x2=-1
+            for event in pygame.event.get(): 
+                if event.type == pygame.MOUSEBUTTONUP:
+                    make_sound()
+                    if x1 > -1:
+                        DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x1+1), 355))
+                        write_screen(lst[x1], BLACK, None, (1280//2 - 520 + 150 * (x1+1), 380), -1, DISPLAYSURF, 20)
+                        if x1 == 0: hard = 20
+                        elif x1 == 1: hard = 40
+                        else: hard = 100
+                        if auto == 1:
+                            player_choice =  [hard, 4]
+                    
+                    if x2>-1:
+                        DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x2+1), 485))
+                        write_screen(lstmode[x2], BLACK, None, (1280//2 - 520 + 150 * (x2+1), 510), -1, DISPLAYSURF, 20)
+                        player_choice = [hard, x2]
+                    if tick_button_rect.collidepoint(mousePos) and player_choice != []:
+                        running = False
+                        return player_choice
+                    if x_button_rect.collidepoint(mousePos): #quit dialog
+                        running = False
+                        player_choice = []
+                        return -1
+            pygame.display.update()
 
     elif mode == 1: #done sucess or failed
         while True:
-            mode == 1 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            for event in pygame.event.get(): 
-                if event.type == pygame.MOUSEBUTTONUP:
-                    make_sound()
-                    tempx = pygame.mouse.get_pos()[0]
-                    tempy = pygame.mouse.get_pos()[1]
-                    temp = (tempx - 588)//200
-                    if 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
-                        return
-            pygame.display.update((380, 300, 600, 250))
+            write_screen("Hope u enjoy!", BLACK, None, (1280//2 - 230, 450), -1, DISPLAYSURF, 50)
+            pygame.display.update()
+            pygame.time.delay(1000)
+            return
+            # for event in pygame.event.get(): 
+            #     if event.type == pygame.MOUSEBUTTONUP:
+            #         make_sound()
+            #         if pygame.mouse.get_pressed()[0]:
+                        # return
+            # pygame.time.delay(1000)
 
     elif mode == 3:#quit game
-        write_screen("Do u really want to log out? We will miss u =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-        write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
+        write_screen("Do u really want to log out?", BLACK, None, (1280//2 - 250, 380), -1, DISPLAYSURF, 30)
+        lst = ["SURE","NO"]
+        lst_rect = []
+        for i in range(1,3):
+            DISPLAYSURF.blit(modebox, (1280//2 - 590 + 200 * i, 500))
+            lst_rect.append(pygame.rect.Rect(1280//2 - 590 + 200 * i, 500,140,50))
+            write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 525), -1, DISPLAYSURF, 20)
         while True:
+            mousePos = pygame.mouse.get_pos()
+            for item in lst_rect:
+                x = lst_rect.index(item)
+                if item.collidepoint(mousePos):
+                    DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 500))
+                    write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, DISPLAYSURF, 20)
+                else:
+                    DISPLAYSURF.blit(modebox, (1280//2 - 590 + 200 * (x+1), 500))
+                    write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, DISPLAYSURF, 20)
+                    
             for event in pygame.event.get(): 
-                tempx = pygame.mouse.get_pos()[0]
-                tempy = pygame.mouse.get_pos()[1]
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
-                    if (900 < tempx < 940 and 302 < tempy < 340) or (724 < tempx < 748 and 490 < tempy < 506): #quit dialog
+                    if x_button_rect.collidepoint(mousePos) or lst_rect[1].collidepoint(mousePos): #quit dialog
                         return -1
-                    elif 542 < tempx < 567 and 489 < tempy < 506:
+                    elif lst_rect[0].collidepoint(mousePos):
                         return 0
-                else:
-                    if 542 < tempx < 567 and 489 < tempy < 506:
-                        write_screen("SURE", BLACK, BROWN, ((542+568)//2, 500), 1, DISPLAYSURF, 18)
-                    elif 724 < tempx < 748 and 490 < tempy < 506:
-                        write_screen("NO", BLACK, BROWN, ((720 + 746)//2, 500), 1, DISPLAYSURF, 18)
-                    else:
-                        write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
-            pygame.display.update((380, 300, 600, 250))
+            pygame.display.update()
 
     elif mode == 4:#setting
-        write_screen(" KEY ", BLACK, None, (1280//2 - 240 + 30, 380), -1, DISPLAYSURF, 20)
+        write_screen(" KEY ", BLACK, None, (1280//2 - 240 + 30, 525), -1, DISPLAYSURF, 20)
         lst = ["AWSD", "ARROWKEY", "JIKL"]
         for i in range(1, 4):
-            write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 380), -1, DISPLAYSURF, 20)
+            write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 525), -1, DISPLAYSURF, 20)
         x = -1
         running = True
         key_mode = 0
@@ -260,26 +284,21 @@ def make_menu(s: str):
         DISPLAYSURF, collide_rect_list = set_all(s)
         clock = pygame.time.Clock()
         running = True
-        y = 0
+        y = -1
         while running:
             mousePos = pygame.mouse.get_pos()
             for item in collide_rect_list:
                 if item.collidepoint(mousePos):
                     DISPLAYSURF.blit(textbox_p, (item[0],item[1]))
                     write_screen(lst[collide_rect_list.index(item)], GRAY, None, (1280/2-300, collide_rect_list.index(item)*50 + 245), -1, DISPLAYSURF, 24)
-                    # y = lst[collide_rect_list.index(item)]
+                    y = collide_rect_list.index(item)
                 else:
                     DISPLAYSURF.blit(textbox, (item[0],item[1]))
                     write_screen(lst[collide_rect_list.index(item)], WHITE, None, (1280/2-300, collide_rect_list.index(item)*50 + 245), -1, DISPLAYSURF, 24)
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
-                    tempx = pygame.mouse.get_pos()[0]
-                    tempy = pygame.mouse.get_pos()[1]
-                    temp = (tempy - 220) // 50
-                    if (-1< temp < 8 and 1280//2 - 300 < tempx < 1280//2 - 100 and temp!=y):
-                        y = temp
-                    elif temp == y > -1:
+                    if y > -1:
                         if (y == 0 or y == 1):
                             while True:
                                 lst = make_dialog(DISPLAYSURF, "Choose mode to play", 0, y)
