@@ -118,8 +118,8 @@ def rec_input(DISPLAYSURF, x, y) -> int:
         clock.tick(30)
 
 def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
-    logbox = pygame.image.load('img/log.png').convert_alpha()
-    logbox = pygame.transform.scale(logbox, (600, 480))
+    # logbox = pygame.image.load('img/log.png').convert_alpha()
+    # logbox = pygame.transform.scale(logbox, (600, 480))
     pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
     pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
