@@ -1,0 +1,14 @@
+The cheese cake of Tom's owner (we actually don't know her name) has always been stolen.
+So she ordered Tom to find the culprit (Jerry, of course).
+Jerry's house is a maze. There are 3 levels of the maze (Easy, Medium, Hard). 
+The higher level you choose, the larger and more complex is the maze.
+Help Tom enter the maze and catch Jerry for his owner. 
+Use arrow keys to move, or you can change the keys in Settings.
+
+Game modes:
+1. Normal: Catch Jerry and you win.
+2. Speedrun: Tom's owner is so angry now, so he has to be quick. Try to find Jerry as fast as possible!
+3. Collect: Help Tom collect cheese as much as possible.
+
+Autoplay: 
+The Madam is so upset now. She bought a robot cat to catch the mouse. Click "Autoplay" to see how fast it is!

@@ -1,11 +1,11 @@
--Khởi động:	
+Login:	
 	Username, password
 	Nút login, reset
 	Create account:
 		Sign up page:
 			Username, password, confirm -> sign up
 	Trả về: giao diện
--Giao diện:
+Giao diện:
 	Play
 		Chọn level:
 			Easy
@@ -42,12 +42,16 @@
 		Sound: điều chỉnh âm thanh to nhỏ
 			Âm thanh có âm thanh bên ngoài & trong khi chơi
 
-	About
 	Instruction
+		Đọc file instruction.py
+
+	About
+		Đọc file about.txt
+	
 	Logout:
 		2 tuỳ chọn: yes, no
 
--	Chơi game:
+Chơi game:
 	Hiển thị:
 		Bình thường:
 			Thời gian

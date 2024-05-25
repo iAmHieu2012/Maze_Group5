@@ -44,7 +44,7 @@ def login():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background2.png')
+    background_image = pygame.image.load('img/background2.jpg')
 
     # Tải nhạc nền và phát lặp lại
     mixer.music.load('sound/login_music.mp3')
@@ -273,7 +273,7 @@ def sign_up():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background3.png')
+    background_image = pygame.image.load('img/background3.jpg')
 
     # Tải nhạc nền và phát lặp lại
     mixer.music.load('sound/signup_music.mp3')
@@ -545,7 +545,7 @@ def start_all():
     DARK_RED = (139, 0, 0)  # Màu Dark Red
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background1.png')
+    background_image = pygame.image.load('img/background1.jpg')
 
     # tải âm thanh khi click chuột
     click_sound = mixer.Sound('sound/click.mp3')
@@ -630,32 +630,24 @@ def start_all():
     #pygame.quit()
 
 if __name__ == '__main__':
-    # pygame setup
     pygame.init()
+
     #Cửa số game: chỉnh full screen: screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     screen_width = 1280
     screen_height = 720
     screen = pygame.display.set_mode((screen_width,screen_height)) 
 
-    # # Load hình ảnh Tom and Jerry
-    # tom_and_jerry_img = pygame.image.load('wallpaperflare.com_wallpaper.jpg')  # Đặt đường dẫn tới hình ảnh của bạn ở đây
-
-    # # Vị trí để vẽ hình ảnh Tom and Jerry
-    # tom_and_jerry_rect = tom_and_jerry_img.get_rect()
-    # tom_and_jerry_rect.center = (screen_width // 2, screen_height // 2)  # Đặt hình ảnh ở giữa màn hình        
-
     #Đặt tên cho cửa sổ game là Maze
     pygame.display.set_caption('Maze')
+    
     #Hình ảnh tượng trưng cho game đặt bên trái tên cửa sổ game
-    # img = pygame.image.load('maze_icon.png')
-    # pygame.display.set_icon(img)
+    img = pygame.image.load('img/maze_icon.png')
+    pygame.display.set_icon(img)
 
     #tạo biến clock truy cập vào đồng hồ trong pygame.time để xử lí về thời gian
     clock = pygame.time.Clock()
     running = True
     while running:
-        # poll for events
-        # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -666,10 +658,7 @@ if __name__ == '__main__':
         ss = start_all()
         print(ss)
         break
-        # flip() the display to put your work on screen
-        pygame.display.flip()
 
-        clock.tick(60)  # limits FPS to 60
     pygame.quit()
 
     

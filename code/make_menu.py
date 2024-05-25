@@ -36,7 +36,7 @@ def set_all(s: str):
     
     #DISPLAYSURF.fill(BLUE)
     #pygame.draw.line(DISPLAYSURF, RED, (0, 0), (100, 100), 10)
-    background = pygame.image.load('img/background1.png')
+    background = pygame.image.load('img/background.jpg')
     picture = pygame.transform.scale(background, (1280, 720))
     DISPLAYSURF.blit(picture, (0, 0))
 
@@ -189,18 +189,6 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                         return
             pygame.display.update((380, 300, 600, 250))
 
-    # elif mode == 2: #load game
-    #     while True:
-    #         mode == 2 and write_screen("Press X to start playing! Hope u enjoy =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-    #         for event in pygame.event.get(): 
-    #             if event.type == pygame.MOUSEBUTTONUP:
-    #                 make_sound()
-    #                 tempx = pygame.mouse.get_pos()[0]
-    #                 tempy = pygame.mouse.get_pos()[1]
-    #                 temp = (tempx - 588)//200
-    #                 if 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
-    #                     return
-    #         pygame.display.update((380, 300, 600, 250))
     elif mode == 3:#quit game
         write_screen("Do u really want to log out? We will miss u =^.^=", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
         write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
@@ -284,47 +272,27 @@ def make_menu(s: str):
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
+                        elif y == 2:
+                            #return 2 là hàm load_game, xem tiếp ở mainprg.py
+                            return 2
                         
-                        elif y ==4 or y == 6:
-                            DISPLAYSURF.fill('white')
-                            foo = 'help.txt' if y == 4 else 'about.txt'
-                            help = open(foo, 'r')
-                            help = help.readlines()
-                            for i in range(len(help)):
-                                write_screen(help[i], BLACK, None, (1280//2, 100 + i*30), 1, DISPLAYSURF, 16)
-                            subrun = True
-                            while subrun:
-                                for event in pygame.event.get():
-                                    if event.type == pygame.QUIT:
-                                            running = False
-                                            subrun = False
-                                            pygame.quit()
-                                            sys.exit()
-                                    elif event.type == pygame.MOUSEBUTTONUP:
-                                            subrun = False
-                                            return 0
-                                pygame.display.update()
-                        elif y == 5:
-                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                            return 0
-
-                        # elif y == 2:
-                            # Load game
-                            
                         # elif y == 3:
                         #     # leaderboard
 
+                        elif y == 4:
+                            return 4
+                        elif y == 5:
+                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
+                            return 0
+                        elif y == 6:
+                            return 6
                         elif (y == 7):
                             n = make_dialog(DISPLAYSURF, "Log out", 3)
                             if n == -1:
                                 return 0
                             if n == 0:
                                 running = False
-# <<<<<<< main
-#                                 return -1
-# =======
                                 return -1 
-# >>>>>>> main
 
                 elif event.type == QUIT:
                     running = False
@@ -332,29 +300,29 @@ def make_menu(s: str):
                     sys.exit()
             pygame.display.update()
 
-if __name__=="__main__":
-    pygame.init()
-    Login.screen_width = 1280
-    Login.screen_height = 720
-    Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
-    Login.clock = pygame.time.Clock()
-    soundbar.set_sound(0.5)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        s = Login.start_all()
-        while True:
-            n = make_menu(s) #list thong so game
-            print(n)
-            if n == -1:
-                break
-            elif n == 0:
-                continue
-            else:
-                continue
-                #play game [name, auto, hard, mode]
-                #auto == 0 tu choi, auto == 1 bot choi
-                #hard: 20,40,100
-                #mode: 0,1,2 (normal, speed, limit)
+# if __name__=="__main__":
+#     pygame.init()
+#     Login.screen_width = 1280
+#     Login.screen_height = 720
+#     Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
+#     Login.clock = pygame.time.Clock()
+#     soundbar.set_sound(0.5)
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 running = False
+#         s = Login.start_all()
+#         while True:
+#             n = make_menu(s) #list thong so game
+#             print(n)
+#             if n == -1:
+#                 break
+#             elif n == 0:
+#                 continue
+#             else:
+#                 continue
+#                 #play game [name, auto, hard, mode]
+#                 #auto == 0 tu choi, auto == 1 bot choi
+#                 #hard: 20,40,100
+#                 #mode: 0,1,2 (normal, speed, limit)
     

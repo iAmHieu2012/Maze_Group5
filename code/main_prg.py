@@ -1,8 +1,6 @@
-#from create_maze import *
 from end_game import *
-#from main_code import *
 import Login
-from Make_menu import *
+from make_menu import *
 import subprocess
 
 if __name__ == '__main__':
@@ -13,26 +11,44 @@ if __name__ == '__main__':
     Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
     Login.clock = pygame.time.Clock()
     pygame.display.set_caption('Tom and Jerry')
+    img = pygame.image.load('img/maze_icon.png')
+    pygame.display.set_icon(img)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         s = Login.start_all()
-# <<<<<<< main
-# =======
+
         open('current_account.txt', 'w').close()
         fp1 = open('current_account.txt', 'w')
         fp1.writelines(s)
         fp1.close()
-# >>>>>>> main
+
         while True:
             soundbar.set_sound(pygame.mixer.music.get_volume())
             n = make_menu(s) #list thong so game
-            #print(n)
             if n == -1:
                 break
             elif n == 0:
                 continue
+            elif n == 2:
+                subprocess.run(['python', 'load_game.py'])
+                result = open('result.txt', 'r')
+                temp = int(result.read(2))
+                result.close()
+                if temp == -1:
+                    break
+                if End_game(temp) == 0:
+                    soundbar.set_sound(pygame.mixer.music.get_volume())
+                    break
+                else:
+                    soundbar.set_sound(pygame.mixer.music.get_volume())
+                    continue
+            elif n == 4:
+                subprocess.run(['python', 'code/instruction.py'])
+            elif n == 6:
+                subprocess.run(['python', 'code/about.py'])
             else:
                 while True:
                     inp = open('mode.txt', 'w')

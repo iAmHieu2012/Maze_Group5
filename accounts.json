@@ -1,5 +1,6 @@
 {
     "easynormal": "easy",
     "mediumspeed": "medium",
-    "hardlimit": "hard"
+    "hardlimit": "hard",
+    "username": "password"
 }
