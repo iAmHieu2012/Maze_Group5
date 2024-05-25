@@ -118,8 +118,8 @@ def rec_input(DISPLAYSURF, x, y) -> int:
         clock.tick(30)
 
 def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
-    logbox = pygame.image.load('img/log.png').convert_alpha()
-    logbox = pygame.transform.scale(logbox, (600, 480))
+    # logbox = pygame.image.load('img/log.png').convert_alpha()
+    # logbox = pygame.transform.scale(logbox, (600, 480))
     pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
     pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
@@ -278,8 +278,6 @@ def make_menu(s: str):
                     tempy = pygame.mouse.get_pos()[1]
                     temp = (tempy - 220) // 50
                     if (-1< temp < 8 and 1280//2 - 300 < tempx < 1280//2 - 100 and temp!=y):
-                        # pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
-                        # pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200, y*50 + 220, 400, 50), 6)
                         y = temp
                     elif temp == y > -1:
                         if (y == 0 or y == 1):
@@ -293,44 +291,22 @@ def make_menu(s: str):
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
-                        elif y==2:
+                        elif y == 2:
                             return [s,2]
-                        elif y ==4 or y == 6:
-                            DISPLAYSURF.fill('white')
-                            foo = 'help.txt' if y == 4 else 'about.txt'
-                            help = open(foo, 'r')
-                            help = help.readlines()
-                            for i in range(len(help)):
-                                write_screen(help[i], BLACK, None, (1280//2, 100 + i*30), 1, DISPLAYSURF, 16)
-                            subrun = True
-                            while subrun:
-                                for event in pygame.event.get():
-                                    if event.type == pygame.QUIT:
-                                            running = False
-                                            subrun = False
-                                            pygame.quit()
-                                            sys.exit()
-                                    elif event.type == pygame.MOUSEBUTTONUP:
-                                            subrun = False
-                                            return 0
-                                pygame.display.update()
-                        elif y == 5:
-                            n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                            return 0
-
-                        # elif y == 2:
-                            # Load game
                             
-                        # elif y == 3:
-                        #     # leaderboard
+                        elif y == 3:
+                            return 3
 
                         elif y == 4:
                             return 4
+                        
                         elif y == 5:
                             n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
                             return 0
+                        
                         elif y == 6:
                             return 6
+                        
                         elif (y == 7):
                             n = make_dialog(DISPLAYSURF, "Log out", 3)
                             if n == -1:

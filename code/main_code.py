@@ -1,7 +1,6 @@
 from create_maze import *
 from algorithm import *
-from Make_menu import *
-
+from make_menu import *
 nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -73,26 +72,16 @@ def is_game_over():
     if time < 0:
         pygame.time.wait(700)
         [food.set_pos() for food in food_list]
-        set_record(record, score)
-        record = get_record()
+        # set_record_speedrun(record, score)
+        # record = record
         time, score, FPS = 150, 0, 60
         return False
     # return when lose
 
-def get_record():
-    try:
-        with open("record") as f:
-            return f.readline()
-    except FileNotFoundError:
-        with open("record", "w") as f:
-            f.write("0")
-            return 0
-
-def set_record(record, score):
-    rec = max(int(record), score)
-    with open("record", "w") as f:
-        f.write(str(rec))
-
+# def set_record_speedrun(record, score):
+#     rec = max(int(record), score)
+#     with open("record", "w") as f:
+#         f.write(str(rec))
 
 FPS = 60
 # FPS tăng thì tốc độ quét màn hình tăng -> tốc độ nhân vật tăng
@@ -224,8 +213,7 @@ def read_saved_game(username : str):
         maze.append(cell)
     print(len(maze))
     return game_mode, game_level, AimPos, CurrentPos, maze, time, score
-        
-    
+           
 def load_game(username: str):
     game_mode, game_level, AimPos, CurrentPos, maze, time, score = read_saved_game(username)
     maze2D = getMaze2DArray(maze)
@@ -340,7 +328,8 @@ def get_way_between_2point(currp, nextp, maze2D):
 pygame.time.set_timer(pygame.USEREVENT, 1000)
 time = 150
 score = 0
-record = get_record()
+# record = record
+# record_time = get_record_time()
 
 # fonts
 font = pygame.font.Font(r"./font/Shermlock.ttf", 150)
@@ -435,8 +424,14 @@ f.close()
 #main    
 count = 0
 times_move = 0
-#main    
 running = True
+fp = open('current_account.txt', 'r')
+username = fp.readline()
+fp.close()
+filename = 'player_record/' + username + '.txt'
+fp = open(filename, 'r')
+recordList = list(map(int, fp.readline().split()))
+fp.close()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -569,9 +564,8 @@ while running:
                     five_first_step = path_cell_list_bfs[1:6].copy()
                     [cell.draw(game_surface) for cell in maze]
 
-
                 if hint:
-                    for i in range(5):
+                    for i in range(15):
                         hint_rect.topleft = (maze[0].thickness + five_first_step[i].x*create_maze.TILE,maze[0].thickness + five_first_step[i].y*create_maze.TILE)
                         game_surface.blit(hint_img, hint_rect)
                 # draw maze
@@ -595,6 +589,21 @@ while running:
                 hint1, hint_2, hint = False, False, False
                 is_set = False
                 running = False
+                if game_level == 20 and 150 - time < recordList[0]:
+                    recordList[0] = 150 - time
+                if game_level == 40 and 150 - time < recordList[1]:
+                    recordList[1] = 150 - time
+                if game_level == 100 and 150 - time < recordList[2]:
+                    recordList[2] = 150 - time
+                fp = open('current_account.txt', 'r')
+                username = fp.readline()
+                filename = 'player_record/' + username + '.txt'
+                fp.close()
+                fp = open(filename, 'w').close()
+                fp = open(filename, 'w')
+                for i in range(6):
+                    fp.write(str(recordList[i]) + ' ')
+                fp.close()
                 break
 
             # Action when player failed
@@ -719,8 +728,9 @@ while running:
 
             # gameplay
             if eat_food():
-                # FPS += 10
                 score += 1
+
+            # Kiem tra game da ket thuc hay chua
             if is_game_over() == False:
                 running = False
                 finish = True
@@ -728,6 +738,23 @@ while running:
                 result.write('1')
                 result.close()
                 break
+
+            else:
+                if game_level == 20 and score > recordList[3]:
+                    recordList[3] = score
+                if game_level == 40 and score > recordList[4]:
+                    recordList[4] = score
+                if game_level == 100 and score > recordList[5]:
+                    recordList[5] = score
+                fp = open('current_account.txt', 'r')
+                username = fp.readline()
+                filename = 'player_record/' + username + '.txt'
+                fp.close()
+                fp = open(filename, 'w').close()
+                fp = open(filename, 'w')
+                for i in range(6):
+                    fp.write(str(recordList[i]) + ' ')
+                fp.close()
 
             # draw player
             game_surface.blit(player_img, player_rect)
@@ -751,9 +778,9 @@ while running:
                 text_font.render("record", True, pygame.Color("magenta")),
                 (WIDTH + 20, 470),
             )
-            surface.blit(
-                font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
-            )
+            # surface.blit(
+            #     font.render(f"{record}", True, pygame.Color("magenta")), (WIDTH + 20, 540)
+            # )
 
             clock.tick(FPS)
         
