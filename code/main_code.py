@@ -1,34 +1,35 @@
 from create_maze import *
 from algorithm import *
-from time import sleep
+from Make_menu import *
 
-
+nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
 lst = inp.readlines()
 inp.close()
-game_level = int(lst[2])
-game_mode = int(lst[3])
+if int(lst[1]) != 2:
+    game_level = int(lst[2])
+    game_mode = int(lst[3])
 
-#Set level
-if game_level == 20:
-    create_maze.TILE = 60
-    create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-    algorithm.MODE = 50
-    create_maze.THICK = 4
-    nums_food = 10
-elif game_level == 40:
-    create_maze.TILE = 40
-    create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-    algorithm.MODE = 150
-    create_maze.THICK = 3
-    nums_food = 30
-elif game_level == 100:
-    create_maze.TILE = 20
-    create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
-    create_maze.THICK = 2
-    algorithm.MODE = 300
-    nums_food = 60
+    #Set level
+    if game_level == 20:
+        create_maze.TILE = 60
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
+        algorithm.MODE = 50
+        create_maze.THICK = 4
+        nums_food = 10
+    elif game_level == 40:
+        create_maze.TILE = 40
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
+        algorithm.MODE = 150
+        create_maze.THICK = 3
+        nums_food = 30
+    elif game_level == 100:
+        create_maze.TILE = 20
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
+        create_maze.THICK = 2
+        algorithm.MODE = 300
+        nums_food = 60
 
 class Food:
     def __init__(self):
@@ -148,227 +149,87 @@ def new_game():
     )
     return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft
 
+#phần save game
+def create_user_saved_game(username : str):
+    # get Jerry position
+    AimPos = findTomAndJerryPos(maze2D)[1]
+    # get Tom position
+    CurrentPos = get_player_current_cell()
+
+    filename = 'saved_game/' + username + '.txt'
+    # open(filename, 'w').close()
+    fp = open(filename, 'w')
+    fp.write(str(game_mode)+'\n')
+    fp.write(str(game_level) + '\n')
+    fp.write(str(AimPos[0])+" "+str(AimPos[1])+'\n')
+    fp.write(str(CurrentPos[0])+" "+str(CurrentPos[1])+'\n')
+    if game_mode == 1:
+        fp.write(str(time) + '\n')
+
+    if game_mode == 2:
+        fp.write(str(score) + '\n')
+        fp.write(str(time) + '\n')
+
+
+    for cell in maze:
+        fp.write(str(cell.y))
+        fp.write(' ')
+        fp.write(str(cell.x))
+        fp.write('\n')
+        for wall,status in cell.walls.items():
+            if status == False:
+                fp.write('0 ')
+            else:
+                fp.write('1 ')
+        fp.write('\n')  
+    fp.close()             
+
 # Phần load game:
 def read_saved_game(username : str):
     filename = 'saved_game/' + username + '.txt'
     fp = open(filename, 'r')
     game_mode = int(fp.readline())
-    if game_mode == 0:
-        game_level = int(fp.readline())
-        #Vị trí Jerry
-        Aimpos = fp.readline().split()
-        Aimpos[0] = int(Aimpos[0])
-        Aimpos[1] = int(Aimpos[1])
-        #Vị trí Tom
-        Currentpos = fp.readline().split()
-        Currentpos[0] = int(Currentpos[0])
-        Currentpos[1] = int(Currentpos[1])
-        maze = []
-        if game_level == 20:
-            create_maze.TILE = 60
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-            create_maze.THICK = 4
-            for i in range(216): # col = 18, row = 12
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 40:
-            create_maze.TILE = 40
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-            create_maze.THICK = 3
-            for i in range(486): # col = 27, row = 18
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 100:
-            create_maze.TILE = 60
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
-            create_maze.THICK = 2
-            for i in range(1944): #col = 54, row = 36
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        return game_mode, maze, Currentpos, Aimpos
-    elif game_mode == 1:
+    print(game_mode)
+    game_level = int(fp.readline())
+    print(game_level)
+    
+    
+    #Vị trí Jerry
+    Aimpos = tuple(map(int,fp.readline().split()))
+
+    #Vị trí Tom
+    Currentpos = tuple(map(int,fp.readline().split()))
+    if game_mode == 1:
         time = int(fp.readline())
-        game_level = int(fp.readline())
-        #Vị trí Jerry
-        Aimpos = fp.readline().split()
-        Aimpos[0] = int(Aimpos[0])
-        Aimpos[1] = int(Aimpos[1])
-        #Vị trí Tom
-        Currentpos = fp.readline().split()
-        Currentpos[0] = int(Currentpos[0])
-        Currentpos[1] = int(Currentpos[1])
-        maze = []
-        if game_level == 20:
-            create_maze.TILE = 60
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-            create_maze.THICK = 4
-            for i in range(216): # col = 18, row = 12
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 40:
-            create_maze.TILE = 40
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-            create_maze.THICK = 3
-            for i in range(486): # col = 27, row = 18
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 100:
-            create_maze.TILE = 20
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
-            create_maze.THICK = 2
-            for i in range(1944): #col = 54, row = 36
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        return game_mode, maze, Currentpos, Aimpos, time
+        score = 0
     elif game_mode == 2:
+        time = int(fp.readline())
         score = int(fp.readline())
-        time = int(fp.readline())
-        game_level = int(fp.readline())
-        #Vị trí Tom
-        Currentpos = fp.readline().split()
-        Currentpos[0] = int(Currentpos[0])
-        Currentpos[1] = int(Currentpos[1])
-        maze = []
-        if game_level == 20:
-            create_maze.TILE = 60
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-            create_maze.THICK = 4
-            for i in range(216): # col = 18, row = 12
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 40:
-            create_maze.TILE = 40
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-            create_maze.THICK = 3
-            for i in range(486): # col = 27, row = 18
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False  
-                maze.append(cell)
-        elif game_level == 100:
-            create_maze.TILE = 20
-            create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
-            create_maze.THICK = 2
-            for i in range(1944): #col = 54, row = 36
-                pos = fp.readline().split()
-                x, y = int(pos[0]), int(pos[1])
-                cell = Cell(x, y)
-                wall = fp.readline().split()
-                if wall[0] == '0':
-                    cell.walls['top'] = False
-                if wall[1] == '0':
-                    cell.walls['right'] = False
-                if wall[2] == '0':
-                    cell.walls['bottom'] = False
-                if wall[3] == '0':
-                    cell.walls['left'] = False       
-                maze.append(cell)
-        return game_mode, maze, Currentpos, time, score
-    fp.close()
-
+    else:
+        time = 0
+        score = 0
+    maze = []
+    for i in range(create_maze.cols* create_maze.rows):
+        row, col = tuple(map(int,fp.readline().split()))
+        cell = Cell(col,row)
+        temp_walls = fp.readline().split()
+        for item in range(4):
+            if item ==0:
+                cell.walls['top'] = False if temp_walls[item] == "0" else True
+            if item ==1:
+                cell.walls['right'] = False if temp_walls[item] == "0" else True
+            if item ==2:
+                cell.walls['bottom'] = False if temp_walls[item] == "0" else True
+            if item ==3:
+                cell.walls['left'] = False if temp_walls[item] == "0" else True
+        maze.append(cell)
+    print(len(maze))
+    return game_mode, game_level, AimPos, CurrentPos, maze, time, score
+        
+    
 def load_game(username: str):
-    game_mode = read_saved_game[0]
-    # get maze
-    maze = read_saved_game(username)[1]
+    game_mode, game_level, AimPos, CurrentPos, maze, time, score = read_saved_game(username)
     maze2D = getMaze2DArray(maze)
-    # get Tom position
-    CurrentPos = read_saved_game(username)[2]
-
-    if game_mode == 0:
-        # get Jerry position
-        AimPos = read_saved_game(username)[3]
-    elif game_mode == 1:
-        AimPos = read_saved_game(username)[3]
-        time = read_saved_game(username)[4]
-    elif game_mode == 2:
-        time = read_saved_game(username)[3]
-        score = read_saved_game(username)[4]
 
     player_rect.topleft = (
         CurrentPos[1] * create_maze.TILE + maze[0].thickness,
@@ -388,9 +249,8 @@ def load_game(username: str):
             pygame.Rect(0, create_maze.rows * create_maze.TILE - maze[0].thickness, create_maze.TILE * create_maze.cols, maze[0].thickness)
         ]
     )
-    return maze, maze2D, walls_collide_list, player_rect.topleft, des_rect.topleft, time, score
-
-
+    return maze, maze2D, walls_collide_list, player_rect.topleft, des_rect.topleft, time, score, game_mode, game_level
+    
 # get maze
 maze = create_maze.generate_maze()
 generateTomAndJerryPos(maze)
@@ -516,67 +376,7 @@ hint_button_2 = Button("img/hintbutton.png", 1300,500)
 # <<<<<<< main
 # =======
 
-def create_user_saved_game(username : str):
-    # get Jerry position
-    AimPos = findTomAndJerryPos(maze2D)[1]
-    # get Tom position
-    CurrentPos = findTomAndJerryPos(maze2D)[0]
 
-    filename = 'saved_game/' + username + '.txt'
-    open(filename, 'w').close()
-    fp = open(filename, 'w')
-    if game_mode == 0:
-        # Dòng 1: in game_mode
-        # Dòng 2: in game_level
-        # Dòng 3: in vị trí Jerry
-        # Dòng 4: in vị trí Tom
-        fp.write('0\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(AimPos[0]) + ' ')
-        fp.write(str(AimPos[1]) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-    elif game_mode == 1:
-        # Dòng 1: in game_mode
-        # Dòng 2: in thời gian còn lại
-        # Dong 3: in game_level
-        # Dòng 4: in vị trí Jerry
-        # Dòng 5: in vị trí Tom
-        fp.write('1\n')
-        fp.write(str(time) + '\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(AimPos[0]) + ' ')
-        fp.write(str(AimPos[1]) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-    elif game_mode == 2:
-        # Dòng 1: in game_mode
-        # Dòng 2: in số điểm hiện tại
-        # Dòng 3: in thời gian còn lại
-        # Dòng 4: in game_level
-        # Dòng 5: in vị trí Tom
-        fp.write('2\n')
-        fp.write(str(score) + '\n')
-        fp.write(str(time) + '\n')
-        fp.write(str(game_level) + '\n')
-        fp.write(str(CurrentPos[0])+ ' ')
-        fp.write(str(CurrentPos[1]) + '\n')
-
-    for cell in maze:
-        fp.write(str(cell.x))
-        fp.write(' ')
-        fp.write(str(cell.y))
-        fp.write('\n')
-        for i in ['top', 'right', 'bottom', 'left']:
-            if cell.walls[i] == True:
-                fp.write('1 ')
-            else:
-                fp.write('0 ')
-        fp.write('\n')  
-    fp.close()             
-# >>>>>>> main
     
 def pause_game():
     surface.blit(pause_surface,(0,0))
@@ -640,7 +440,11 @@ def get_player_current_cell():
     pos = (int(pos[0]),int(pos[1]))
     return pos
 
-
+f = open("mode.txt",'r')
+f.readline()
+temp = int(f.readline())
+loadgamestatus = True if temp == 2 else False
+f.close()
 #main    
 count = 0
 times_move = 0
@@ -662,7 +466,39 @@ while running:
         if event.type == pygame.USEREVENT and not pause:
             time -= 1
     # Menu pause game
-    if pause:
+    if loadgamestatus:
+        surface.blit(bg, (WIDTH, 0))
+        surface.blit(game_surface, (0, 0))
+        game_surface.blit(bg_game, (0, 0))
+        fp1 = open('current_account.txt', 'r')
+        user = fp1.readline()
+        fp1.close()
+        maze, maze2D, walls_collide_list, ptl, dtl, time, score, game_mode, game_level  = load_game(user)
+        loadgamestatus = False
+        #Set level
+        if game_level == 20:
+            create_maze.TILE = 60
+            create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
+            algorithm.MODE = 50
+            create_maze.THICK = 4
+        elif game_level == 40:
+            create_maze.TILE = 40
+            create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
+            algorithm.MODE = 150
+            create_maze.THICK = 3
+        elif game_level == 100:
+            create_maze.TILE = 20
+            create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
+            create_maze.THICK = 2
+            algorithm.MODE = 300
+        player_img = pygame.transform.scale(
+            player_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+        )
+        des_img = pygame.transform.scale(
+            des_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+        )
+        
+    elif pause:
         f = pause_game()
         if f == 1:
             inp = open('result.txt', 'w')

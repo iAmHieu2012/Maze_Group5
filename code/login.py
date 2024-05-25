@@ -44,7 +44,7 @@ def login():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background2.png')
+    background_image = pygame.image.load('img/background2.jpg')
 
     # Tải nhạc nền và phát lặp lại
     mixer.music.load('sound/login_music.mp3')
@@ -273,7 +273,7 @@ def sign_up():
     DARK_GREEN_ACCENT_3_DARKER_25 = (0, 73, 48)  # Màu Dark Green, Accent 3, Darker 25%
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background3.png')
+    background_image = pygame.image.load('img/background3.jpg')
 
     # Tải nhạc nền và phát lặp lại
     mixer.music.load('sound/signup_music.mp3')
@@ -545,7 +545,7 @@ def start_all():
     DARK_RED = (139, 0, 0)  # Màu Dark Red
 
     # Tải ảnh nền
-    background_image = pygame.image.load('img/background1.png')
+    background_image = pygame.image.load('img/background1.jpg')
 
     # tải âm thanh khi click chuột
     click_sound = mixer.Sound('sound/click.mp3')

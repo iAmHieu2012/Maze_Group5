@@ -21,7 +21,7 @@ def write_screen(s: str, color, color2, vt, custom_font: int, DISPLAYSURF, size)
     if custom_font == 0:
         custom_font = pygame.font.Font('font/AttackGraffiti.ttf', size)
     elif custom_font == -1:
-        custom_font = pygame.font.Font('font/Retolia.ttf', size)
+        custom_font = pygame.font.Font('font/Shermlock.ttf', size)
     else:
         custom_font = pygame.font.SysFont('calibri', size)
     custom_text = custom_font.render(s, True, color, color2)
@@ -36,21 +36,26 @@ def set_all(s: str):
     
     #DISPLAYSURF.fill(BLUE)
     #pygame.draw.line(DISPLAYSURF, RED, (0, 0), (100, 100), 10)
-    background = pygame.image.load('img/background1.png')
+    background = pygame.image.load('img/menu.jpg')
     picture = pygame.transform.scale(background, (1280, 720))
+    textbox = pygame.image.load('img/board.png').convert_alpha()
+    textbox = pygame.transform.scale(textbox,(200,50))
     DISPLAYSURF.blit(picture, (0, 0))
 
     #textsys
-    write_screen("Account: "+s, BLACK, YELLOW, (1280/2, 650), 1, DISPLAYSURF, 20)
+    write_screen("Hi "+s+" !", BLACK, None, (1280/2-100, 100), -1, DISPLAYSURF, 60)
     #textcus
+    collide_rect_list =[]
     for i in range(8):
-        pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200,i*50 + 220, 400, 50), 6) #ve bang chon
-    pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, 0*50 + 220, 400, 50), 6)
+        DISPLAYSURF.blit(textbox, (1280//2 - 400,i*50+220))
+        collide_rect_list.append(pygame.rect.Rect(1280//2 - 400,i*50+220,200,50))
+        # pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200,i*50 + 220, 400, 50), 6) #ve bang chon
+    # pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, 0*50 + 220, 400, 50), 6)
     lst = ["PLAY", "AUTOPLAY", "LOAD GAME", "LEADERBOARD", "HELP", "SETTINGS", "ABOUT", "LOG OUT"]
     for i in range(8):
-        write_screen(lst[i], BLACK, None, (1280/2, i*50 + 245), -1, DISPLAYSURF, 26)
+        write_screen(lst[i], WHITE, None, (1280/2-300, i*50 + 245), -1, DISPLAYSURF, 24)
     pygame.display.update()
-    return DISPLAYSURF
+    return DISPLAYSURF, collide_rect_list
 
 def make_sound(mode = 0):
     if mode == 0:
@@ -113,6 +118,8 @@ def rec_input(DISPLAYSURF, x, y) -> int:
         clock.tick(30)
 
 def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
+    logbox = pygame.image.load('img/log.png').convert_alpha()
+    logbox = pygame.transform.scale(logbox, (600, 480))
     pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
     pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
@@ -256,21 +263,35 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                 return (key_mode, -1)
 
 def make_menu(s: str):
+    textbox = pygame.image.load('img/board.png').convert_alpha()
+    textbox = pygame.transform.scale(textbox,(200,50))
+    textbox_p = pygame.image.load('img/board_pressed.png').convert_alpha()
+    textbox_p = pygame.transform.scale(textbox_p,(200,50))
+    lst = ["PLAY", "AUTOPLAY", "LOAD GAME", "LEADERBOARD", "HELP", "SETTINGS", "ABOUT", "LOG OUT"]
     while True:
-        DISPLAYSURF = set_all(s)
+        DISPLAYSURF, collide_rect_list = set_all(s)
         clock = pygame.time.Clock()
         running = True
         y = 0
         while running:
+            mousePos = pygame.mouse.get_pos()
+            for item in collide_rect_list:
+                if item.collidepoint(mousePos):
+                    DISPLAYSURF.blit(textbox_p, (item[0],item[1]))
+                    write_screen(lst[collide_rect_list.index(item)], GRAY, None, (1280/2-300, collide_rect_list.index(item)*50 + 245), -1, DISPLAYSURF, 24)
+                    # y = lst[collide_rect_list.index(item)]
+                else:
+                    DISPLAYSURF.blit(textbox, (item[0],item[1]))
+                    write_screen(lst[collide_rect_list.index(item)], WHITE, None, (1280/2-300, collide_rect_list.index(item)*50 + 245), -1, DISPLAYSURF, 24)
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
                     tempx = pygame.mouse.get_pos()[0]
                     tempy = pygame.mouse.get_pos()[1]
                     temp = (tempy - 220) // 50
-                    if (-1< temp < 8 and 1280//2 - 200 < tempx < 1280//2 + 200 and temp!=y):
-                        pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
-                        pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200, y*50 + 220, 400, 50), 6)
+                    if (-1< temp < 8 and 1280//2 - 300 < tempx < 1280//2 - 100 and temp!=y):
+                        # pygame.draw.rect(DISPLAYSURF, RED, (1280//2 - 200, temp*50 + 220, 400, 50), 6)
+                        # pygame.draw.rect(DISPLAYSURF, BROWN, (1280//2 - 200, y*50 + 220, 400, 50), 6)
                         y = temp
                     elif temp == y > -1:
                         if (y == 0 or y == 1):
@@ -284,7 +305,8 @@ def make_menu(s: str):
                                     make_dialog(DISPLAYSURF, "Sucess: " + str(hard) + " x " + str(hard), 1)
                                     #play_game with mode 0 (play), 1(autoplay)
                                     return hard_mode
-                        
+                        elif y==2:
+                            return [s,2]
                         elif y ==4 or y == 6:
                             DISPLAYSURF.fill('white')
                             foo = 'help.txt' if y == 4 else 'about.txt'
