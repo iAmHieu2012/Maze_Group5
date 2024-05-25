@@ -53,8 +53,7 @@ class Button:
     
     def draw(self,sc):
         sc.blit(self.img, self.rect)
-
-def is_collide(x, y):
+def is_collide(x, y, walls_collide_list, player_rect):
     tmp_rect = player_rect.move(x, y)
     if tmp_rect.collidelist(walls_collide_list) == -1:
         return False
@@ -118,24 +117,25 @@ def new_game():
     CurrentPos = findTomAndJerryPos(maze2D)[0]
 
     player_rect.topleft = (
-        CurrentPos[1] * create_maze.TILE + maze[0].thickness,
-        CurrentPos[0] * create_maze.TILE + maze[0].thickness,
+        CurrentPos[1] * create_maze.TILE + create_maze.THICK,
+        CurrentPos[0] * create_maze.TILE + create_maze.THICK,
     )
     
     des_rect.topleft = (
-        AimPos[1] * create_maze.TILE + maze[0].thickness,
-        AimPos[0] * create_maze.TILE + maze[0].thickness,
+        AimPos[1] * create_maze.TILE + create_maze.THICK,
+        AimPos[0] * create_maze.TILE + create_maze.THICK,
     )
     walls_collide_list = sum(
         [cell.get_rects() for cell in maze],
         [
-            pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, maze[0].thickness),
-            pygame.Rect(0, 0, maze[0].thickness, create_maze.TILE * create_maze.rows),
-            pygame.Rect(create_maze.cols * create_maze.TILE - maze[0].thickness, 0, maze[0].thickness, create_maze.TILE * create_maze.rows),
-            pygame.Rect(0, create_maze.rows * create_maze.TILE - maze[0].thickness, create_maze.TILE * create_maze.cols, maze[0].thickness)
+            pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
+            pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
+            pygame.Rect(create_maze.cols * create_maze.TILE - create_maze.THICK, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
+            pygame.Rect(0, create_maze.rows * create_maze.TILE - create_maze.THICK, create_maze.TILE * create_maze.cols, create_maze.THICK)
         ]
     )
-    return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft
+    lastpos = (-1, -1)
+    return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos
 
 #phần save game
 def create_user_saved_game(username : str):
@@ -177,16 +177,11 @@ def read_saved_game(username : str):
     filename = 'saved_game/' + username + '.txt'
     fp = open(filename, 'r')
     game_mode = int(fp.readline())
-    print(game_mode)
     game_level = int(fp.readline())
-    print(game_level)
-    
-    
     #Vị trí Jerry
-    Aimpos = tuple(map(int,fp.readline().split()))
-
+    AimPos = tuple(map(int,fp.readline().split()))
     #Vị trí Tom
-    Currentpos = tuple(map(int,fp.readline().split()))
+    CurrentPos = tuple(map(int,fp.readline().split()))
     if game_mode == 1:
         time = int(fp.readline())
         score = 0
@@ -197,6 +192,21 @@ def read_saved_game(username : str):
         time = 0
         score = 0
     maze = []
+    if game_level == 20:
+        create_maze.TILE = 60
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
+        algorithm.MODE = 50
+        create_maze.THICK = 4
+    elif game_level == 40:
+        create_maze.TILE = 40
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
+        algorithm.MODE = 150
+        create_maze.THICK = 2
+    elif game_level == 100:
+        create_maze.TILE = 20
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
+        create_maze.THICK = 2
+        algorithm.MODE = 300
     for i in range(create_maze.cols* create_maze.rows):
         row, col = tuple(map(int,fp.readline().split()))
         cell = Cell(col,row)
@@ -211,36 +221,44 @@ def read_saved_game(username : str):
             if item ==3:
                 cell.walls['left'] = False if temp_walls[item] == "0" else True
         maze.append(cell)
-    print(len(maze))
+    maze2D = getMaze2DArray(maze)
+    maze2D[AimPos[0]][AimPos[1]].make_jerry_pos()
+    maze2D[CurrentPos[0]][CurrentPos[1]].make_tom_pos()
+    maze = list(maze2D.flatten())
     return game_mode, game_level, AimPos, CurrentPos, maze, time, score
            
 def load_game(username: str):
     game_mode, game_level, AimPos, CurrentPos, maze, time, score = read_saved_game(username)
     maze2D = getMaze2DArray(maze)
-
-    player_rect.topleft = (
-        CurrentPos[1] * create_maze.TILE + maze[0].thickness,
-        CurrentPos[0] * create_maze.TILE + maze[0].thickness,
-    )
-    
-    des_rect.topleft = (
-        AimPos[1] * create_maze.TILE + maze[0].thickness,
-        AimPos[0] * create_maze.TILE + maze[0].thickness,
-    )
+    if game_level == 20:
+        create_maze.TILE = 60
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
+        algorithm.MODE = 50
+        create_maze.THICK = 4
+    elif game_level == 40:
+        create_maze.TILE = 40
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
+        algorithm.MODE = 150
+        create_maze.THICK = 2
+    elif game_level == 100:
+        create_maze.TILE = 20
+        create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
+        create_maze.THICK = 2
+        algorithm.MODE = 300
     walls_collide_list = sum(
         [cell.get_rects() for cell in maze],
         [
-            pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, maze[0].thickness),
-            pygame.Rect(0, 0, maze[0].thickness, create_maze.TILE * create_maze.rows),
-            pygame.Rect(create_maze.cols * create_maze.TILE - maze[0].thickness, 0, maze[0].thickness, create_maze.TILE * create_maze.rows),
-            pygame.Rect(0, create_maze.rows * create_maze.TILE - maze[0].thickness, create_maze.TILE * create_maze.cols, maze[0].thickness)
+            pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
+            pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
+            pygame.Rect(create_maze.cols * create_maze.TILE - create_maze.THICK, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
+            pygame.Rect(0, create_maze.rows * create_maze.TILE - create_maze.THICK, create_maze.TILE * create_maze.cols, create_maze.THICK)
         ]
     )
-    return maze, maze2D, walls_collide_list, player_rect.topleft, des_rect.topleft, time, score, game_mode, game_level
+    return maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level
     
 # get maze
 maze = create_maze.generate_maze()
-generateTomAndJerryPos(maze)
+maze = generateTomAndJerryPos(maze)
 maze2D = getMaze2DArray(maze)
 
 # get Jerry position
@@ -253,28 +271,28 @@ CurrentPos = findTomAndJerryPos(maze2D)[0]
 player_speed = 10  # TILE must be divided by player_speed
 player_img = pygame.image.load("img/tomface.png").convert_alpha()
 player_img = pygame.transform.scale(
-    player_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+    player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
 )
 player_rect = player_img.get_rect()
 player_rect.topleft = (
-    CurrentPos[1] * create_maze.TILE + maze[0].thickness,
-    CurrentPos[0] * create_maze.TILE + maze[0].thickness,
+    CurrentPos[1] * create_maze.TILE + create_maze.THICK,
+    CurrentPos[0] * create_maze.TILE + create_maze.THICK,
 )
 
 # destination settings
 des_img = pygame.image.load("img/jerryface.png").convert_alpha()
 des_img = pygame.transform.scale(
-    des_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+    des_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
 )
 des_rect = des_img.get_rect()
 des_rect.topleft = (
-    AimPos[1] * create_maze.TILE + maze[0].thickness,
-    AimPos[0] * create_maze.TILE + maze[0].thickness,
+    AimPos[1] * create_maze.TILE + create_maze.THICK,
+    AimPos[0] * create_maze.TILE + create_maze.THICK,
 )
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(
-    hint_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+    hint_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
 )
 hint_rect = hint_img.get_rect()
 
@@ -294,19 +312,19 @@ food_list = [Food() for i in range(nums_food)]
 walls_collide_list = sum(
     [cell.get_rects() for cell in maze],
     [
-        pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, maze[0].thickness),
-        pygame.Rect(0, 0, maze[0].thickness, create_maze.TILE * create_maze.rows),
+        pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
+        pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
         pygame.Rect(
-            create_maze.cols * create_maze.TILE - maze[0].thickness,
+            create_maze.cols * create_maze.TILE - create_maze.THICK,
             0,
-            maze[0].thickness,
+            create_maze.THICK,
             create_maze.TILE * create_maze.rows,
         ),
         pygame.Rect(
             0,
-            create_maze.rows * create_maze.TILE - maze[0].thickness,
+            create_maze.rows * create_maze.TILE - create_maze.THICK,
             create_maze.TILE * create_maze.cols,
-            maze[0].thickness,
+            create_maze.THICK,
         ),
     ],
 )
@@ -405,13 +423,13 @@ def get_player_current_cell():
     # Get player position (Tom's Position)
     if current_direction == "w" or current_direction == "a":
         pos = (
-            np.ceil((player_rect.top - maze[0].thickness) / create_maze.TILE),
-            np.ceil((player_rect.left -  maze[0].thickness) / create_maze.TILE),
+            np.ceil((player_rect.top - create_maze.THICK) / create_maze.TILE),
+            np.ceil((player_rect.left -  create_maze.THICK) / create_maze.TILE),
         )
     else:
         pos = (
-            np.floor((player_rect.top - maze[0].thickness) / create_maze.TILE),
-            np.floor((player_rect.left - maze[0].thickness) / create_maze.TILE),
+            np.floor((player_rect.top - create_maze.THICK) / create_maze.TILE),
+            np.floor((player_rect.left - create_maze.THICK) / create_maze.TILE),
         )
     pos = (int(pos[0]),int(pos[1]))
     return pos
@@ -455,7 +473,7 @@ while running:
         fp1 = open('current_account.txt', 'r')
         user = fp1.readline()
         fp1.close()
-        maze, maze2D, walls_collide_list, ptl, dtl, time, score, game_mode, game_level  = load_game(user)
+        maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level  = load_game(user)
         loadgamestatus = False
         #Set level
         if game_level == 20:
@@ -467,19 +485,47 @@ while running:
             create_maze.TILE = 40
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
             algorithm.MODE = 150
-            create_maze.THICK = 3
+            create_maze.THICK = 2
         elif game_level == 100:
             create_maze.TILE = 20
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
             create_maze.THICK = 2
             algorithm.MODE = 300
+        # player settings
+        player_speed = 10  # TILE must be divided by player_speed
+        player_img = pygame.image.load("img/tomface.png").convert_alpha()
         player_img = pygame.transform.scale(
-            player_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+            player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
         )
+        player_rect = player_img.get_rect()
+        player_rect.topleft = (
+            CurrentPos[1] * create_maze.TILE + create_maze.THICK,
+            CurrentPos[0] * create_maze.TILE + create_maze.THICK,
+        )
+
+        # destination settings
+        des_img = pygame.image.load("img/jerryface.png").convert_alpha()
         des_img = pygame.transform.scale(
-            des_img, (create_maze.TILE - 2 * maze[0].thickness, create_maze.TILE - 2 * maze[0].thickness)
+            des_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
         )
-        
+        des_rect = des_img.get_rect()
+        des_rect.topleft = (
+            AimPos[1] * create_maze.TILE + create_maze.THICK,
+            AimPos[0] * create_maze.TILE + create_maze.THICK,
+        )
+        surface.blit(bg, (WIDTH, 0))
+        surface.blit(game_surface, (0, 0))
+        game_surface.blit(bg_game, (0, 0))
+        # draw maze
+        [cell.draw(game_surface) for cell in maze]
+
+        # draw player
+        game_surface.blit(player_img, player_rect)
+        game_surface.blit(des_img, des_rect)
+        is_set = False
+        last_pos = (-1,-1)
+        direction = (0,0)        
+        current_direction = None
     elif pause:
         f = pause_game()
         if f == 1:
@@ -528,7 +574,7 @@ while running:
                 pressed_key = pygame.key.get_pressed()
                 # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
                 for key, key_value in keys.items():
-                    if pressed_key[key_value] and not is_collide(*directions[key]):
+                    if pressed_key[key_value] and not is_collide(*directions[key], walls_collide_list, player_rect):
                         direction = directions[key]
                         if not is_set:
                             is_set = True
@@ -536,7 +582,7 @@ while running:
                             lastpos = pos
                         break
 
-                if pos == lastpos and not is_collide(*direction):
+                if pos == lastpos and not is_collide(*direction, walls_collide_list, player_rect):
                     player_rect.move_ip(direction)
                 else:
                     is_set = False
@@ -550,7 +596,7 @@ while running:
                     maze = list(maze2D.flatten())
                     path1 = findPathBetween2Point(maze, algo=1)
                     path_cell_list_dfs = getPathCellList(path1, maze2D)
-                    five_first_step = path_cell_list_dfs[1:6].copy()
+                    five_first_step = path_cell_list_dfs[1:6].copy() if len(path1) > 6 else path_cell_list_dfs[1:].copy()
                     [cell.draw(game_surface) for cell in maze]
 
                 if hint_2 and not hint:
@@ -561,12 +607,12 @@ while running:
                     maze = list(maze2D.flatten())
                     path2 = findPathBetween2Point(maze, algo=2)
                     path_cell_list_bfs = getPathCellList(path2, maze2D)
-                    five_first_step = path_cell_list_bfs[1:6].copy()
+                    five_first_step = path_cell_list_bfs[1:6].copy() if len(path2) > 6 else path_cell_list_bfs[1:].copy()
                     [cell.draw(game_surface) for cell in maze]
 
                 if hint:
-                    for i in range(15):
-                        hint_rect.topleft = (maze[0].thickness + five_first_step[i].x*create_maze.TILE,maze[0].thickness + five_first_step[i].y*create_maze.TILE)
+                    for i in range(5):
+                        hint_rect.topleft = (create_maze.THICK + five_first_step[i].x*create_maze.TILE,create_maze.THICK + five_first_step[i].y*create_maze.TILE)
                         game_surface.blit(hint_img, hint_rect)
                 # draw maze
                 [cell.draw(game_surface) for cell in maze]
@@ -636,15 +682,14 @@ while running:
                 pressed_key = pygame.key.get_pressed()
                 # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
                 for key, key_value in keys.items():
-                    if pressed_key[key_value] and not is_collide(*directions[key]):
+                    if pressed_key[key_value] and not is_collide(*directions[key], walls_collide_list,player_rect):
                         direction = directions[key]
                         if not is_set:
                             is_set = True
                             current_direction = key
                             lastpos = pos
                         break
-
-                if pos == lastpos and not is_collide(*direction):
+                if pos == lastpos and not is_collide(*direction, walls_collide_list,player_rect):
                     player_rect.move_ip(direction)
                 else:
                     is_set = False
@@ -657,7 +702,7 @@ while running:
                     maze = list(maze2D.flatten())
                     path1 = findPathBetween2Point(maze, algo=1)
                     path_cell_list_dfs = getPathCellList(path1, maze2D)
-                    five_first_step = path_cell_list_dfs[1:6].copy()
+                    five_first_step = path_cell_list_dfs[1:6].copy() if len(path1)>6 else path_cell_list_dfs[1:].copy()
                     [cell.draw(game_surface) for cell in maze]
 
                 if hint_2 and not hint:
@@ -668,12 +713,12 @@ while running:
                     maze = list(maze2D.flatten())
                     path2 = findPathBetween2Point(maze, algo=2)
                     path_cell_list_bfs = getPathCellList(path2, maze2D)
-                    five_first_step = path_cell_list_bfs[1:6].copy()
+                    five_first_step = path_cell_list_bfs[1:6].copy() if len(path2)>6 else path_cell_list_bfs[1:].copy()
                     [cell.draw(game_surface) for cell in maze]
 
                 if hint:
                     for i in range(5):
-                        hint_rect.topleft = (maze[0].thickness + five_first_step[i].x*create_maze.TILE,maze[0].thickness + five_first_step[i].y*create_maze.TILE)
+                        hint_rect.topleft = (create_maze.THICK + five_first_step[i].x*create_maze.TILE,create_maze.THICK + five_first_step[i].y*create_maze.TILE)
                         game_surface.blit(hint_img, hint_rect)
                 # draw maze
                 [cell.draw(game_surface) for cell in maze]
@@ -710,7 +755,7 @@ while running:
             pressed_key = pygame.key.get_pressed()
             # Kiểm tra xem có thể rẽ vào hướng nút bấm không (nếu không bị tường chặn)
             for key, key_value in keys.items():
-                if pressed_key[key_value] and not is_collide(*directions[key]):
+                if pressed_key[key_value] and not is_collide(*directions[key], walls_collide_list, player_rect):
                     direction = directions[key]
                     if not is_set:
                         is_set = True
@@ -718,7 +763,7 @@ while running:
                         lastpos = pos
                     break
 
-            if pos == lastpos and not is_collide(*direction):
+            if pos == lastpos and not is_collide(*direction, walls_collide_list, player_rect):
                 player_rect.move_ip(direction)
             else:
                 is_set = False
@@ -805,7 +850,7 @@ while running:
                         bg.blit(text_font.render("FINISH", True, pygame.Color("pink")),(0,0))
                         bg.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (850, 500))
                         if pygame.mouse.get_pressed()[0]:
-                            maze, maze2D,walls_collide_list ,player_rect.topleft,des_rect.topleft= new_game()
+                            maze, maze2D,walls_collide_list ,player_rect.topleft,des_rect.topleft, lastpos= new_game()
                             # get Jerry position
                             AimPos = findTomAndJerryPos(maze2D)[1]
                             # get Tom position
