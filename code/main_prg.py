@@ -19,12 +19,10 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
         s = Login.start_all()
-
         open('current_account.txt', 'w').close()
         fp1 = open('current_account.txt', 'w')
         fp1.writelines(s)
         fp1.close()
-
         while True:
             soundbar.set_sound(pygame.mixer.music.get_volume())
             n = make_menu(s) #list thong so game
@@ -52,7 +50,7 @@ if __name__ == '__main__':
             else:
                 while True:
                     inp = open('mode.txt', 'w')
-                    for i in range(4):
+                    for i in range(len(n)):
                         inp.write(str(n[i]) + '\n')
                     inp.close() 
                     subprocess.run(["python", "code/main_code.py"])
