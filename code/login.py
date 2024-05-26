@@ -546,6 +546,7 @@ def start_all():
 
     # Tải ảnh nền
     background_image = pygame.image.load('img/background1.jpg')
+    background_image = pygame.transform.scale(background_image,(1280,720))
 
     # tải âm thanh khi click chuột
     click_sound = mixer.Sound('sound/click.mp3')
@@ -558,11 +559,15 @@ def start_all():
     tendangnhap = ''
 
     # Tạo font chữ
-    font_1 = pygame.font.Font(None, 36)
+    font_1 = pygame.font.Font('font/Shermlock.ttf', 36)
     
     # Biến xác định vị trí ô vuông 
-    Login_rect = pygame.Rect(550, screen_height // 2 - font_1.get_height() // 2 - 50 - 10 , 190, font_1.get_height() + 20) 
-    Signup_rect = pygame.Rect(550, screen_height // 2 - font_1.get_height() // 2 + 50 - 10 , 190, font_1.get_height() + 20) 
+    modebox = pygame.image.load('img/modebox.png').convert_alpha()
+    modebox = pygame.transform.scale(modebox, (190, font_1.get_height() + 20))
+    modebox_pressed = pygame.image.load('img/modeboxpressed.png').convert_alpha()
+    modebox_pressed = pygame.transform.scale(modebox_pressed, (190, font_1.get_height() + 20))
+    Login_rect = pygame.Rect(300, screen_height // 2 - font_1.get_height() // 2 - 50 - 10 , 190, font_1.get_height() + 20) 
+    Signup_rect = pygame.Rect(300, screen_height // 2 - font_1.get_height() // 2 + 50 - 10 , 190, font_1.get_height() + 20) 
 
     # Hàm kiểm tra xem chuột có nằm trong ô vuông 
     def is_over_Login_box(mouse_pos):
@@ -594,8 +599,8 @@ def start_all():
                 return tendangnhap   
                                
 
-        # Tô màu màn hình
-        screen.fill(WHITE)
+        # # Tô màu màn hình
+        # screen.fill(WHITE)
         # Vẽ ảnh nền
         screen.blit(background_image, (0, 0))
 
@@ -603,22 +608,25 @@ def start_all():
         Login = font_1.render("Log in", True, DARK_RED, None)
         Signup = font_1.render("Sign up", True, DARK_RED, None)
 
-        # Biến xác định vùng trắng bao bọc xung quanh ô login và signup
-        white_login_rect = pygame.Rect(550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20) 
-        white_signup_rect = pygame.Rect(550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20)
+        # # Biến xác định vùng trắng bao bọc xung quanh ô login và signup
+        # white_login_rect = pygame.Rect(550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20) 
+        # white_signup_rect = pygame.Rect(550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20)
 
-        # Tô màu trắng vùng xung quanh 
-        pygame.draw.rect(screen, YELLOW, white_login_rect)
-        pygame.draw.rect(screen, YELLOW, white_signup_rect)
+        # # Tô màu trắng vùng xung quanh 
+        # pygame.draw.rect(screen, YELLOW, white_login_rect)
+        # pygame.draw.rect(screen, YELLOW, white_signup_rect)
+        
+        screen.blit(modebox,Login_rect)
+        screen.blit(modebox,Signup_rect)
 
 
         #Vẽ đối tượng văn bản lên màn hình ở vị trí mong muốn
-        screen.blit(Login, (screen_width // 2 - Login.get_width() // 2, screen_height // 2 - Login.get_height() // 2 - 50))
-        screen.blit(Signup, (screen_width // 2 - Signup.get_width() // 2, screen_height // 2 - Signup.get_height() // 2 + 50))
+        screen.blit(Login, (screen_width // 2-240 - Login.get_width() // 2, screen_height // 2 - Login.get_height() // 2 - 50))
+        screen.blit(Signup, (screen_width // 2-240 - Signup.get_width() // 2, screen_height // 2 - Signup.get_height() // 2 + 50))
 
-        # Vẽ hình chữ nhật xung quanh vùng nhập dữ liệu, ô login, ô reset
-        pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20), 2)
-        pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20), 2)
+        # # Vẽ hình chữ nhật xung quanh vùng nhập dữ liệu, ô login, ô reset
+        # pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20), 2)
+        # pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20), 2)
       
         # Cập nhật màn hình
         pygame.display.flip()
