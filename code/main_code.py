@@ -135,7 +135,7 @@ def new_game():
         ]
     )
     lastpos = (-1, -1)
-    return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos
+    return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos
 
 #phần save game
 def create_user_saved_game(username : str):
@@ -289,7 +289,7 @@ des_rect = des_img.get_rect()
 #     AimPos[1] * create_maze.TILE + create_maze.THICK,
 #     AimPos[0] * create_maze.TILE + create_maze.THICK,
 # )
-maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos = new_game()
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(
@@ -387,36 +387,48 @@ def pause_game():
         if play_button.rect.collidepoint(pygame.mouse.get_pos()):
             return 0
         if home_button.rect.collidepoint(pygame.mouse.get_pos()):
-
-            DISPLAYSURF = surface
-            pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
-            pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
-            write_screen('Go out', WHITE, None, (1280//2 - 240 + 80, 320), 1, DISPLAYSURF, 20)
-            write_screen("  x  ", WHITE, RED, (1280//2 + 280, 320), -1, DISPLAYSURF, 20)
-            write_screen("Do u want to save your current game?", BLACK, None, (1280//2, 380), 1, DISPLAYSURF, 18)
-            write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
+            write_screen('Leave Game', GRAY, None, (1280//2 - 270, 250), -1, surface, 30)
+            logbox = pygame.image.load('img/log.png').convert_alpha()
+            logbox = pygame.transform.scale(logbox, (560, 400))
+            logbox_rect = logbox.get_rect()
+            logbox_rect.topleft = (1280//2 - 500, 200)
+            modebox = pygame.image.load('img/modebox.png').convert_alpha()
+            modebox = pygame.transform.scale(modebox, (140,50))
+            modebox_pressed = pygame.image.load('img/modeboxpressed.png').convert_alpha()
+            modebox_pressed = pygame.transform.scale(modebox_pressed, (140,50))
+            surface.blit(logbox, logbox_rect)
+            write_screen("Do u wanna save your game?", BLACK, None, (1280//2 - 250, 380), -1, surface, 30)
+            lst = ["SURE","NO"]
+            lst_rect = []
+            for i in range(1,3):
+                surface.blit(modebox, (1280//2 - 590 + 200 * i, 500))
+                lst_rect.append(pygame.rect.Rect(1280//2 - 590 + 200 * i, 500,140,50))
+                write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 525), -1, surface, 20)
             while True:
+                mousePos = pygame.mouse.get_pos()
+                for item in lst_rect:
+                    x = lst_rect.index(item)
+                    if item.collidepoint(mousePos):
+                        surface.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 500))
+                        write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
+                    else:
+                        surface.blit(modebox, (1280//2 - 590 + 200 * (x+1), 500))
+                        write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
+                        
                 for event in pygame.event.get(): 
-                    tempx = pygame.mouse.get_pos()[0]
-                    tempy = pygame.mouse.get_pos()[1]
                     if event.type == pygame.MOUSEBUTTONUP:
-                        if (900 < tempx < 940 and 302 < tempy < 340) or (724 < tempx < 748 and 490 < tempy < 506): #quit dialog
+                        make_sound()
+                        if lst_rect[1].collidepoint(mousePos): #quit dialog
                             return 1
-                        elif 542 < tempx < 567 and 489 < tempy < 506:
-                            # lưu mê cung
+                        elif lst_rect[0].collidepoint(mousePos): # save
                             f = open('current_account.txt', 'r')
                             username = f.read()
                             f.close()
                             create_user_saved_game(username)
                             return 1
-                    else:
-                        if 542 < tempx < 567 and 489 < tempy < 506:
-                            write_screen("SURE", BLACK, BROWN, ((542+568)//2, 500), 1, DISPLAYSURF, 18)
-                        elif 724 < tempx < 748 and 490 < tempy < 506:
-                            write_screen("NO", BLACK, BROWN, ((720 + 746)//2, 500), 1, DISPLAYSURF, 18)
-                        else:
-                            write_screen("SURE                                     NO", BLACK, WHITE, (1280//2, 500), 1, DISPLAYSURF, 18)
-                pygame.display.update((380, 300, 600, 250))
+                    if event.type == pygame.QUIT:
+                        return 1
+                pygame.display.update()
     # continue to pause
     return 2
 
@@ -437,9 +449,9 @@ def get_player_current_cell():
 
 def reset_record(username : str):
     filename = 'player_record/' + username + '.txt'
-    fp = open(filename, 'w')
-    fp.write('150 150 150 0 0 0')
-    fp.close()
+    f = open(filename,'w')
+    f.write('150 150 150 0 0 0')
+    f.close()
 
 def get_record(username : str):
     filename = 'player_record/' + username + '.txt'
