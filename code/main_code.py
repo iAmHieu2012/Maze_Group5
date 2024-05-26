@@ -256,16 +256,16 @@ def load_game(username: str):
     )
     return maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level
     
-# get maze
-maze = create_maze.generate_maze()
-maze = generateTomAndJerryPos(maze)
-maze2D = getMaze2DArray(maze)
+# # get maze
+# maze = create_maze.generate_maze()
+# maze = generateTomAndJerryPos(maze)
+# maze2D = getMaze2DArray(maze)
 
-# get Jerry position
-AimPos = findTomAndJerryPos(maze2D)[1]
+# # get Jerry position
+# AimPos = findTomAndJerryPos(maze2D)[1]
 
-# get Tom position
-CurrentPos = findTomAndJerryPos(maze2D)[0]
+# # get Tom position
+# CurrentPos = findTomAndJerryPos(maze2D)[0]
 
 # player settings
 player_speed = 10  # TILE must be divided by player_speed
@@ -274,10 +274,10 @@ player_img = pygame.transform.scale(
     player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
 )
 player_rect = player_img.get_rect()
-player_rect.topleft = (
-    CurrentPos[1] * create_maze.TILE + create_maze.THICK,
-    CurrentPos[0] * create_maze.TILE + create_maze.THICK,
-)
+# player_rect.topleft = (
+#     CurrentPos[1] * create_maze.TILE + create_maze.THICK,
+#     CurrentPos[0] * create_maze.TILE + create_maze.THICK,
+# )
 
 # destination settings
 des_img = pygame.image.load("img/jerryface.png").convert_alpha()
@@ -285,10 +285,11 @@ des_img = pygame.transform.scale(
     des_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
 )
 des_rect = des_img.get_rect()
-des_rect.topleft = (
-    AimPos[1] * create_maze.TILE + create_maze.THICK,
-    AimPos[0] * create_maze.TILE + create_maze.THICK,
-)
+# des_rect.topleft = (
+#     AimPos[1] * create_maze.TILE + create_maze.THICK,
+#     AimPos[0] * create_maze.TILE + create_maze.THICK,
+# )
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos = new_game()
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(

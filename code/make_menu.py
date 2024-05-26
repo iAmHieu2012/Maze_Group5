@@ -132,16 +132,16 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
     modebox_pressed = pygame.transform.scale(modebox_pressed, (140,50))
     DISPLAYSURF.blit(logbox, logbox_rect)
     DISPLAYSURF.blit(x_button, (1280//2 + 80, 250))
-    DISPLAYSURF.blit(tick_button, (logbox_rect.centerx, logbox_rect.bottom))
     # pygame.draw.rect(DISPLAYSURF, WHITE, (1280//2 - 250, 300, 550, 240))
     # pygame.draw.rect(DISPLAYSURF, BLUE, (1280//2 - 250, 300, 550, 40))
     write_screen(s, GRAY, None, (1280//2 - 270, 250), -1, DISPLAYSURF, 30)
     # write_screen("  X  ", WHITE, RED, (1280//2 + 80, 320), -1, DISPLAYSURF, 20)
     x_button_rect = x_button.get_rect()
-    x_button_rect.topleft = (1280//2 + 60, 250)
-    tick_button_rect = x_button.get_rect()
+    x_button_rect.topleft = (1280//2 + 80, 250)
+    tick_button_rect = tick_button.get_rect()
     tick_button_rect.center = (logbox_rect.centerx, logbox_rect.bottom)
     if mode == 0:
+        DISPLAYSURF.blit(tick_button, (logbox_rect.centerx-30, logbox_rect.bottom-30))
         write_screen("LEVEL", BLACK, None, (1280//2 - 430, 320), -1, DISPLAYSURF, 20)
         lst = ["EASY", "MEDIUM", " HARD "]
         lst_level_rect = []
@@ -244,35 +244,37 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
 
     elif mode == 4:#setting
         write_screen(" KEY ", BLACK, None, (1280//2 - 240 + 30, 525), -1, DISPLAYSURF, 20)
-        lst = ["AWSD", "ARROWKEY", "JIKL"]
-        for i in range(1, 4):
-            write_screen(lst[i - 1], BLACK, CYAN, (1280//2 - 210 + 150 * i, 525), -1, DISPLAYSURF, 20)
+        lst = ["AWSD", "ARROWKEY"]
+        lst_rect = []
+        for i in range(1, 3):
+            DISPLAYSURF.blit(modebox, (1280//2 - 590 + 200 * i, 355))
+            lst_rect.append(pygame.rect.Rect(1280//2 - 590 + 200 * i, 355,140,50))
+            write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 380), -1, DISPLAYSURF, 20)
         x = -1
         running = True
         key_mode = 0
-        runner = 0
         while running:
-            if runner == 0:#choose map 
-                for event in pygame.event.get(): 
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        make_sound()
-                        tempx = pygame.mouse.get_pos()[0]
-                        tempy = pygame.mouse.get_pos()[1]
-                        temp = (tempx - 538)//150
-                        if (-1 < temp < 3 and 360 < tempy < 400 and temp != x):
-                            x>-1 and write_screen(lst[x], BLACK, CYAN, (1280//2 - 210 + 150 * (x + 1), 380), -1, DISPLAYSURF, 20)
-                            write_screen(lst[temp], BLACK, BROWN, (1280//2 - 210 + 150 * (temp + 1), 380), -1, DISPLAYSURF, 20)
-                            x = temp
-                        elif 900 < tempx < 940 and 302 < tempy < 340: #quit dialog
-                            running = False
-                            return -1
-                        elif temp == x > -1:
-                            key_mode = temp
-                            runner = -1
+            running = soundbar.sound_all(DISPLAYSURF,x_button_rect)
+            mousePos = pygame.mouse.get_pos()
+            for item in lst_rect:
+                if item.collidepoint(mousePos):
+                    x = lst_rect.index(item)
+                    break
+            else:
+                x = -1
+            for event in pygame.event.get(): 
+                if event.type == pygame.MOUSEBUTTONUP:
+                    make_sound()
+                    if x>-1:
+                        DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 355))
+                        write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 380), -1, DISPLAYSURF, 20)
+                        key_mode = x
+                    if x_button_rect.collidepoint(mousePos):
+                        running = False
+                        return -1
+                    if tick_button_rect.collidepoint(mousePos): 
+                        return (key_mode, -1)
             pygame.display.update()
-            if runner == -1:
-                soundbar.sound_all(DISPLAYSURF)
-                return (key_mode, -1)
 
 def make_menu(s: str):
     textbox = pygame.image.load('img/board.png').convert_alpha()
@@ -321,7 +323,7 @@ def make_menu(s: str):
                         
                         elif y == 5:
                             n = make_dialog(DISPLAYSURF, "SETTINGS", 4)
-                            return 0
+                            return 5
                         
                         elif y == 6:
                             return 6
