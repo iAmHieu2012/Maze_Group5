@@ -458,7 +458,7 @@ def get_record(username : str):
         return recordList
     except:
         reset_record(username)
-        get_record(username)
+        return get_record(username)
 
 f = open("mode.txt",'r')
 f.readline()
@@ -767,7 +767,7 @@ while running:
             surface.blit(bg, (WIDTH, 0))
             surface.blit(game_surface, (0, 0))
             game_surface.blit(bg_game, (0, 0))
-
+            maze2D[AimPos].make_blank()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     inp = open('result.txt', 'w')
@@ -875,19 +875,17 @@ while running:
                         current_direction = get_way_between_2point(pA,pB,maze2D)
                         player_rect.move_ip(directions[current_direction])
                     if not len(path):
-                        bg.blit(text_font.render("FINISH", True, pygame.Color("pink")),(0,0))
-                        bg.blit(mini_text_font.render("Click on the screen to restart!", True, pygame.Color("white")), (850, 500))
+                        # finish = True
                         if pygame.mouse.get_pressed()[0]:
-                            maze, maze2D,walls_collide_list ,player_rect.topleft,des_rect.topleft, lastpos= new_game()
-                            # get Jerry position
-                            AimPos = findTomAndJerryPos(maze2D)[1]
-                            # get Tom position
-                            CurrentPos = findTomAndJerryPos(maze2D)[0]
+                            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos= new_game()
                             time = -1
                             is_game_over()
                             finish = False
                             hint1, hint_2, hint = False, False, False
                             is_set = False
+                            pygame.display.update()
+                        else:
+                            bg.blit(mini_text_font.render("Click to restart!", True, pygame.Color("white")), (0, 0))
                 else:
                     maze2D[CurrentPos[0]][CurrentPos[1]].make_blank()
                     maze2D[pos[0]][pos[1]].make_tom_pos()
@@ -906,7 +904,6 @@ while running:
             game_surface.blit(des_img,des_rect)
             game_surface.blit(player_img, player_rect)
             [cell.draw(game_surface) for cell in maze]
-                    
             clock.tick(FPS)
 
         if not finish:
@@ -933,4 +930,7 @@ while running:
                         if not hint_2:
                             hint_2 = True
                             hint_1 = False
+        else: 
+            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
+            finish = False
     pygame.display.update()
