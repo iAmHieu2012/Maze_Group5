@@ -268,7 +268,7 @@ def load_game(username: str):
 # CurrentPos = findTomAndJerryPos(maze2D)[0]
 
 # player settings
-player_speed = 10  # TILE must be divided by player_speed
+player_speed = 5  # TILE must be divided by player_speed
 player_img = pygame.image.load("img/tomface.png").convert_alpha()
 player_img = pygame.transform.scale(
     player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
@@ -435,6 +435,23 @@ def get_player_current_cell():
     pos = (int(pos[0]),int(pos[1]))
     return pos
 
+def reset_record(username : str):
+    filename = 'player_record/' + username + '.txt'
+    fp = open(filename, 'w')
+    fp.write('150 150 150 0 0 0')
+    fp.close()
+
+def get_record(username : str):
+    filename = 'player_record/' + username + '.txt'
+    try:
+        fp = open(filename, 'r')
+        recordList = list(map(int, fp.readline().split()))
+        fp.close()
+        return recordList
+    except:
+        reset_record(username)
+        get_record(username)
+
 f = open("mode.txt",'r')
 f.readline()
 temp = int(f.readline())
@@ -444,13 +461,12 @@ f.close()
 count = 0
 times_move = 0
 running = True
+
 fp = open('current_account.txt', 'r')
 username = fp.readline()
 fp.close()
-filename = 'player_record/' + username + '.txt'
-fp = open(filename, 'r')
-recordList = list(map(int, fp.readline().split()))
-fp.close()
+recordList = get_record(username)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
