@@ -151,6 +151,36 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
             write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
         running = True
         hard = 0
+        if auto == 1:
+            while running:
+                mousePos = pygame.mouse.get_pos()
+                for item in lst_level_rect:
+                    if item.collidepoint(mousePos):
+                        x1 = lst_level_rect.index(item)
+                        break
+                else: x1=-1
+                for event in pygame.event.get(): 
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        make_sound()
+                        if x1 > -1:
+                            for i in range(1, 4):
+                                DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 355))
+                                write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
+                            DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x1+1), 355))
+                            write_screen(lst[x1], BLACK, None, (1280//2 - 520 + 150 * (x1+1), 380), -1, DISPLAYSURF, 20)
+                            if x1 == 0: hard = 20
+                            elif x1 == 1: hard = 40
+                            else: hard = 100
+                            player_choice =  [hard, 4]
+                        if tick_button_rect.collidepoint(mousePos) and player_choice != []:
+                            running = False
+                            return player_choice
+                        if x_button_rect.collidepoint(mousePos): #quit dialog
+                            running = False
+                            player_choice = []
+                            return -1
+                pygame.display.update()
+
         if auto == 0:
             write_screen("MODE", BLACK, None, (1280//2 - 430, 450), -1, DISPLAYSURF, 20)
             # pygame.time.delay(500)

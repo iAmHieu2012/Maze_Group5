@@ -6,6 +6,9 @@ nums_food = 0
 inp = open('mode.txt', 'r')
 lst = inp.readlines()
 inp.close()
+if int(lst[1]) == 1:
+    auto =1
+else: auto =0
 if int(lst[1]) != 2:
     game_level = int(lst[2])
     game_mode = int(lst[3])
@@ -146,36 +149,44 @@ def create_user_saved_game(username : str):
 
     filename = 'saved_game/' + username + '.txt'
     # open(filename, 'w').close()
-    fp = open(filename, 'w')
-    fp.write(str(game_mode)+'\n')
-    fp.write(str(game_level) + '\n')
-    fp.write(str(AimPos[0])+" "+str(AimPos[1])+'\n')
-    fp.write(str(CurrentPos[0])+" "+str(CurrentPos[1])+'\n')
-    if game_mode == 1:
-        fp.write(str(time) + '\n')
+    try:
+        fp = open(filename, 'w')
+        fp.write(str(game_mode)+'\n')
+        fp.write(str(game_level) + '\n')
+        fp.write(str(AimPos[0])+" "+str(AimPos[1])+'\n')
+        fp.write(str(CurrentPos[0])+" "+str(CurrentPos[1])+'\n')
+        if game_mode == 1:
+            fp.write(str(time) + '\n')
 
-    if game_mode == 2:
-        fp.write(str(score) + '\n')
-        fp.write(str(time) + '\n')
+        if game_mode == 2:
+            fp.write(str(score) + '\n')
+            fp.write(str(time) + '\n')
 
 
-    for cell in maze:
-        fp.write(str(cell.y))
-        fp.write(' ')
-        fp.write(str(cell.x))
-        fp.write('\n')
-        for wall,status in cell.walls.items():
-            if status == False:
-                fp.write('0 ')
-            else:
-                fp.write('1 ')
-        fp.write('\n')  
-    fp.close()             
+        for cell in maze:
+            fp.write(str(cell.y))
+            fp.write(' ')
+            fp.write(str(cell.x))
+            fp.write('\n')
+            for wall,status in cell.walls.items():
+                if status == False:
+                    fp.write('0 ')
+                else:
+                    fp.write('1 ')
+            fp.write('\n')  
+        fp.close()
+    except:
+        f = open(filename, 'w')
+        f.close()
+        create_user_saved_game(username)
+
 
 # Phần load game:
 def read_saved_game(username : str):
     filename = 'saved_game/' + username + '.txt'
-    fp = open(filename, 'r')
+    try:
+        fp = open(filename, 'r')
+    except: return None
     game_mode = int(fp.readline())
     game_level = int(fp.readline())
     #Vị trí Jerry
@@ -228,6 +239,8 @@ def read_saved_game(username : str):
     return game_mode, game_level, AimPos, CurrentPos, maze, time, score
            
 def load_game(username: str):
+    if read_saved_game(username) == None:
+        return None
     game_mode, game_level, AimPos, CurrentPos, maze, time, score = read_saved_game(username)
     maze2D = getMaze2DArray(maze)
     if game_level == 20:
@@ -309,27 +322,6 @@ direction = (0, 0)
 # food settings
 food_list = [Food() for i in range(nums_food)]
 
-# collision list
-walls_collide_list = sum(
-    [cell.get_rects() for cell in maze],
-    [
-        pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
-        pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
-        pygame.Rect(
-            create_maze.cols * create_maze.TILE - create_maze.THICK,
-            0,
-            create_maze.THICK,
-            create_maze.TILE * create_maze.rows,
-        ),
-        pygame.Rect(
-            0,
-            create_maze.rows * create_maze.TILE - create_maze.THICK,
-            create_maze.TILE * create_maze.cols,
-            create_maze.THICK,
-        ),
-    ],
-)
-
 def get_way_between_2point(currp, nextp, maze2D):
     if currp[0] == nextp[0]:
         if (currp[1]+1 == nextp[1]) and not maze2D[currp].walls['right'] and not maze2D[nextp].walls['left']:
@@ -377,7 +369,7 @@ hint_button_1 = Button("img/hintbutton.png", 1300,300)
 hint_button_2 = Button("img/hintbutton.png", 1300,500)
 
     
-def pause_game():
+def pause_game(auto=0):
     surface.blit(pause_surface,(0,0))
     pause_surface.blit(bg_pause, (0,0))
     pause_surface.blit(text_font.render("CONTINUE?", True, pygame.Color("white")), (880, 400))
@@ -386,49 +378,53 @@ def pause_game():
     if pygame.mouse.get_pressed()[0]:
         if play_button.rect.collidepoint(pygame.mouse.get_pos()):
             return 0
-        if home_button.rect.collidepoint(pygame.mouse.get_pos()):
-            write_screen('Leave Game', GRAY, None, (1280//2 - 270, 250), -1, surface, 30)
-            logbox = pygame.image.load('img/log.png').convert_alpha()
-            logbox = pygame.transform.scale(logbox, (560, 400))
-            logbox_rect = logbox.get_rect()
-            logbox_rect.topleft = (1280//2 - 500, 200)
-            modebox = pygame.image.load('img/modebox.png').convert_alpha()
-            modebox = pygame.transform.scale(modebox, (140,50))
-            modebox_pressed = pygame.image.load('img/modeboxpressed.png').convert_alpha()
-            modebox_pressed = pygame.transform.scale(modebox_pressed, (140,50))
-            surface.blit(logbox, logbox_rect)
-            write_screen("Do u wanna save your game?", BLACK, None, (1280//2 - 250, 380), -1, surface, 30)
-            lst = ["SURE","NO"]
-            lst_rect = []
-            for i in range(1,3):
-                surface.blit(modebox, (1280//2 - 590 + 200 * i, 500))
-                lst_rect.append(pygame.rect.Rect(1280//2 - 590 + 200 * i, 500,140,50))
-                write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 525), -1, surface, 20)
-            while True:
-                mousePos = pygame.mouse.get_pos()
-                for item in lst_rect:
-                    x = lst_rect.index(item)
-                    if item.collidepoint(mousePos):
-                        surface.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 500))
-                        write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
-                    else:
-                        surface.blit(modebox, (1280//2 - 590 + 200 * (x+1), 500))
-                        write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
-                        
-                for event in pygame.event.get(): 
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        make_sound()
-                        if lst_rect[1].collidepoint(mousePos): #quit dialog
+        if auto != 0:
+            if home_button.rect.collidepoint(pygame.mouse.get_pos()):
+                return 1
+        else:
+            if home_button.rect.collidepoint(pygame.mouse.get_pos()):
+                write_screen('Leave Game', GRAY, None, (1280//2 - 270, 250), -1, surface, 30)
+                logbox = pygame.image.load('img/log.png').convert_alpha()
+                logbox = pygame.transform.scale(logbox, (560, 400))
+                logbox_rect = logbox.get_rect()
+                logbox_rect.topleft = (1280//2 - 500, 200)
+                modebox = pygame.image.load('img/modebox.png').convert_alpha()
+                modebox = pygame.transform.scale(modebox, (140,50))
+                modebox_pressed = pygame.image.load('img/modeboxpressed.png').convert_alpha()
+                modebox_pressed = pygame.transform.scale(modebox_pressed, (140,50))
+                surface.blit(logbox, logbox_rect)
+                write_screen("Do u wanna save your game?", BLACK, None, (1280//2 - 250, 380), -1, surface, 30)
+                lst = ["SURE","NO"]
+                lst_rect = []
+                for i in range(1,3):
+                    surface.blit(modebox, (1280//2 - 590 + 200 * i, 500))
+                    lst_rect.append(pygame.rect.Rect(1280//2 - 590 + 200 * i, 500,140,50))
+                    write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 525), -1, surface, 20)
+                while True:
+                    mousePos = pygame.mouse.get_pos()
+                    for item in lst_rect:
+                        x = lst_rect.index(item)
+                        if item.collidepoint(mousePos):
+                            surface.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 500))
+                            write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
+                        else:
+                            surface.blit(modebox, (1280//2 - 590 + 200 * (x+1), 500))
+                            write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 525), -1, surface, 20)
+                            
+                    for event in pygame.event.get(): 
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            make_sound()
+                            if lst_rect[1].collidepoint(mousePos): #quit dialog
+                                return 1
+                            elif lst_rect[0].collidepoint(mousePos): # save
+                                f = open('current_account.txt', 'r')
+                                username = f.read()
+                                f.close()
+                                create_user_saved_game(username)
+                                return 1
+                        if event.type == pygame.QUIT:
                             return 1
-                        elif lst_rect[0].collidepoint(mousePos): # save
-                            f = open('current_account.txt', 'r')
-                            username = f.read()
-                            f.close()
-                            create_user_saved_game(username)
-                            return 1
-                    if event.type == pygame.QUIT:
-                        return 1
-                pygame.display.update()
+                    pygame.display.update()
     # continue to pause
     return 2
 
@@ -502,6 +498,9 @@ while running:
         fp1 = open('current_account.txt', 'r')
         user = fp1.readline()
         fp1.close()
+        if load_game(username) == None:
+            make_dialog(surface,"You haven't got any saved games!",1,0)
+            break
         maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level  = load_game(user)
         loadgamestatus = False
         #Set level
@@ -556,7 +555,7 @@ while running:
         direction = (0,0)        
         current_direction = None
     elif pause:
-        f = pause_game()
+        f = pause_game(auto)
         if f == 1:
             inp = open('result.txt', 'w')
             inp.write('-1')
