@@ -180,6 +180,9 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
                     if x1 > -1:
+                        for i in range(1, 4):
+                            DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 355))
+                            write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
                         DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x1+1), 355))
                         write_screen(lst[x1], BLACK, None, (1280//2 - 520 + 150 * (x1+1), 380), -1, DISPLAYSURF, 20)
                         if x1 == 0: hard = 20
@@ -189,6 +192,9 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                             player_choice =  [hard, 4]
                     
                     if x2>-1:
+                        for i in range(1, 4):
+                            DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 485))
+                            write_screen(lstmode[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 510), -1, DISPLAYSURF, 20)
                         DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x2+1), 485))
                         write_screen(lstmode[x2], BLACK, None, (1280//2 - 520 + 150 * (x2+1), 510), -1, DISPLAYSURF, 20)
                         player_choice = [hard, x2]
