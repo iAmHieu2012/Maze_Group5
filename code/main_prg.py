@@ -48,6 +48,8 @@ if __name__ == '__main__':
                 subprocess.run(['python', 'code/leaderboard.py'])
             elif n == 4:
                 subprocess.run(['python', 'code/instruction.py'])
+            elif n == 5:
+                continue
             elif n == 6:
                 subprocess.run(['python', 'code/about.py'])
             else:
