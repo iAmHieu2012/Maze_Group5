@@ -148,7 +148,8 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
             lst_level_rect.append(pygame.rect.Rect(1280//2 - 590 + 150 * i, 355,140,50))
             write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
         running = True
-        hard = 0
+        hard = -1
+        gm = -1
         if auto == 1:
             while running:
                 mousePos = pygame.mouse.get_pos()
@@ -192,36 +193,45 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
         player_choice = []
         x1 = -1
         x2 = -1
+        x1_hover = -1
+        x2_hover = -1
         while running:
             mousePos = pygame.mouse.get_pos()
             for item in lst_level_rect:
                 if item.collidepoint(mousePos):
-                    x1 = lst_level_rect.index(item)
+                    x1_hover = lst_level_rect.index(item)
                     break
+            else: x1_hover = -1
             for item in lst_mode_rect:
                 if item.collidepoint(mousePos):
-                    x2 = lst_mode_rect.index(item)
+                    x2_hover = lst_mode_rect.index(item)
                     break
+            else: x2_hover = -1
             for event in pygame.event.get(): 
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
-                    if x1 > -1:
+                    if x1_hover > -1:
+                        x1 = x1_hover
                         for i in range(1, 4):
                             DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 355))
                             write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 380), -1, DISPLAYSURF, 20)
                         DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x1+1), 355))
                         write_screen(lst[x1], BLACK, None, (1280//2 - 520 + 150 * (x1+1), 380), -1, DISPLAYSURF, 20)
-                        if x1 == 0: hard = 20
-                        elif x1 == 1: hard = 40
-                        else: hard = 100
-                        player_choice = [hard, x2]
-                    if x2>-1:
+                    if x1 == 0: hard = 20
+                    elif x1 == 1: hard = 40
+                    else: hard = 100
+                    player_choice = [hard, gm]
+                    if x2_hover>-1:
+                        x2 = x2_hover
                         for i in range(1, 4):
                             DISPLAYSURF.blit(modebox, (1280//2 - 590 + 150 * i, 485))
                             write_screen(lstmode[i - 1], BLACK, None, (1280//2 - 520 + 150 * i, 510), -1, DISPLAYSURF, 20)
                         DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 150 * (x2+1), 485))
                         write_screen(lstmode[x2], BLACK, None, (1280//2 - 520 + 150 * (x2+1), 510), -1, DISPLAYSURF, 20)
-                        player_choice = [hard, x2]
+                    if x2 == 0: gm = 0
+                    elif x2 == 1: gm = 1
+                    else: gm =2
+                    player_choice = [hard, gm]
                     if tick_button_rect.collidepoint(mousePos) and (-1 not in player_choice):
                         running = False
                         return player_choice

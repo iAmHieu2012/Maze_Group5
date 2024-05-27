@@ -140,10 +140,11 @@ def generate_maze():
             current_cell = next_cell
         elif array:
             current_cell = array.pop()
-    # for i in range(40):
-    #     current_cell = choice(grid_cells)
-    #     next_cell = grid_cells[grid_cells.index(current_cell)].rand_neighbors(grid_cells)
-    #     if next_cell == False:
-    #         continue
-    #     remove_walls(current_cell, next_cell)
+    for i in range(40):
+        current_cell = choice(grid_cells)
+        next_cell = grid_cells[grid_cells.index(current_cell)].rand_neighbors(grid_cells)
+        if next_cell == False:
+            continue
+        remove_walls(current_cell, next_cell)
+    print(rows,cols)
     return grid_cells

@@ -47,8 +47,8 @@ if int(lst[1]) != 2:
     elif game_level == 40:
         create_maze.TILE = 40
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-        algorithm.MODE = 150
-        create_maze.THICK = 3
+        algorithm.MODE = 50
+        create_maze.THICK = 2
         nums_food = 30
     elif game_level == 100:
         create_maze.TILE = 20
@@ -208,8 +208,8 @@ def read_saved_game(username : str):
     elif game_level == 40:
         create_maze.TILE = 40
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-        algorithm.MODE = 150
-        create_maze.THICK = 3
+        algorithm.MODE = 50
+        create_maze.THICK = 2
         nums_food = 30
     elif game_level == 100:
         create_maze.TILE = 20
@@ -252,8 +252,8 @@ def load_game(username: str):
     elif game_level == 40:
         create_maze.TILE = 40
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-        algorithm.MODE = 150
-        create_maze.THICK = 3
+        algorithm.MODE = 50
+        create_maze.THICK = 2
         nums_food = 30
     elif game_level == 100:
         create_maze.TILE = 20
@@ -518,8 +518,8 @@ while running:
         elif game_level == 40:
             create_maze.TILE = 40
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-            algorithm.MODE = 150
-            create_maze.THICK = 3
+            algorithm.MODE = 50
+            create_maze.THICK = 2
             nums_food = 30
         elif game_level == 100:
             create_maze.TILE = 20
