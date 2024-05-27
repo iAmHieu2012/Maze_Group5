@@ -28,40 +28,26 @@ screen = pygame.display.set_mode((478, 478))
 font = pygame.font.Font('font/AGENTORANGE.TTF', 36)
 
 img_spr = font.render("Speedrun", True, WHITE)
-rect1 = img_spr.get_rect()
-
 img_clt = font.render("Collect", True, WHITE)
-rect2 = img_clt.get_rect()
 
 contentImg = []
 contentFont = pygame.font.Font('font/Comic-Art.ttf', 25)
 
-easy1   = contentFont.render("Easy     :               " + str(recordList[0]), True, WHITE)
-rect_e1 = img_spr.get_rect()
+easy1   = contentFont.render("Easy     :", True, WHITE)
+medium1 = contentFont.render("Medium :", True, WHITE)
+hard1   = contentFont.render("Hard     :", True, WHITE)
+easy2   = contentFont.render("Easy     :", True, WHITE)
+medium2 = contentFont.render("Medium :", True, WHITE)
+hard2   = contentFont.render("Hard     :", True, WHITE)
 
-medium1 = contentFont.render("Medium :              " + str(recordList[1]), True, WHITE)
-rect_m1 = img_spr.get_rect()
-
-hard1   = contentFont.render("Hard     :              " + str(recordList[2]), True, WHITE)
-rect_h1 = img_spr.get_rect()
-
-easy2   = contentFont.render("Easy     :               " + str(recordList[3]), True, WHITE)
-rect_e2 = img_spr.get_rect()
-
-medium2 = contentFont.render("Medium :              " + str(recordList[4]), True, WHITE)
-rect_m2 = img_spr.get_rect()
-
-hard2   = contentFont.render("Hard     :              " + str(recordList[5]), True, WHITE)
-rect_h2 = img_spr.get_rect()
-
-# fp = open('record.txt', 'r')
-# data = fp.readlines()
-# for i in range(len(data)):
-#     try:
-#         contentImg.append(contentFont.render(data[i], True, DARKBROWN))
-#     except:
-#         contentImg.append(contentFont.render(' ', True, DARKBROWN))
-# fp.close()
+record_data = []
+for i in range(3):
+    if recordList[i] != 150:
+        record_data.append(contentFont.render(str(recordList[i]), True, WHITE))
+    else:
+        record_data.append(contentFont.render('None', True, WHITE))
+for i in range(3, 6, 1):
+    record_data.append(contentFont.render(str(recordList[i]), True, WHITE))
 
 running = True
 background_image = pygame.image.load('img/lead_bg.png')
@@ -76,12 +62,25 @@ while running:
     screen.blit(background_image, (0, 0))
     screen.blit(img_spr, (20, 30))
     screen.blit(img_clt, (20, 260))
+
     screen.blit(easy1, (50, 110))
+    screen.blit(record_data[0], (200, 110))
+
     screen.blit(medium1, (50, 140))
+    screen.blit(record_data[1], (200, 140))
+
     screen.blit(hard1, (50, 170))
+    screen.blit(record_data[2], (200, 170))
+
     screen.blit(easy2, (50, 340))
+    screen.blit(record_data[3], (200, 340))
+
     screen.blit(medium2, (50, 370))
+    screen.blit(record_data[4], (200, 370))
+
     screen.blit(hard2, (50, 400))
+    screen.blit(record_data[5], (200, 400))
+
 
     pygame.display.update()
 
