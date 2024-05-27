@@ -416,7 +416,7 @@ def sign_up():
                                 # nếu ráp code muốn return ra chuỗi username mới thì return ngay chỗ này
                                 running = False
                                 # mixer.music.stop()
-                                print(username_input)    
+                                # print(username_input)                             
                                 return username_input                    
           
             # Bắt sự kiện nhập văn bản vào ô username or password
@@ -644,23 +644,11 @@ def start_all():
                     tendangnhap = sign_up()
                 return tendangnhap   
                                
-
-        # # Tô màu màn hình
-        # screen.fill(WHITE)
-        # Vẽ ảnh nền
         screen.blit(background_image, (0, 0))
 
         # Render và vẽ các thành phần giao diện
         Login = font_1.render("Log in", True, DARK_RED, None)
         Signup = font_1.render("Sign up", True, DARK_RED, None)
-
-        # # Biến xác định vùng trắng bao bọc xung quanh ô login và signup
-        # white_login_rect = pygame.Rect(550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20) 
-        # white_signup_rect = pygame.Rect(550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20)
-
-        # # Tô màu trắng vùng xung quanh 
-        # pygame.draw.rect(screen, YELLOW, white_login_rect)
-        # pygame.draw.rect(screen, YELLOW, white_signup_rect)
         
         screen.blit(modebox,Login_rect)
         screen.blit(modebox,Signup_rect)
@@ -669,10 +657,6 @@ def start_all():
         #Vẽ đối tượng văn bản lên màn hình ở vị trí mong muốn
         screen.blit(Login, (screen_width // 2-240 - Login.get_width() // 2, screen_height // 2 - Login.get_height() // 2 - 50))
         screen.blit(Signup, (screen_width // 2-240 - Signup.get_width() // 2, screen_height // 2 - Signup.get_height() // 2 + 50))
-
-        # # Vẽ hình chữ nhật xung quanh vùng nhập dữ liệu, ô login, ô reset
-        # pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Login.get_height() // 2 - 50 - 10 , 190, Login.get_height() + 20), 2)
-        # pygame.draw.rect(screen, BLACK, (550, screen_height // 2 - Signup.get_height() // 2 + 50 - 10 , 190, Signup.get_height() + 20), 2)
       
         # Cập nhật màn hình
         pygame.display.flip()
@@ -708,11 +692,8 @@ if __name__ == '__main__':
 
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("white")
-
         ss = start_all()
-        print(ss)
         break
-
     pygame.quit()
 
     
