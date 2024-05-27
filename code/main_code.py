@@ -41,7 +41,7 @@ if int(lst[1]) != 2:
     if game_level == 20:
         create_maze.TILE = 60
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-        algorithm.MODE = 50
+        algorithm.MODE = 20
         create_maze.THICK = 4
         nums_food = 10
     elif game_level == 40:
@@ -54,7 +54,7 @@ if int(lst[1]) != 2:
         create_maze.TILE = 20
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
         create_maze.THICK = 2
-        algorithm.MODE = 300
+        algorithm.MODE = 80
         nums_food = 60
 
 class Food:
@@ -202,7 +202,7 @@ def read_saved_game(username : str):
     if game_level == 20:
         create_maze.TILE = 60
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-        algorithm.MODE = 50
+        algorithm.MODE = 20
         create_maze.THICK = 4
         nums_food = 10
     elif game_level == 40:
@@ -215,7 +215,7 @@ def read_saved_game(username : str):
         create_maze.TILE = 20
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
         create_maze.THICK = 2
-        algorithm.MODE = 300
+        algorithm.MODE = 80
         nums_food = 60
     for i in range(create_maze.cols* create_maze.rows):
         row, col = tuple(map(int,fp.readline().split()))
@@ -246,7 +246,7 @@ def load_game(username: str):
     if game_level == 20:
         create_maze.TILE = 60
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-        algorithm.MODE = 50
+        algorithm.MODE = 20
         create_maze.THICK = 4
         nums_food = 10
     elif game_level == 40:
@@ -259,7 +259,7 @@ def load_game(username: str):
         create_maze.TILE = 20
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
         create_maze.THICK = 2
-        algorithm.MODE = 300
+        algorithm.MODE = 80
         nums_food = 60
     walls_collide_list = sum(
         [cell.get_rects() for cell in maze],
@@ -512,7 +512,7 @@ while running:
         if game_level == 20:
             create_maze.TILE = 60
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-            algorithm.MODE = 50
+            algorithm.MODE = 20
             create_maze.THICK = 4
             nums_food = 10
         elif game_level == 40:
@@ -525,7 +525,7 @@ while running:
             create_maze.TILE = 20
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
             create_maze.THICK = 2
-            algorithm.MODE = 300
+            algorithm.MODE = 80
             nums_food = 60
         # player settings
         if game_mode == 2:
@@ -886,16 +886,8 @@ while running:
             surface.blit(bg, (WIDTH, 0))
             surface.blit(game_surface, (0, 0))
             game_surface.blit(bg_game, (0, 0))
+            path = findPathBetween2Point(maze, algo=default_algo)
             if not autoplay_pause:
-                walls_collide_list = sum(
-                    [cell.get_rects() for cell in maze],
-                    [
-                        pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
-                        pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
-                        pygame.Rect(create_maze.cols * create_maze.TILE - create_maze.THICK, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
-                        pygame.Rect(0, create_maze.rows * create_maze.TILE - create_maze.THICK, create_maze.TILE * create_maze.cols, create_maze.THICK)
-                    ]
-                )
                 if incoming_algo != default_algo:
                     default_algo = incoming_algo
                     path = findPathBetween2Point(maze, algo=default_algo) if findPathBetween2Point(maze, algo=default_algo) else []
@@ -909,8 +901,9 @@ while running:
                         pB = path[1]
                         current_direction = get_way_between_2point(pA,pB,maze2D)
                         player_rect.move_ip(directions[current_direction])
+                    #finish
                     if not len(path):
-                        # finish = True
+                        finish = True
                         if pygame.mouse.get_pressed()[0]:
                             maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list= new_game()
                             time = -1
@@ -930,13 +923,15 @@ while running:
                     is_set = False
             if hint_1:
                 incoming_algo = 1
-                path = findPathBetween2Point(maze, algo=incoming_algo) if findPathBetween2Point(maze, algo=incoming_algo) else []
+                if not incoming_algo == default_algo:
+                    path = findPathBetween2Point(maze, algo=incoming_algo) if findPathBetween2Point(maze, algo=incoming_algo) else []
                 [cell.draw(game_surface) for cell in maze]
                 [cell.color_cell(game_surface, "blue") for cell in getPathCellList(path,maze2D)[1:]]
                 
             if hint_2:
                 incoming_algo = 2
-                path = findPathBetween2Point(maze, algo=incoming_algo) if findPathBetween2Point(maze, algo=incoming_algo) else []
+                if not incoming_algo == default_algo:
+                    path = findPathBetween2Point(maze, algo=incoming_algo) if findPathBetween2Point(maze, algo=incoming_algo) else []
                 [cell.draw(game_surface) for cell in maze]
                 [cell.color_cell(game_surface, "green") for cell in getPathCellList(path,maze2D)[1:]]
             game_surface.blit(des_img,des_rect)
