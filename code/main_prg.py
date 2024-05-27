@@ -3,6 +3,25 @@ import Login
 from make_menu import *
 import subprocess
 
+
+
+def reset_record(username : str):
+    filename = 'player_record/' + username + '.txt'
+    f = open(filename,'w')
+    f.write('150 150 150 0 0 0')
+    f.close()
+
+def get_record(username : str):
+    filename = 'player_record/' + username + '.txt'
+    try:
+        fp = open(filename, 'r')
+        recordList = list(map(int, fp.readline().split()))
+        fp.close()
+        return recordList
+    except:
+        reset_record(username)
+        return get_record(username)
+    
 if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
@@ -23,7 +42,7 @@ if __name__ == '__main__':
         fp1 = open('current_account.txt', 'w')
         fp1.write(s)
         fp1.close()
-
+        get_record(s)
         while True:
             soundbar.set_sound(pygame.mixer.music.get_volume())
             n = make_menu(s) #list thong so game

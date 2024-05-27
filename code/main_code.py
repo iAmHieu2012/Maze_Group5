@@ -1,6 +1,8 @@
 from create_maze import *
 from algorithm import *
 from make_menu import *
+from main_prg import reset_record, get_record
+
 nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -71,15 +73,12 @@ def eat_food():
     return False
 
 def is_game_over():
-    global time, score, record, FPS
+    global time, score, FPS
     if time < 0:
         pygame.time.wait(700)
         [food.set_pos() for food in food_list]
-        # set_record_speedrun(record, score)
-        # record = record
         time, score, FPS = 150, 0, 60
         return False
-    # return when lose
 
 def new_game():
     # get maze
@@ -135,7 +134,6 @@ def create_user_saved_game(username : str):
 
         if game_mode == 2:
             fp.write(str(time) + '\n')
-            fp.write(str(score) + '\n')
 
 
         for cell in maze:
@@ -392,22 +390,22 @@ def get_player_current_cell():
     pos = (int(pos[0]),int(pos[1]))
     return pos
 
-def reset_record(username : str):
-    filename = 'player_record/' + username + '.txt'
-    f = open(filename,'w')
-    f.write('150 150 150 0 0 0')
-    f.close()
+# def reset_record(username : str):
+#     filename = 'player_record/' + username + '.txt'
+#     f = open(filename,'w')
+#     f.write('150 150 150 0 0 0')
+#     f.close()
 
-def get_record(username : str):
-    filename = 'player_record/' + username + '.txt'
-    try:
-        fp = open(filename, 'r')
-        recordList = list(map(int, fp.readline().split()))
-        fp.close()
-        return recordList
-    except:
-        reset_record(username)
-        return get_record(username)
+# def get_record(username : str):
+#     filename = 'player_record/' + username + '.txt'
+#     try:
+#         fp = open(filename, 'r')
+#         recordList = list(map(int, fp.readline().split()))
+#         fp.close()
+#         return recordList
+#     except:
+#         reset_record(username)
+#         return get_record(username)
 
 FPS = 60
 pygame.init()
@@ -459,8 +457,6 @@ if int(lst[1]) != 2:
 
 # player settings
 player_speed = 10  # TILE must be divided by player_speed
-if game_level == 100:
-    player_speed = 5
 
 player_img = pygame.image.load("img/tomface.png").convert_alpha()
 player_img = pygame.transform.scale(
@@ -475,7 +471,7 @@ des_img = pygame.transform.scale(
 )
 des_rect = des_img.get_rect()
 
-maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos = new_game()
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(
