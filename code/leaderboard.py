@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 DARKBROWN = (92, 64, 51)
 
 fp = open('current_account.txt', 'r')
-username = fp.readline()
+username = fp.readline().strip("\n")
 fp.close()
 filename = 'player_record/' + username + '.txt'
 fp = open(filename, 'r')

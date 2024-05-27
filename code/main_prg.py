@@ -1,5 +1,5 @@
 from end_game import *
-import Login
+import login
 from make_menu import *
 import subprocess
 
@@ -25,10 +25,10 @@ def get_record(username : str):
 if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
-    Login.screen_width = 1280
-    Login.screen_height = 720
-    Login.screen = pygame.display.set_mode((Login.screen_width, Login.screen_height)) 
-    Login.clock = pygame.time.Clock()
+    login.screen_width = 1280
+    login.screen_height = 720
+    login.screen = pygame.display.set_mode((login.screen_width, login.screen_height)) 
+    login.clock = pygame.time.Clock()
     pygame.display.set_caption('Tom and Jerry')
     img = pygame.image.load('img/maze_icon.png')
     pygame.display.set_icon(img)
@@ -37,10 +37,11 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        s = Login.start_all()
-        open('current_account.txt', 'w').close()
+        s = login.start_all()
         fp1 = open('current_account.txt', 'w')
         fp1.write(s)
+        fp1.write("\n")
+        fp1.write("0")
         fp1.close()
         get_record(s)
         while True:
