@@ -3,6 +3,8 @@ from algorithm import *
 from make_menu import *
 from main_prg import reset_record, get_record
 
+from main_prg import reset_record, get_record
+
 nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -111,7 +113,8 @@ def new_game():
         ]
     )
     lastpos = (-1, -1)
-    return maze, maze2D, walls_collide_list, player_rect.topleft, des_rect.topleft, lastpos, CurrentPos, AimPos
+    food_list = [Food() for i in range(nums_food)]
+    return maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list
 
 #phần save game
 def create_user_saved_game(username : str):
@@ -132,7 +135,6 @@ def create_user_saved_game(username : str):
             fp.write(str(time) + '\n')
 
         if game_mode == 2:
-            fp.write(str(score) + '\n')
             fp.write(str(time) + '\n')
 
         for cell in maze:
@@ -175,21 +177,25 @@ def read_saved_game(username : str):
         time = 0
         score = 0
     maze = []
+    #Set level
     if game_level == 20:
         create_maze.TILE = 60
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
         algorithm.MODE = 50
         create_maze.THICK = 4
+        nums_food = 10
     elif game_level == 40:
         create_maze.TILE = 40
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
         algorithm.MODE = 150
-        create_maze.THICK = 2
+        create_maze.THICK = 3
+        nums_food = 30
     elif game_level == 100:
         create_maze.TILE = 20
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
         create_maze.THICK = 2
         algorithm.MODE = 300
+        nums_food = 60
     for i in range(create_maze.cols* create_maze.rows):
         row, col = tuple(map(int,fp.readline().split()))
         cell = Cell(col,row)
@@ -215,21 +221,25 @@ def load_game(username: str):
         return None
     game_mode, game_level, AimPos, CurrentPos, maze, time, score = read_saved_game(username)
     maze2D = getMaze2DArray(maze)
+    #Set level
     if game_level == 20:
         create_maze.TILE = 60
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
         algorithm.MODE = 50
         create_maze.THICK = 4
+        nums_food = 10
     elif game_level == 40:
         create_maze.TILE = 40
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
         algorithm.MODE = 150
-        create_maze.THICK = 2
+        create_maze.THICK = 3
+        nums_food = 30
     elif game_level == 100:
         create_maze.TILE = 20
         create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
         create_maze.THICK = 2
         algorithm.MODE = 300
+        nums_food = 60
     walls_collide_list = sum(
         [cell.get_rects() for cell in maze],
         [
@@ -240,6 +250,59 @@ def load_game(username: str):
         ]
     )
     return maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level
+    
+# # get maze
+# maze = create_maze.generate_maze()
+# maze = generateTomAndJerryPos(maze)
+# maze2D = getMaze2DArray(maze)
+
+# # get Jerry position
+# AimPos = findTomAndJerryPos(maze2D)[1]
+
+# # get Tom position
+# CurrentPos = findTomAndJerryPos(maze2D)[0]
+
+# player settings
+player_speed = 5  # TILE must be divided by player_speed
+player_img = pygame.image.load("img/tomface.png").convert_alpha()
+player_img = pygame.transform.scale(
+    player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
+)
+player_rect = player_img.get_rect()
+# player_rect.topleft = (
+#     CurrentPos[1] * create_maze.TILE + create_maze.THICK,
+#     CurrentPos[0] * create_maze.TILE + create_maze.THICK,
+# )
+
+# destination settings
+des_img = pygame.image.load("img/jerryface.png").convert_alpha()
+des_img = pygame.transform.scale(
+    des_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
+)
+des_rect = des_img.get_rect()
+# des_rect.topleft = (
+#     AimPos[1] * create_maze.TILE + create_maze.THICK,
+#     AimPos[0] * create_maze.TILE + create_maze.THICK,
+# )
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list = new_game()
+#hint
+hint_img = pygame.image.load("img/star.png").convert_alpha()
+hint_img = pygame.transform.scale(
+    hint_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
+)
+hint_rect = hint_img.get_rect()
+
+directions = {
+    "a": (-player_speed, 0),
+    "d": (player_speed, 0),
+    "w": (0, -player_speed),
+    "s": (0, player_speed),
+}
+keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
+direction = (0, 0)
+
+# food settings
+food_list = [Food() for i in range(nums_food)]
 
 def get_way_between_2point(currp, nextp, maze2D):
     if currp[0] == nextp[0]:
@@ -409,7 +472,7 @@ des_img = pygame.transform.scale(
 )
 des_rect = des_img.get_rect()
 
-maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list = new_game()
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(
@@ -487,6 +550,7 @@ f.readline()
 temp = int(f.readline())
 loadgamestatus = True if temp == 2 else False
 f.close()
+    
 #main    
 count = 0
 times_move = 0
@@ -520,30 +584,34 @@ while running:
         fp1 = open('current_account.txt', 'r')
         user = fp1.readline()
         fp1.close()
+        
         if load_game(username) == None:
             make_dialog(surface,"You haven't got any saved games!",1,0)
             break
         maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level  = load_game(user)
         loadgamestatus = False
-        if game_mode == 2:
-            food_list = [Food() for i in range(nums_food)]
         #Set level
         if game_level == 20:
             create_maze.TILE = 60
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
             algorithm.MODE = 50
             create_maze.THICK = 4
+            nums_food = 10
         elif game_level == 40:
             create_maze.TILE = 40
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
             algorithm.MODE = 150
-            create_maze.THICK = 2
+            create_maze.THICK = 3
+            nums_food = 30
         elif game_level == 100:
             create_maze.TILE = 20
             create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
             create_maze.THICK = 2
             algorithm.MODE = 300
+            nums_food = 60
         # player settings
+        if game_mode == 2:
+            food_list = [Food() for i in range(nums_food)]
         player_speed = 10  # TILE must be divided by player_speed
         if game_level == 100:
             player_speed = 5
@@ -576,10 +644,22 @@ while running:
         # draw player
         game_surface.blit(player_img, player_rect)
         game_surface.blit(des_img, des_rect)
+        
         is_set = False
         last_pos = (-1,-1)
         direction = (0,0)        
         current_direction = None
+        pause = False
+        f = open("mode.txt",'w')
+        f.write(str(username))
+        f.write("\n")
+        f.write("0\n")
+        f.write(str(game_level))
+        f.write("\n")
+        f.write(str(game_mode))
+        f.write("\n")
+        f.close()
+
     elif pause:
         f = pause_game(auto)
         if f == 1:
@@ -903,7 +983,7 @@ while running:
                     if not len(path):
                         # finish = True
                         if pygame.mouse.get_pressed()[0]:
-                            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos= new_game()
+                            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list= new_game()
                             time = -1
                             is_game_over()
                             finish = False
@@ -957,6 +1037,6 @@ while running:
                             hint_2 = True
                             hint_1 = False
         else: 
-            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
+            maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list = new_game()
             finish = False
     pygame.display.update()
