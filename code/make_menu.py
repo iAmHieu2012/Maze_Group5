@@ -1,6 +1,4 @@
 import pygame, sys
-import Login
-import json
 from pygame.locals import *
 import soundbar
 
@@ -290,7 +288,7 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
             return -1
         while running:
             for i in range(1, 3):
-                if not i -1 ==x:
+                if not i - 1 ==x:
                     DISPLAYSURF.blit(modebox, (1280//2 - 590 + 200 * i, 355))
                     write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 380), -1, DISPLAYSURF, 20)
                         
@@ -301,7 +299,15 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
             for item in lst_rect:
                 if item.collidepoint(mousePos):
                     x = lst_rect.index(item)
-                    break
+                    if pygame.mouse.get_pressed()[0]:
+                        fp = open('current_account.txt', 'r')
+                        username = fp.readline().strip("\n")
+                        fp.close()
+                        f=  open("current_account.txt","w")
+                        f.write(username)
+                        f.write("\n")
+                        f.write(str(x))
+                        f.close()   
             for event in pygame.event.get(): 
                 if event.type == pygame.MOUSEBUTTONUP:
                     make_sound()
@@ -311,7 +317,6 @@ def make_dialog(DISPLAYSURF, s: str, mode = 0, auto = 0):
                             write_screen(lst[i - 1], BLACK, None, (1280//2 - 520 + 200 * i, 380), -1, DISPLAYSURF, 20)
                         DISPLAYSURF.blit(modebox_pressed, (1280//2 - 590 + 200 * (x+1), 355))
                         write_screen(lst[x], BLACK, None, (1280//2 - 520 + 200 * (x+1), 380), -1, DISPLAYSURF, 20)
-                        key_mode = x
                     if x_button_rect.collidepoint(mousePos):
                         running = False
                         return -1

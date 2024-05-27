@@ -5,6 +5,26 @@ from main_prg import reset_record, get_record
 
 from main_prg import reset_record, get_record
 
+
+FPS = 60
+pygame.init()
+pygame.mixer.init()
+game_surface = pygame.Surface(RES)
+pause_surface = pygame.Surface((WIDTH + 300, HEIGHT))
+end_game_surface = pygame.Surface((WIDTH + 300, HEIGHT))
+surface = pygame.display.set_mode((WIDTH + 300, HEIGHT))
+clock = pygame.time.Clock()
+
+# images
+bg_game = pygame.image.load("img/background.jpg").convert()
+bg_game = pygame.transform.scale(bg_game, (WIDTH, HEIGHT))
+bg_pause = pygame.image.load("img/bg_pause.png").convert()
+bg = pygame.image.load("img/bg_main.jpg").convert()
+
+# game icon
+pygame.display.set_caption("Maze")
+pygame_icon = pygame.image.load("img/maze_icon.png")
+pygame.display.set_icon(pygame_icon)
 nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -136,6 +156,7 @@ def create_user_saved_game(username : str):
 
         if game_mode == 2:
             fp.write(str(time) + '\n')
+            fp.write(str(score) + '\n')
 
         for cell in maze:
             fp.write(str(cell.y))
@@ -298,11 +319,15 @@ directions = {
     "w": (0, -player_speed),
     "s": (0, player_speed),
 }
-keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
+fp = open('current_account.txt', 'r')
+username = fp.readline().strip("\n")
+typekeys = int(fp.readline())
+fp.close()
+if typekeys == 0:
+    keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
+elif typekeys ==1:
+    keys = {"a": pygame.K_LEFT, "d": pygame.K_RIGHT, "w": pygame.K_UP, "s": pygame.K_DOWN}
 direction = (0, 0)
-
-# food settings
-food_list = [Food() for i in range(nums_food)]
 
 def get_way_between_2point(currp, nextp, maze2D):
     if currp[0] == nextp[0]:
@@ -366,7 +391,7 @@ def pause_game(auto=0):
                                 return 1
                             elif lst_rect[0].collidepoint(mousePos): # save
                                 f = open('current_account.txt', 'r')
-                                username = f.read()
+                                username = f.readline().strip("\n")
                                 f.close()
                                 create_user_saved_game(username)
                                 return 1
@@ -407,111 +432,6 @@ def get_player_current_cell():
 #     except:
 #         reset_record(username)
 #         return get_record(username)
-
-FPS = 60
-pygame.init()
-pygame.mixer.init()
-game_surface = pygame.Surface(RES)
-pause_surface = pygame.Surface((WIDTH + 300, HEIGHT))
-end_game_surface = pygame.Surface((WIDTH + 300, HEIGHT))
-surface = pygame.display.set_mode((WIDTH + 300, HEIGHT))
-clock = pygame.time.Clock()
-
-# images
-bg_game = pygame.image.load("img/background.jpg").convert()
-bg_game = pygame.transform.scale(bg_game, (WIDTH, HEIGHT))
-bg_pause = pygame.image.load("img/bg_pause.png").convert()
-bg = pygame.image.load("img/bg_main.jpg").convert()
-
-# game icon
-pygame.display.set_caption("Maze")
-pygame_icon = pygame.image.load("img/maze_icon.png")
-pygame.display.set_icon(pygame_icon)
-
-nums_food = 0
-# take level and mode from mode.txt
-inp = open('mode.txt', 'r')
-lst = inp.readlines()
-inp.close()
-if int(lst[1]) != 2:
-    game_level = int(lst[2])
-    game_mode = int(lst[3])
-    #Set level
-    if game_level == 20:
-        create_maze.TILE = 60
-        create_maze.cols, create_maze.rows = create_maze.WIDTH // 60, create_maze.HEIGHT // 60
-        algorithm.MODE = 50
-        create_maze.THICK = 4
-        nums_food = 10
-    elif game_level == 40:
-        create_maze.TILE = 40
-        create_maze.cols, create_maze.rows = create_maze.WIDTH // 40, create_maze.HEIGHT // 40
-        algorithm.MODE = 150
-        create_maze.THICK = 3
-        nums_food = 30
-    elif game_level == 100:
-        create_maze.TILE = 20
-        create_maze.cols, create_maze.rows = create_maze.WIDTH // 20, create_maze.HEIGHT // 20
-        create_maze.THICK = 2
-        algorithm.MODE = 300
-        nums_food = 60
-
-# player settings
-player_speed = 10  # TILE must be divided by player_speed
-
-player_img = pygame.image.load("img/tomface.png").convert_alpha()
-player_img = pygame.transform.scale(
-    player_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
-)
-player_rect = player_img.get_rect()
-
-# destination settings
-des_img = pygame.image.load("img/jerryface.png").convert_alpha()
-des_img = pygame.transform.scale(
-    des_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
-)
-des_rect = des_img.get_rect()
-
-maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list = new_game()
-#hint
-hint_img = pygame.image.load("img/star.png").convert_alpha()
-hint_img = pygame.transform.scale(
-    hint_img, (create_maze.TILE - 2 * create_maze.THICK, create_maze.TILE - 2 * create_maze.THICK)
-)
-hint_rect = hint_img.get_rect()
-
-directions = {
-    "a": (-player_speed, 0),
-    "d": (player_speed, 0),
-    "w": (0, -player_speed),
-    "s": (0, player_speed),
-}
-keys = {"a": pygame.K_a, "d": pygame.K_d, "w": pygame.K_w, "s": pygame.K_s}
-direction = (0, 0)
-
-# food settings
-food_list = [Food() for i in range(nums_food)]
-
-# collision list
-walls_collide_list = sum(
-    [cell.get_rects() for cell in maze],
-    [
-        pygame.Rect(0, 0, create_maze.TILE * create_maze.cols, create_maze.THICK),
-        pygame.Rect(0, 0, create_maze.THICK, create_maze.TILE * create_maze.rows),
-        pygame.Rect(
-            create_maze.cols * create_maze.TILE - create_maze.THICK,
-            0,
-            create_maze.THICK,
-            create_maze.TILE * create_maze.rows,
-        ),
-        pygame.Rect(
-            0,
-            create_maze.rows * create_maze.TILE - create_maze.THICK,
-            create_maze.TILE * create_maze.cols,
-            create_maze.THICK,
-        ),
-    ],
-)
 
 # timer, score, record
 pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -556,9 +476,6 @@ count = 0
 times_move = 0
 running = True
 
-fp = open('current_account.txt', 'r')
-username = fp.readline()
-fp.close()
 recordList = get_record(username)
 
 while running:
@@ -582,7 +499,7 @@ while running:
         surface.blit(game_surface, (0, 0))
         game_surface.blit(bg_game, (0, 0))
         fp1 = open('current_account.txt', 'r')
-        user = fp1.readline()
+        user = fp1.readline().strip("\n")
         fp1.close()
         
         if load_game(username) == None:
@@ -776,7 +693,7 @@ while running:
                 if game_level == 100 and 150 - time < recordList[2]:
                     recordList[2] = 150 - time
                 fp = open('current_account.txt', 'r')
-                username = fp.readline()
+                username = fp.readline().strip("\n")
                 filename = 'player_record/' + username + '.txt'
                 fp.close()
                 fp = open(filename, 'w').close()
@@ -926,7 +843,7 @@ while running:
                 if game_level == 100 and score > recordList[5]:
                     recordList[5] = score
                 fp = open('current_account.txt', 'r')
-                username = fp.readline()
+                username = fp.readline().strip('\n')
                 filename = 'player_record/' + username + '.txt'
                 fp.close()
                 fp = open(filename, 'w').close()
