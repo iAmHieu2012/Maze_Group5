@@ -52,7 +52,7 @@ def End_game(result = 0):
                     result=1-result
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if YES_rect.collidepoint(mouse_pos) or NO_rect.collidepoint(mouse_pos):
+                    if YES_rect.collidepoint(pygame.mouse.get_pos()) or NO_rect.collidepoint(pygame.mouse.get_pos()):
                         print(choice)
                         running = False
                         return choice
