@@ -1,6 +1,15 @@
 import pygame
 from pygame.locals import *
 from main_prg import reset_record
+import tkinter as tk
+from tkinter import messagebox
+
+class popup_box:
+    def popup(self, title = '', sentence = ''):
+        tk.Tk().withdraw()
+        name = messagebox.showinfo(title=title, message=sentence)
+
+
 BLACK = (0, 0, 0)
 GREEN = (1, 50, 32)
 WHITE = (255, 255, 255)
@@ -15,6 +24,7 @@ recordList = list(map(int, fp.readline().split()))
 fp.close()
 
 pygame.init()
+
 
 #Đặt tên cho cửa sổ game là Maze
 pygame.display.set_caption('Record')
@@ -41,13 +51,12 @@ medium2 = contentFont.render("Medium :", True, WHITE)
 hard2   = contentFont.render("Hard     :", True, WHITE)
 
 reset   = contentFont.render("Reset", True, WHITE)
-reset_rect = reset.get_rect()
+reset_rect = Rect(400, 20, 56, 25)
+pygame.draw.rect(reset, WHITE, reset_rect, 1)
 
-# mouse_pos = pygame.mouse.get_pos()
-# def is_over_reset_box(mouse_pos):
-#     return reset_rect.collidepoint(mouse_pos)
-# if is_over_reset_box(mouse_pos):
-    
+fp = open('current_account.txt', 'r')
+username = fp.readline()
+fp.close()
 
 record_data = []
 for i in range(3):
@@ -64,7 +73,15 @@ while running:
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
-
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = pygame.mouse.get_pos()
+            if reset_rect.collidepoint(x, y):
+                reset_record(username)
+                temp = popup_box()
+                temp.popup('Success', 'Your record has been reset')
+                running = False
+                break  
+        
     # Tô màu màn hình
     screen.fill(WHITE)
     # Vẽ ảnh nền
@@ -91,7 +108,6 @@ while running:
     screen.blit(record_data[5], (200, 400))
 
     screen.blit(reset, (400, 20))
-
     pygame.display.update()
 
 pygame.quit()
