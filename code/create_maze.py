@@ -1,5 +1,6 @@
 import pygame
-from random import choice, randrange
+from random import choice, randint, randrange
+import numpy as np
 import algorithm
 
 RES = WIDTH, HEIGHT = 1080, 720
@@ -80,6 +81,23 @@ class Cell:
             neighbors.append(left)
         return choice(neighbors) if neighbors else False
     
+    def rand_neighbors(self, grid_cells):
+        self.grid_cells = grid_cells
+        neighbors = []
+        top = self.check_cell(self.x, self.y - 1)
+        right = self.check_cell(self.x + 1, self.y)
+        bottom = self.check_cell(self.x, self.y + 1)
+        left = self.check_cell(self.x - 1, self.y)
+        if top:
+            neighbors.append(top)
+        if right:
+            neighbors.append(right)
+        if bottom:
+            neighbors.append(bottom)
+        if left:
+            neighbors.append(left)
+        return choice(neighbors) if neighbors else False
+    
     def make_tom_pos(self):
         self.status = 2
     def make_jerry_pos(self):
@@ -122,4 +140,10 @@ def generate_maze():
             current_cell = next_cell
         elif array:
             current_cell = array.pop()
+    for i in range(40):
+        current_cell = choice(grid_cells)
+        next_cell = grid_cells[grid_cells.index(current_cell)].rand_neighbors(grid_cells)
+        if next_cell == False:
+            continue
+        remove_walls(current_cell, next_cell)
     return grid_cells
