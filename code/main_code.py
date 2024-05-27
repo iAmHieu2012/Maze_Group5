@@ -3,6 +3,8 @@ from algorithm import *
 from make_menu import *
 from main_prg import reset_record, get_record
 
+from main_prg import reset_record, get_record
+
 nums_food = 0
 # take level and mode from mode.txt
 inp = open('mode.txt', 'r')
@@ -134,7 +136,6 @@ def create_user_saved_game(username : str):
 
         if game_mode == 2:
             fp.write(str(time) + '\n')
-
 
         for cell in maze:
             fp.write(str(cell.y))
@@ -471,7 +472,7 @@ des_img = pygame.transform.scale(
 )
 des_rect = des_img.get_rect()
 
-maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos = new_game()
+maze, maze2D, walls_collide_list, player_rect.topleft,des_rect.topleft, lastpos, CurrentPos, AimPos, food_list = new_game()
 #hint
 hint_img = pygame.image.load("img/star.png").convert_alpha()
 hint_img = pygame.transform.scale(
