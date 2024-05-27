@@ -31,6 +31,29 @@ if __name__ == '__main__':
                 break
             elif n == 0:
                 continue
+            elif n == [s,2]:
+                while True:
+                    inp = open('mode.txt', 'w')
+                    for i in range(len(n)):
+                        inp.write(str(n[i]) + '\n')
+                    inp.close() 
+                    subprocess.run(["python", "code/main_code.py"])
+                    result = open('result.txt', 'r')
+                    temp = int(result.read(2))
+                    result.close()
+                    if temp == -1:
+                        break
+                    if End_game(temp) == 0:
+                        soundbar.set_sound(pygame.mixer.music.get_volume())
+                        break
+                    else:
+                        f = open("mode.txt","r")
+                        temp = f.readlines()
+                        gamelevel,gamemode = int(temp[2]), int(temp[3])
+                        n = [s,0,gamelevel,gamemode]
+                        soundbar.set_sound(pygame.mixer.music.get_volume())
+                        continue
+            
             # elif n == 2:
             #     subprocess.run(['python', 'load_game.py'])
             #     result = open('result.txt', 'r')
