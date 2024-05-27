@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
- 
+from main_prg import reset_record
 BLACK = (0, 0, 0)
 GREEN = (1, 50, 32)
 WHITE = (255, 255, 255)
@@ -39,6 +39,15 @@ hard1   = contentFont.render("Hard     :", True, WHITE)
 easy2   = contentFont.render("Easy     :", True, WHITE)
 medium2 = contentFont.render("Medium :", True, WHITE)
 hard2   = contentFont.render("Hard     :", True, WHITE)
+
+reset   = contentFont.render("Reset", True, WHITE)
+reset_rect = reset.get_rect()
+
+# mouse_pos = pygame.mouse.get_pos()
+# def is_over_reset_box(mouse_pos):
+#     return reset_rect.collidepoint(mouse_pos)
+# if is_over_reset_box(mouse_pos):
+    
 
 record_data = []
 for i in range(3):
@@ -81,7 +90,9 @@ while running:
     screen.blit(hard2, (50, 400))
     screen.blit(record_data[5], (200, 400))
 
+    screen.blit(reset, (400, 20))
 
     pygame.display.update()
 
 pygame.quit()
+
