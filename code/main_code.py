@@ -503,6 +503,8 @@ while running:
             break
         maze, maze2D, walls_collide_list, CurrentPos, AimPos, time, score, game_mode, game_level  = load_game(user)
         loadgamestatus = False
+        if game_mode == 2:
+            food_list = [Food() for i in range(nums_food)]
         #Set level
         if game_level == 20:
             create_maze.TILE = 60
